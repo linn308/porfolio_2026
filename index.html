@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linh Nguyen — Multimedia Designer</title>
+  <meta name="description" content="Portfolio của Nguyễn Trần Trúc Bạch Linh — Multimedia Designer: 2D Design & 3D / Web3D.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- model-viewer: cần cho khung 3D ở Hero -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER ============
+       Menu chỉ còn đúng 2 mục lớn: 2D và 3D, cộng About/Contact,
+       cộng bộ chuyển ngôn ngữ VI/EN ở cuối (xem script.js: initLanguage). -->
+  <header class="site-header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo">
+        <span class="logo__name">linn.</span>
+        <span class="logo__role" data-vi="Multimedia Designer" data-en="Multimedia Designer">Multimedia Designer</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <a href="project/2d/2d.html" class="nav__tab">2D</a>
+        <a href="project/3d/3d.html" class="nav__tab">3D</a>
+        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+
+        <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
+          <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 1. HERO SECTION ============ -->
+    <section class="hero" id="home">
+      <div class="container hero__inner">
+
+        <div class="hero__viewport">
+          <div class="viewport-frame">
+            <span class="viewport-tag">Showreel · Motion & 3D</span>
+            <!-- Thay file assets/videos/showreel.mp4 bằng video của bạn -->
+            <video class="viewport-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop">
+              <source src="assets/videos/showreel.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p class="viewport-caption" data-vi="Cel-look Anime & 3D Layout Reel — Trúc Linh" data-en="Cel-look Anime & 3D Layout Reel — linn">Cel-look Anime & 3D Layout Reel — Trúc Linh</p>
+        </div>
+
+        <div class="hero__text">
+          <p class="kicker" data-vi="Đà Lạt, Việt Nam" data-en="Da Lat, Vietnam">
+            <span class="kicker__dot"></span>
+            Đà Lạt, Việt Nam
+          </p>
+          <h1 class="hero__title"
+            data-vi-html="Kết Nối Chiều Sâu <em>3D</em> Vào<br>Truyền Thông Thị Giác 2D"
+            data-en-html="Bridging <em>3D</em> Depth into<br>2D &amp; Visual Communication">
+            Bridging <em>3D</em> Depth into<br>
+            2D &amp; Visual Communication
+          </h1>
+          <p class="hero__subtitle"
+            data-vi-html="Hơn 2 năm kinh nghiệm 3D Artist &amp; Layout Artist tại <strong>Hibari Vietnam</strong>, chuyên phong cách Cel-look Anime. Tốt nghiệp <strong>Arena Multimedia</strong>, hiện phát triển song song 2D Design, Video Editing và 3D Animation"
+            data-en-html="More than 2 years of experience as a 3D Artist &amp; Layout Artist at <strong>Hibari Vietnam</strong>, specializing in Cel-look Anime style. A graduate of <strong>Arena Multimedia</strong>, now growing 2D Design, Video Editing and 3D Animation side by side.">
+            Hơn 2 năm kinh nghiệm 3D Artist &amp; Layout Artist tại <strong>Hibari Vietnam</strong>,
+            chuyên phong cách Cel-look Anime. Tốt nghiệp <strong>Arena Multimedia</strong>,
+            hiện phát triển song song 2D Design, Video Editing và 3D Animation.
+          </p>
+          <div class="hero__cta">
+            <a href="project/2d/2d.html" class="btn btn--warm" data-vi="Khám phá 2D" data-en="Explore 2D">Khám phá 2D</a>
+            <a href="project/3d/3d.html" class="btn btn--primary" data-vi="Khám phá 3D" data-en="Explore 3D">Khám phá 3D</a>
+          </div>
+        </div>
+
+        <div class="hero__viewport">
+          <div class="viewport-frame">
+            <span class="viewport-tag">Web3D · Interactive</span>
+            <!-- Thay src bằng file .glb thật của bạn -->
+            <model-viewer
+              class="viewport-model"
+              src="assets/models/crusader-preview.glb"
+              poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop"
+              alt="Mô hình 3D preview — kéo để xoay, cuộn để zoom"
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="1200"
+              rotation-per-second="18deg"
+              shadow-intensity="1"
+              exposure="1.05"
+              interaction-prompt="none"
+            ></model-viewer>
+          </div>
+          <p class="viewport-caption" data-vi="Kéo để xoay 360° · Cuộn để zoom" data-en="Drag to rotate 360° · Scroll to zoom">Kéo để xoay 360° · Cuộn để zoom</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  
+    <!-- ============ 2. EXPERIENCE, EDUCATION, ACHIEVEMENTS & SKILLS ============ -->
+    <section class="experience" id="experience">
+      <div class="container experience__inner">
+        
+        <!-- ========== a. Học vấn/ Education -->
+        <div class="education__timeline">
+          <p class="kicker" style="margin-top: 48px;" data-vi="Học tập" data-en="Learning"><span class="kicker__dot"></span> Học tập</p>
+          <h2 class="section-title" data-vi="Học Vấn" data-en="Education">Học Vấn</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">2020 — 2023</span>
+              <h3 class="timeline__role" data-vi="Chuyên ngành Thiết kế Đa phương tiện" data-en="Multimedia Design Major">Chuyên ngành Thiết kế Đa phương tiện</h3>
+              <p class="timeline__org">Arena Multimedia</p>
+              <p class="timeline__desc" data-vi="Thiết kế đồ họa" data-en="Graphic Design">Graphic Design</p>
+              <p class="timeline__desc" data-vi="Thiết kế sản phẩm kỹ thuật số" data-en="Digital Product Design">Digital Product Design</p>
+              <p class="timeline__desc" data-vi="Làm phim kỹ thuật số" data-en="Digital Filmaking">Digital Filmaking</p>
+              <p class="timeline__desc" data-vi="Thiết kế game 3D" data-en="3D Game Design ">3D Game Design </p>
+              <p class="timeline__desc" data-vi="Hoạt hình 3D" data-en="3D Animation">3D Animation</p>
+            </li>
+          </ol>
+        </div>
+        
+        <!-- ========== b. Giải thưởng & Thành tích/ Award & Achievement -->
+        <div class="education__timeline">
+          <p class="kicker" style="margin-top: 48px;" data-vi="Sự công nhận" data-en="Recognition"><span class="kicker__dot"></span> Sự công nhận</p>
+          <h2 class="section-title" data-vi="Giải thưởng & Thành tích" data-en="Award & Achievement">Giải thưởng & Thành tích</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">04/2023</span>
+              <h3 class="timeline__role" data-vi="Đồ án xuất sắc: 3D Game Design ‘Crusader’" data-en="Excellent project in 3D Game Design ‘CRUSADER’">Đồ án xuất sắc: 3D Game Design ‘Crusader’</h3>
+              <p class="timeline__org"></p>
+              <p class="timeline__desc"
+                data-vi="Phát triển các ý tưởng hình ảnh thông qua phác thảo và thiết kế nhân vật 3D, đảm bảo sự nhất quán về phong cách trong định hướng hình ảnh tổng thể."
+                data-en="Developed visual concepts through sketching and 3D character design, ensuring stylistic consistency within the overall visual direction.">
+                Developed visual concepts through sketching and 3D character design, ensuring stylistic consistency within the overall visual direction.
+              </p>
+            </li>
+
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">10/2023</span>
+              <h3 class="timeline__role" data-vi="Đồ án xuất sắc: Phim ngắn 3D ‘FIGHT FOR LIFE’" data-en="Excellent project in 3D Short Film ‘FIGHT FOR LIFE’">Đồ án xuất sắc: Phim ngắn 3D ‘FIGHT FOR LIFE’</h3>
+              <p class="timeline__org"></p>
+              <p class="timeline__desc"
+                data-vi="Xây dựng bảng phân cảnh, đóng góp ý tưởng cốt truyện và tham gia vào quá trình sản xuất hoạt ảnh nhằm đảm bảo tính liền mạch cho câu chuyện."
+                data-en="Created storyboards, contributed narrative ideas, and participated in animation production to support cohesive storytelling.">
+                Xây dựng bảng phân cảnh, đóng góp ý tưởng cốt truyện và tham gia vào quá trình sản xuất hoạt ảnh nhằm đảm bảo tính liền mạch cho câu chuyện.
+              </p>
+            </li>
+          </ol>
+        </div>
+
+        <!-- ========== c. Kinh nghiệm/ Experience ========== -->
+        <div class="experience__timeline">
+          <p class="kicker" data-vi="Kinh nghiệm" data-en="Experience"><span class="kicker__dot"></span> Experience</p>
+          <h2 class="section-title" data-vi="Quá Trình Làm Việc" data-en="Work Experience">Quá Trình Làm Việc</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">11/2023 — 03/2026</span>
+              <h3 class="timeline__role" data-vi="3D Artist / Layout Artist" data-en="3D Artist / Layout Artist">3D Artist / Layout Artist</h3>
+              <p class="timeline__org" data-vi="Hibari Vietnam" data-en="Hibari Vietnam">Hibari Vietnam</p>
+              <p class="timeline__desc"
+                data-vi="Sản xuất nội dung 3D phong cách Cel-look Anime — modeling, layout bố cục khung hình và dàn dựng storyboard cho các dự án phim &amp; game."
+                data-en="Produced Cel-look Anime style 3D content — modeling, frame-layout composition and storyboarding for film and game projects.">
+                Sản xuất nội dung 3D phong cách Cel-look Anime — modeling, layout bố cục khung hình
+                và dàn dựng storyboard cho các dự án phim &amp; game.
+              </p>
+            </li>
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">2023 — 2024</span>
+              <h3 class="timeline__role" data-vi="Freelance 2D/3D Designer" data-en="Freelance 2D/3D Designer">Freelance 2D/3D Designer</h3>
+              <p class="timeline__org" data-vi="Độc lập" data-en="Independent">Độc lập</p>
+              <p class="timeline__desc"
+                data-vi="Nhận dự án thiết kế 2D &amp; 3D tự do song song, mở rộng kỹ năng editorial layout và dựng hình 3D ngoài phạm vi công việc chính thức."
+                data-en="Took on freelance 2D &amp; 3D design projects in parallel, expanding editorial layout and 3D modeling skills beyond full-time work.">
+                Nhận dự án thiết kế 2D &amp; 3D tự do song song, mở rộng kỹ năng editorial layout
+                và dựng hình 3D ngoài phạm vi công việc chính thức.
+              </p>
+            </li>
+            
+          </ol>
+
+          
+        </div>
+
+        <!-- ========== d. Skill/ Kỹ năng ========== -->
+        <div class="experience__skills">
+          <p class="kicker" data-vi="Bộ công cụ" data-en="Toolkit"><span class="kicker__dot"></span> Toolkit</p>
+          <h2 class="section-title" data-vi="Kỹ Năng" data-en="Skills">Kỹ Năng</h2>
+
+          <!-- Mỗi .tag bên trong chỉ tự sáng khi CHÍNH nó được hover
+               (xem style.css: ".skill-group .tag:hover" — không còn kiểu
+               hover cả nhóm .skill-group rồi sáng hết toàn bộ tag bên trong). -->
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="2D Design" data-en="2D Design">2D Design</h3>
+            <div class="card__tags">
+              <span class="tag">Photoshop</span>
+              <span class="tag">Illustrator</span>
+              <span class="tag">InDesign</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="Video &amp; Motion" data-en="Video &amp; Motion">Video &amp; Motion</h3>
+            <div class="card__tags">
+              <span class="tag">After Effects</span>
+              <span class="tag">Premiere Pro</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="3D game &amp; film" data-en="3D game &amp; film">3D game &amp; film</h3>
+            <div class="card__tags">
+              <span class="tag">Maya</span>
+              <span class="tag">3ds Max</span>
+              <span class="tag">ZBrush</span>
+              <span class="tag">Subtance Painter</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ============ 3. EXPLORE: SPLIT-SELECTOR 2D / 3D ============ -->
+    <section class="explore" id="explore">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-vi="Bạn muốn khám phá điều gì?" data-en="What would you like to explore?">
+            <span class="kicker__dot"></span> Bạn muốn khám phá điều gì?
+          </p>
+          <h2 class="section-title" data-vi="Hồ sơ năng lực" data-en="Portfolio">Hồ sơ năng lực</h2>
+          <p class="section-desc" 
+          data-vi="Tập hợp các sản phẩm, dự án và thành tích thực tế được sắp xếp hệ thống nhằm chứng minh kỹ năng, kinh nghiệm và phong cách làm việc của một cá nhân hoặc tổ chức." 
+          data-en="Curated collection of real projects, products, and achievements organized to showcase an individual's or organization's skills, experience, and work style.">
+           Tập hợp các sản phẩm, dự án và thành tích thực tế được sắp xếp hệ thống nhằm chứng minh kỹ năng, kinh nghiệm và phong cách làm việc của một cá nhân hoặc tổ chức.
+          </p>
+        </div>
+
+        <div class="explore__panels">
+          <a href="project/2d/2d.html" class="explore-panel explore-panel--2d">
+            <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
+            <div class="explore-panel__content">
+              <h3 class="explore-panel__label">2D</h3>
+              <p class="explore-panel__desc" data-vi="Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign." data-en="Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign.">Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign.</p>
+              <div class="explore-panel__list">
+                <span class="tag">Layout</span>
+                <span class="tag">Poster</span>
+                <span class="tag">Editorial</span>
+                <span class="tag">Design</span>
+              </div>
+              <span class="explore-panel__arrow">
+                <span data-vi="Xem thư viện 2D" data-en="View 2D gallery">Xem gallery 2D</span>
+                <span class="explore-panel__arrow-icon">→</span>
+              </span>
+            </div>
+          </a>
+
+          <a href="project/3d/3d.html" class="explore-panel explore-panel--3d">
+            <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
+            <div class="explore-panel__content">
+              <h3 class="explore-panel__label">3D</h3>
+              <p class="explore-panel__desc" data-vi="Model, Layout, Animation — Maya, ZBrush." data-en="Model, Layout, Animation — Maya, ZBrush.">Model, Layout, Animation, — Maya, ZBrush</p>
+              <div class="explore-panel__list">
+                <span class="tag">Model</span>
+                <span class="tag">Layout</span>
+                <span class="tag">Anim</span>
+              </div>
+              <span class="explore-panel__arrow">
+                <span data-vi="Xem thư viện 3D" data-en="View 3D gallery">Xem gallery 3D</span>
+                <span class="explore-panel__arrow-icon">→</span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+  <!-- ============ FOOTER / CONTACT ============ -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__cta">
+        <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
+        <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
+      </div>
+        <!-- Hàng 1:  Thông tin liên hệ-->
+      <div class="footer__contact">
+        <a href="mailto:linhh1188@gmail.com" class="footer__item">
+          <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+          <span class="footer__item-value">linhh1188@gmail.com</span>
+        </a>
+        <a href="tel:+84372746842" class="footer__item">
+          <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+          <span class="footer__item-value">0372 746 842</span>
+        </a>
+        <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+          <span class="footer__item-value">behance.net/linlinhh ↗</span>
+        </a>
+        <div class="footer__item footer__item--static">
+          <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+          <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
+        </div>
+      </div>
+
+        <!-- Hàng 2: Mạng xã hội / Nền tảng khác (4 box căn giữa nếu thiếu) -->
+      <div class="footer__contact footer__contact--sub">
+        <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
+          <span class="footer__item-value">Trúc Linh ↗</span>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
+          <span class="footer__item-value">Instagram ↗</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+          <span class="footer__item-value">LinkedIn ↗</span>
+        </a>
+        <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+          <span class="footer__item-value">ArtStation ↗</span>
+        </a>
+      </div>
+      <p class="footer__bottom">
+        © <span id="year"></span>
+        <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

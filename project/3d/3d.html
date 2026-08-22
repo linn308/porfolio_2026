@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D &amp; Web3D — Linh Nguyen</title>
+  <meta name="description" content="Gallery 3D &amp; Web3D của Linh Nguyen: Model, Layout, Animation, Web3D Interactive.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- model-viewer: dùng cho các card Model / Web3D — xoay 360°/zoom ngay tại chỗ -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="header">
+    <div class="container header__inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo__name">linn.</span>
+        <span class="logo__role" data-vi="3D Artist" data-en="3D Artist">3D Artist</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <a href="2d.html" class="nav__tab">2D</a>
+        <a href="3d.html" class="nav__tab is-active--3d">3D</a>
+        <a href="../../index.html#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+
+        <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
+          <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ SUB-HERO ============ -->
+    <section class="sub-hero">
+      <div class="container">
+        <p class="breadcrumb">
+          <a href="index.html" data-vi="Home" data-en="Home">Home</a> <span>/</span> <span class="breadcrumb__current">3D</span>
+        </p>
+        <p class="kicker" data-vi="Vũ trụ 3D" data-en="3D Universe"><span class="kicker__dot"></span> 3D Universe</p>
+        <h1 class="sub-hero__title" data-vi="Hoạt Hình 3D &amp; Web3D Tương Tác" data-en="3D Animation &amp; Web3D Interactive">3D Animation &amp; Web3D Interactive</h1>
+        <p class="sub-hero__desc"
+          data-vi="Từ modeling, Cel-look animation đến việc đưa mô hình 3D thẳng lên trình duyệt. Các dự án Model &amp; Web3D bên dưới có thể xoay 360° và zoom trực tiếp ngay trên card."
+          data-en="From modeling and Cel-look animation to bringing 3D models straight into the browser. The Model &amp; Web3D projects below can be rotated 360° and zoomed directly on the card.">
+          Từ modeling, Cel-look animation đến việc đưa mô hình 3D thẳng lên trình duyệt.
+          Các dự án Model &amp; Web3D bên dưới có thể xoay 360° và zoom trực tiếp ngay trên card.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ FILTERABLE GALLERY ============ -->
+    <section class="gallery-section" id="gallery">
+      <div class="container">
+
+        <div class="filter-bar" id="filterBar" role="tablist" aria-label="Lọc dự án 3D">
+          <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true" data-vi="Tất cả" data-en="All">Tất cả</button>
+          <button class="filter-btn" data-filter="model" role="tab" aria-selected="false">Model</button>
+          <button class="filter-btn" data-filter="layout" role="tab" aria-selected="false">Layout</button>
+          <button class="filter-btn" data-filter="anim" role="tab" aria-selected="false" data-vi="Animation" data-en="Animation">Animation</button>
+          <button class="filter-btn" data-filter="web3d" role="tab" aria-selected="false">Web3D</button>
+        </div>
+
+        <div class="gallery" id="galleryGrid">
+
+          <!-- Card thật 1 — Model (model-viewer tương tác ngay trên card,
+               data-id trùng key trong data.js nên có badge số ảnh + trang chi tiết) -->
+          <article class="card" data-category="model">
+            <button class="card__media" type="button"
+              data-id="crusader"
+              data-title="CRUSADER"
+              data-subtitle="3D Game Design — Excellent Project"
+              data-model="assets/models/crusader.glb"
+              data-desc="Đồ án 3D Game Design đạt loại xuất sắc. Modeling &amp; texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop."
+              data-tools="Maya, ZBrush, Photoshop">
+              <!-- Thay src bằng file .glb thật của bạn -->
+              <model-viewer
+                src="assets/models/crusader.glb"
+                poster="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop"
+                alt="CRUSADER — 3D Game Design"
+                camera-controls
+                shadow-intensity="1"
+                exposure="1"
+              ></model-viewer>
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category">Model</p>
+              <h3 class="card__title">CRUSADER</h3>
+              <p class="card__desc" data-vi="3D Game Design · Đồ án xuất sắc" data-en="3D Game Design · Excellent Project">3D Game Design · Excellent Project</p>
+              <div class="card__tags">
+                <span class="tag">Maya</span>
+                <span class="tag">ZBrush</span>
+                <span class="tag">Photoshop</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card thật 2 — Animation -->
+          <article class="card" data-category="anim">
+            <button class="card__media" type="button"
+              data-id="fight-for-life"
+              data-title="FIGHT FOR LIFE"
+              data-subtitle="3D Short Film — Excellent Project"
+              data-img="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop"
+              data-desc="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
+              data-tools="Cel-look, Storyboard, Layout">
+              <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy">
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category" data-vi="Animation" data-en="Animation">Animation</p>
+              <h3 class="card__title">FIGHT FOR LIFE</h3>
+              <p class="card__desc" data-vi="3D Short Film · Cel-look Anime" data-en="3D Short Film · Cel-look Anime">3D Short Film · Cel-look Anime</p>
+              <div class="card__tags">
+                <span class="tag">Cel-look</span>
+                <span class="tag">Storyboard</span>
+                <span class="tag">Layout</span>
+              </div>
+            </div>
+          </article>
+
+          <!--
+            CÁC CARD BÊN DƯỚI LÀ MẪU (PLACEHOLDER) — có gắn badge "Placeholder"
+            và viền nét đứt. Thay bằng dự án Layout/Web3D thật khi có.
+          -->
+
+          <article class="card card--placeholder" data-category="layout">
+            <button class="card__media" type="button"
+              data-id="layout-study-3d"
+              data-title="[Tên dự án] — Layout / Storyboard Study"
+              data-subtitle="Layout Artist"
+              data-img="https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=1400&auto=format&fit=crop"
+              data-desc="Placeholder — thay bằng dự án layout/storyboard 3D thật: bố cục khung hình, camera blocking, nhịp kể chuyện."
+              data-tools="Maya, Storyboard">
+              <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
+              <img src="https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Layout / Storyboard Study" loading="lazy">
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category">Layout</p>
+              <h3 class="card__title">[Tên dự án] — Layout / Storyboard Study</h3>
+              <p class="card__desc" data-vi="Layout Artist" data-en="Layout Artist">Layout Artist</p>
+              <div class="card__tags">
+                <span class="tag">Maya</span>
+                <span class="tag">Storyboard</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--placeholder" data-category="web3d">
+            <button class="card__media" type="button"
+              data-id="web3d-placeholder"
+              data-title="[Tên dự án] — Web3D Interactive Prototype"
+              data-subtitle="Web3D · Three.js"
+              data-model="assets/models/web3d-placeholder.glb"
+              data-desc="Placeholder — thay bằng dự án Web3D thật khi hoàn thiện: model nhúng trực tiếp trên web, tương tác xoay/zoom bằng Three.js."
+              data-tools="Three.js, glTF, JavaScript">
+              <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
+              <model-viewer
+                src="assets/models/web3d-placeholder.glb"
+                poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1000&auto=format&fit=crop"
+                alt="Placeholder — Web3D Interactive Prototype"
+                camera-controls
+                shadow-intensity="1"
+              ></model-viewer>
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category">Web3D</p>
+              <h3 class="card__title">[Tên dự án] — Web3D Interactive Prototype</h3>
+              <p class="card__desc">Web3D · Three.js</p>
+              <div class="card__tags">
+                <span class="tag">Three.js</span>
+                <span class="tag">glTF</span>
+                <span class="tag">JavaScript</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="gallery__empty" id="galleryEmpty" hidden data-vi="Chưa có dự án nào trong mục này." data-en="No projects in this category yet.">Chưa có dự án nào trong mục này.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER / CONTACT ============ -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__cta">
+        <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
+        <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
+      </div>
+        <!-- Hàng 1:  Thông tin liên hệ-->
+      <div class="footer__contact">
+        <a href="mailto:linhh1188@gmail.com" class="footer__item">
+          <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+          <span class="footer__item-value">linhh1188@gmail.com</span>
+        </a>
+        <a href="tel:+84372746842" class="footer__item">
+          <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+          <span class="footer__item-value">0372 746 842</span>
+        </a>
+        <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+          <span class="footer__item-value">behance.net/linlinhh ↗</span>
+        </a>
+        <div class="footer__item footer__item--static">
+          <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+          <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
+        </div>
+      </div>
+
+        <!-- Hàng 2: Mạng xã hội / Nền tảng khác (4 box căn giữa nếu thiếu) -->
+      <div class="footer__contact footer__contact--sub">
+        <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
+          <span class="footer__item-value">Trúc Linh ↗</span>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
+          <span class="footer__item-value">Instagram ↗</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+          <span class="footer__item-value">LinkedIn ↗</span>
+        </a>
+        <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+          <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+          <span class="footer__item-value">ArtStation ↗</span>
+        </a>
+      </div>
+      <p class="footer__bottom">
+        © <span id="year"></span>
+        <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============ LIGHTBOX (modal xem chi tiết + Prev/Next) ============ -->
+  <div class="modal" id="projectModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" id="modalClose" aria-label="Đóng">✕</button>
+
+      <div class="modal__media">
+        <button class="modal__nav modal__nav--prev" id="modalPrev" aria-label="Dự án trước">
+          <span class="modal__nav-icon">‹</span>
+        </button>
+        <button class="modal__nav modal__nav--next" id="modalNext" aria-label="Dự án tiếp theo">
+          <span class="modal__nav-icon">›</span>
+        </button>
+        <img src="" alt="" class="modal__img" id="modalImg">
+        <model-viewer class="modal__model" id="modalModel" hidden camera-controls shadow-intensity="1"></model-viewer>
+      </div>
+
+      <div class="modal__body">
+        <p class="modal__subtitle" id="modalSubtitle"></p>
+        <h3 class="modal__title" id="modalTitle"></h3>
+        <p class="modal__desc" id="modalDesc"></p>
+        <a href="#" class="modal__full-link" id="modalFullLink" hidden
+          data-vi="Xem đầy đủ dự án (nhiều ảnh) →" data-en="View full project (more photos) →">Xem đầy đủ dự án (nhiều ảnh) →</a>
+        <div class="card__tags" id="modalTools"></div>
+        <p class="modal__counter" id="modalCounter"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/data.js"></script>
+  <script src="../../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1133 @@
+/* ==========================================================================
+   1. CSS VARIABLES (DESIGN TOKENS)
+   File này dùng chung cho cả 3 trang: index.html, 2d.html, 3d.html
+   ========================================================================== */
+:root {
+  --bg-base: #0f0f12;
+  --bg-surface: #17171b;
+  --bg-elevated: #1d1d22;
+  --border-color: #28282e;
+
+  --text-primary: #f5f4f2;
+  --text-secondary: #9b9ba3;
+  --text-muted: #5f5f68;
+
+  --accent: #38bdf8;       /* cyan — kỹ thuật số / 3D */
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --accent-warm: #e7b869;  /* vàng ấm — editorial / 2D */
+  --accent-warm-soft: rgba(231, 184, 105, 0.12);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+
+  --container-width: 1200px;
+  --radius-sm: 6px;
+  --radius-md: 16px;
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   2. RESET & BASE STYLES
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: linear-gradient(-45deg, #0f0f12, #16161c, #131722, #0f0f12);
+  background-size: 400% 400%;
+  animation: page-fade-in 0.55s ease both, gradientBG 15s ease infinite;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* JS thêm class này ngay trước khi điều hướng sang trang khác,
+   để có một pha mờ dần mượt mà thay vì chuyển trang đột ngột */
+body.page-fade-out {
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+ol, ul { list-style: none; }
+
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+body.no-scroll { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   3. TIỆN ÍCH DÙNG CHUNG (Kicker, Section title, Buttons, Tags, Filter pills)
+   ========================================================================== */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.kicker--warm { color: var(--accent-warm); }
+.kicker__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  max-width: 560px;
+}
+
+.section-head { margin-bottom: 44px; }
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  transition: transform var(--transition-fast), background-color var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary { background: var(--accent); color: #06222f; }
+.btn--primary:hover { box-shadow: 0 10px 28px -10px rgba(56, 189, 248, 0.55); }
+
+.btn--warm { background: var(--accent-warm); color: #2b1c04; }
+.btn--warm:hover { box-shadow: 0 10px 28px -10px rgba(231, 184, 105, 0.5); }
+
+.btn--outline { border-color: var(--border-color); color: var(--text-primary); }
+.btn--outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* --- Tags --- */
+.card__tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 5px 11px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.card:hover .tag {
+  border-color: rgba(56, 189, 248, 0.4);
+  color: var(--text-primary);
+}
+
+/* Skill section: KHÔNG sáng toàn bộ khi hover cả nhóm — chỉ tag đang được
+   trỏ chuột vào mới đổi màu, các tag còn lại trong nhóm giữ nguyên. */
+.skill-group .tag {
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.skill-group .tag:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+/* --- Filter pills: dùng cho bộ lọc con trong từng trang 2D / 3D --- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+.filter-btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #06222f;
+  font-weight: 600;
+}
+
+/* Trang 3D dùng tông cyan cho nút active (mặc định ở trên);
+   trang 2D override bằng modifier vàng ấm để phân biệt rõ 2 thế giới */
+.filter-bar--warm .filter-btn.is-active {
+  background: var(--accent-warm);
+  border-color: var(--accent-warm);
+  color: #2b1c04;
+}
+
+/* ==========================================================================
+   4. HEADER
+   Menu rút gọn: 2D, 3D và Contact.
+   ========================================================================== */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(15, 15, 18, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.site-header.is-scrolled {
+  border-bottom-color: var(--border-color);
+  background: rgba(15, 15, 18, 0.92);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88px;
+  gap: 24px;
+}
+
+.logo { display: flex; flex-direction: column; line-height: 1.2; }
+.logo__name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; }
+.logo__role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nav { display: flex; align-items: center; gap: 6px; }
+
+.nav__tab {
+  padding: 9px 18px;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav__tab:hover { color: var(--text-primary); }
+
+.nav__tab.is-active--2d { background: var(--accent-warm-soft); color: var(--accent-warm); font-weight: 600; }
+.nav__tab.is-active--3d { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+.nav__tab--about { margin-left: 8px; border: 1px solid var(--border-color); }
+.nav__tab--about:hover { border-color: var(--accent); }
+
+/* --- Bộ chuyển ngôn ngữ VI / EN --- */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  margin-left: 8px;
+}
+
+.lang-switch__btn {
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.lang-switch__btn:hover { color: var(--text-secondary); }
+
+.lang-switch__btn.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  width: 32px; height: 32px;
+  z-index: 110;
+  flex-shrink: 0;
+}
+
+.nav-toggle span {
+  height: 2px; width: 100%;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+/* ==========================================================================
+   5. HERO (chỉ dùng ở index.html)
+   ========================================================================== */
+.hero { padding: 176px 0 100px; }
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+}
+
+.hero__title em {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent-warm);
+}
+
+.hero__subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 500px;
+  margin-bottom: 34px;
+}
+
+.hero__subtitle strong { color: var(--text-primary); font-weight: 600; }
+
+.hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.hero__viewport { display: flex; flex-direction: column; gap: 12px; }
+
+.viewport-frame {
+  position: relative;
+  aspect-ratio: 4 / 3.6;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.viewport-model { width: 100%; height: 100%; --poster-color: transparent; }
+
+.viewport-tag {
+  position: absolute;
+  top: 16px; left: 16px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(15, 15, 18, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 6px 12px;
+  border-radius: 100px;
+  backdrop-filter: blur(6px);
+}
+
+.viewport-caption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-left: 4px;
+}
+
+.viewport-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   6. EXPLORE SPLIT-SELECTOR (index.html)
+   2 khối lớn 2D / 3D — hover để phóng to, click để đi tới trang tương ứng.
+   Đây là "cửa vào" chính thay cho gallery gộp chung trước đây.
+   ========================================================================== */
+.explore {
+  padding: 40px 0 110px;
+  border-top: 1px solid var(--border-color);
+}
+
+.explore__panels {
+  display: flex;
+  gap: 20px;
+  min-height: 420px;
+}
+
+.explore-panel {
+  position: relative;
+  flex: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: flex-end;
+  padding: 36px;
+  transition: flex-grow var(--transition-base), border-color var(--transition-fast);
+}
+
+/* Khi hover 1 panel, panel đó nở ra, panel còn lại thu nhỏ lại một chút
+   — hiệu ứng "tương tác" gợi cảm giác gallery cho khu vực chọn hướng */
+.explore__panels:hover .explore-panel { flex-grow: 0.85; }
+.explore__panels .explore-panel:hover { flex-grow: 1.35; }
+
+.explore-panel__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.7) brightness(0.55);
+  transition: transform 6s ease, filter var(--transition-base);
+}
+
+.explore-panel:hover .explore-panel__bg {
+  transform: scale(1.08);
+  filter: saturate(0.9) brightness(0.4);
+}
+
+.explore-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 15, 18, 0.92) 0%, rgba(15, 15, 18, 0.15) 65%);
+}
+
+.explore-panel__content { position: relative; z-index: 2; width: 100%; }
+
+.explore-panel__label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 8px;
+}
+
+.explore-panel--2d .explore-panel__label { color: var(--accent-warm); }
+.explore-panel--3d .explore-panel__label { color: var(--accent); }
+
+.explore-panel__desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  max-width: 320px;
+  margin-bottom: 18px;
+}
+
+.explore-panel__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.explore-panel__arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.explore-panel--2d .explore-panel__arrow { color: var(--accent-warm); }
+.explore-panel--3d .explore-panel__arrow { color: var(--accent); }
+
+.explore-panel__arrow-icon { transition: transform var(--transition-base); }
+.explore-panel:hover .explore-panel__arrow-icon { transform: translateX(6px); }
+
+/* ==========================================================================
+   7. SUB-HERO / BREADCRUMB (2d.html, 3d.html)
+   ========================================================================== */
+.sub-hero {
+  padding: 156px 0 60px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.breadcrumb a { transition: color var(--transition-fast); }
+.breadcrumb a:hover { color: var(--text-primary); }
+.breadcrumb__current { color: var(--text-secondary); }
+
+.sub-hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  margin-bottom: 16px;
+}
+
+.sub-hero__desc {
+  color: var(--text-secondary);
+  max-width: 620px;
+  font-size: 1.02rem;
+}
+
+/* ==========================================================================
+   8. GALLERY & CARDS (dùng chung ở 2d.html / 3d.html)
+   ========================================================================== */
+.gallery-section { padding: 60px 0 110px; }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 26px;
+}
+
+.gallery__empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 60px 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  grid-column: 1 / -1;
+}
+
+/* Card ẩn khi bị lọc: fade + scale nhẹ thay vì display:none đột ngột,
+   nhờ vậy chuyển đổi bộ lọc trông "mượt" hơn hẳn */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base),
+    box-shadow var(--transition-base), opacity var(--transition-base);
+}
+
+.card.is-hidden { display: none; }
+
+.card.is-filtering-out {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 24px 44px -22px rgba(0, 0, 0, 0.6);
+}
+
+.card--2d:hover { border-color: rgba(231, 184, 105, 0.45); }
+
+.card__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-elevated);
+}
+
+.card__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base), filter var(--transition-base);
+}
+
+.card:hover .card__media img { transform: scale(1.08); filter: brightness(0.5); }
+
+/* model-viewer bên trong card: xoay/zoom được ngay tại chỗ, không cần mở modal */
+.card__media model-viewer { 
+  width: 100%; 
+  height: 100%; 
+}
+
+.card__overlay {
+  position: absolute;
+  inset: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+
+.card:hover .card__overlay { opacity: 1; }
+
+.card__body { padding: 22px; }
+
+.card__category {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.card--2d .card__category { color: var(--accent-warm); }
+
+.card__title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+.card__desc { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px; }
+
+/* Badge cho các card mẫu (placeholder) — để bạn biết chỗ nào cần thay
+   bằng dự án thật, không lẫn với các dự án đã có sẵn thông tin thật */
+.card--placeholder { border-style: dashed; }
+
+.card__placeholder-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background: rgba(15, 15, 18, 0.75);
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+/* Badge số lượng ảnh — JS tự thêm vào card có nhiều slide trong data.js,
+   báo cho người xem biết dự án này có thể "xem đầy đủ" nhiều hình hơn */
+.card__count-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-primary);
+  background: rgba(15, 15, 18, 0.75);
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+/* ==========================================================================
+   9. EXPERIENCE & SKILLS (index.html)
+   ========================================================================== */
+.experience {
+  padding: 110px 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.experience__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 72px;
+  align-items: start;
+}
+
+.timeline { position: relative; padding-left: 28px; border-left: 1px solid var(--border-color); }
+.timeline__item { position: relative; padding-bottom: 40px; }
+.timeline__item:last-child { padding-bottom: 0; }
+
+.timeline__dot {
+  position: absolute;
+  left: -33px; top: 4px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2px solid var(--accent);
+}
+
+.timeline__date { display: block; font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; }
+.timeline__role { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; }
+.timeline__org { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 10px; }
+.timeline__desc { color: var(--text-secondary); font-size: 0.92rem; max-width: 460px; }
+
+.experience__skills .skill-group { margin-bottom: 26px; }
+.experience__skills .skill-group:last-child { margin-bottom: 0; }
+
+.skill-group__title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.experience-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.experience-list li {
+  font-size: 0.85rem;
+  color: var(--accent-warm);
+  background: var(--accent-warm-soft);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(231, 184, 105, 0.2);
+}
+
+/* ==========================================================================
+   10. FOOTER / CONTACT (dùng chung cả 3 trang)
+   ========================================================================== */
+.site-footer { 
+  padding: 110px 0 40px; 
+  border-top: 1px solid var(--border-color); /* Line mỏng đồng bộ với các section trên */
+  /* padding-top: 60px; */
+  margin-top: 80px;
+  position: relative;
+}
+
+.footer__cta { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+.footer__cta .kicker { display: inline-flex; margin-inline: auto; }
+.footer__cta .section-title { text-align: center; }
+
+.footer__contact {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.footer__item {
+  background: var(--bg-surface);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: background-color var(--transition-fast);
+}
+
+a.footer__item:hover { background: var(--bg-elevated); }
+
+.footer__item-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.footer__item-value { 
+  font-size: 0.95rem; 
+  color: var(--text-primary); 
+  word-break: break-word; 
+}
+a.footer__item:hover .footer__item-value { 
+  color: var(--accent); 
+}
+
+.footer__bottom { 
+  text-align: center; 
+  font-size: 0.8rem; 
+  color: var(--text-muted); 
+}
+
+.footer__contact--sub {
+  margin-top: -39px; /* Khớp nối với hàng trên */
+  margin-bottom: 110px;
+  justify-content: center;
+}
+
+/* Căn giữa hàng nếu có ít hơn 4 items */
+.footer__contact--centered {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer__contact--centered .footer__item {
+  flex: 1 1 200px;
+  max-width: 280px;
+}
+
+/* ==========================================================================
+   11. MODAL / LIGHTBOX (xem chi tiết + điều hướng Prev/Next)
+   ========================================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.modal.is-open { opacity: 1; visibility: visible; }
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 8, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 740px;
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transform: translateY(24px) scale(0.98);
+  transition: transform var(--transition-base);
+}
+
+.modal.is-open .modal__panel { transform: translateY(0) scale(1); }
+
+.modal__close {
+  position: absolute;
+  top: 16px; right: 16px;
+  z-index: 3;
+  width: 36px; height: 36px;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 15, 18, 0.7);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.modal__close:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Nút điều hướng Prev / Next: nút tròn nhỏ, canh giữa theo chiều dọc.
+   CỐ Ý không dùng dải full-height sát cạnh phải như trước — dải đó chồng
+   lên đúng góc trên-phải nơi có nút Đóng (.modal__close), khiến người dùng
+   bấm nhầm "chuyển tiếp" thay vì "đóng". Giờ 2 nút tách biệt hẳn về vị trí:
+   Đóng luôn ở góc trên-phải, Prev/Next luôn canh giữa 2 cạnh trái-phải. */
+.modal__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  background: rgba(15, 15, 18, 0.72);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(4px);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.modal__nav:hover { border-color: var(--accent); color: var(--accent); }
+.modal__nav--prev { left: 16px; }
+.modal__nav--next { right: 16px; }
+
+.modal__nav-icon { font-size: 1.4rem; line-height: 1; }
+
+/* Nút "Xem đầy đủ dự án" — chỉ hiện khi dự án có nhiều ảnh/model,
+   dẫn sang project.html để xem toàn bộ gallery chi tiết */
+.modal__full-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.4);
+  padding-bottom: 2px;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.modal__full-link:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.modal__media { position: relative; }
+
+.modal__img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.modal__model { width: 100%; aspect-ratio: 16 / 9; --poster-color: transparent; }
+
+.modal__body { padding: 30px; }
+
+.modal__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.modal__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
+.modal__desc { color: var(--text-secondary); font-size: 0.98rem; margin-bottom: 18px; }
+
+.modal__counter {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   12. PROJECT DETAIL PAGE (project.html)
+   Trang mẫu xem đầy đủ 1 dự án: nhiều ảnh/model trong cùng 1 gallery lớn,
+   có dải thumbnail bên dưới để chọn nhanh, tái dùng .modal__nav cho nút
+   Prev/Next để không phải viết lại CSS.
+   ========================================================================== */
+.project-hero {
+  padding: 156px 0 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.project-hero__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.project-hero__text { max-width: 640px; }
+
+.project-hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 12px;
+}
+
+.project-hero__subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.project-not-found {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.project-gallery-section { padding: 48px 0 60px; }
+
+.project-gallery__main {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  margin-bottom: 16px;
+}
+
+.project-gallery__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  --poster-color: transparent;
+}
+
+.project-gallery__thumbs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.project-gallery__thumb {
+  flex: 0 0 92px;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast);
+}
+
+.project-gallery__thumb:hover { opacity: 0.85; }
+
+.project-gallery__thumb.is-active {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.project-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.project-info {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 48px;
+  padding-top: 44px;
+  margin-top: 44px;
+  border-top: 1px solid var(--border-color);
+}
+
+.project-info__desc {
+  color: var(--text-secondary);
+  font-size: 1.02rem;
+  max-width: 620px;
+  margin-bottom: 28px;
+}
+
+.project-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  transition: color var(--transition-fast);
+}
+
+.project-back:hover { color: var(--text-primary); }
+
+/* ==========================================================================
+   13. MEDIA QUERIES (Responsive)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero__inner { grid-template-columns: 1fr; }
+  .hero__viewport { max-width: 480px; }
+  .experience__inner { grid-template-columns: 1fr; gap: 56px; }
+  .footer__contact { grid-template-columns: repeat(2, 1fr); }
+
+  .explore__panels { flex-direction: column; min-height: unset; }
+  .explore-panel { min-height: 280px; }
+  .explore__panels:hover .explore-panel { flex-grow: 1; }
+  .explore__panels .explore-panel:hover { flex-grow: 1; }
+}
+
+@media (max-width: 900px) {
+  .nav-toggle { display: flex; }
+
+  .nav {
+    position: fixed;
+    top: 88px; left: 0; right: 0; bottom: 0;
+    background: var(--bg-base);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+  }
+
+  .nav.is-open { transform: translateX(0); }
+  .nav__tab { font-size: 1.15rem; }
+
+  .nav-toggle.is-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.is-active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+@media (max-width: 620px) {
+  .hero { padding: 140px 0 70px; }
+  .hero__cta { flex-direction: column; }
+  .hero__cta .btn { width: 100%; }
+
+  .sub-hero { padding: 130px 0 44px; }
+
+  .portfolio, .experience, .site-footer, .explore, .gallery-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .gallery { grid-template-columns: 1fr; }
+  .footer__contact { grid-template-columns: 1fr; }
+  .modal__panel { max-height: 92vh; }
+  .modal__nav { width: 38px; height: 38px; }
+
+  .project-hero { padding: 130px 0 32px; }
+  .project-info { grid-template-columns: 1fr; gap: 32px; }
+}
+
+@media (max-width: 900px) {
+  .lang-switch { margin-left: 0; margin-top: 14px; }
+}
