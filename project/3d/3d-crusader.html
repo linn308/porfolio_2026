@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project — Truc Linh</title>
+  <meta name="description" content="Chi tiết dự án của Truc Linh.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- model-viewer: 1 số project có slide dạng model 3D -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER ============
+       Trang này dùng chung cho mọi dự án (2D lẫn 3D) nên không tô đậm
+       tab 2D hay 3D cụ thể — người dùng luôn có thể bấm quay lại đúng chỗ
+       bằng breadcrumb hoặc nút "Quay lại" bên dưới. -->
+  <header class="site-header" id="header">
+    <div class="container header__inner">
+      <a href="../../index.html" class="logo">
+        <span class="logo__name">linn.</span>
+        <span class="logo__role" data-vi="Chi tiết dự án" data-en="Detail Project">Chi tiết dự án</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <a href="../../2d/index-2d.html" class="nav__tab">2D</a>
+        <a href="../index-3d.html" class="nav__tab">3D</a>
+        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+
+        <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
+          <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hiện khi URL không có ?id= hợp lệ (xem script.js: initProjectDetail) -->
+    <p class="project-not-found" id="projectNotFound" hidden data-vi="Không tìm thấy dự án. Quay lại trang chủ để xem toàn bộ portfolio." data-en="Project not found. Go back to the homepage to see the full portfolio.">
+      Không tìm thấy dự án. Quay lại trang chủ để xem toàn bộ portfolio.
+    </p>
+
+    <!-- Toàn bộ nội dung dự án được JS đổ vào các #id bên dưới,
+         dựa trên dữ liệu tương ứng trong data.js -->
+    <div id="projectDetail">
+      <section class="project-hero">
+        <div class="container">
+          <button type="button" class="project-back" id="projectBackBtn" data-vi="← Quay lại" data-en="← Back">← Quay lại</button>
+          <div class="project-hero__head">
+            <div class="project-hero__text">
+              <p class="kicker" id="projectCategory">—</p>
+              <h1 class="project-hero__title" id="projectTitle">—</h1>
+              <p class="project-hero__subtitle" id="projectSubtitle"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-gallery-section">
+        <div class="container">
+
+          <!-- Khung lớn: hiển thị ảnh hoặc model-viewer đang chọn -->
+          <div class="project-gallery__main" id="projectMain">
+            <button class="modal__nav modal__nav--prev" id="projectPrev" aria-label="Ảnh trước"><span class="modal__nav-icon">‹</span></button>
+            <button class="modal__nav modal__nav--next" id="projectNext" aria-label="Ảnh tiếp theo"><span class="modal__nav-icon">›</span></button>
+          </div>
+
+          <!-- Dải thumbnail — bấm để chọn nhanh -->
+          <div class="project-gallery__thumbs" id="projectThumbs"></div>
+
+          <div class="project-info">
+            <div class="project-info__main">
+              <p class="kicker" data-vi="Về dự án" data-en="About this project"><span class="kicker__dot"></span> About</p>
+              <p class="project-info__desc" id="projectDesc"></p>
+            </div>
+            <div class="project-info__tools">
+              <p class="skill-group__title" data-vi="Công cụ sử dụng" data-en="Tools used">Tools used</p>
+              <div class="card__tags" id="projectTools"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER / CONTACT ============ -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__cta">
+        <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
+        <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
+      </div>
+        <!-- Hàng 1:  Thông tin liên hệ-->
+        <div class="footer__contact-block">
+          <div class="footer__contact-row">
+            <a href="mailto:linhh1188@gmail.com" class="footer__item">
+              <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+              <span class="footer__item-value">linhh1188@gmail.com</span>
+            </a>
+            <a href="tel:+84372746842" class="footer__item">
+              <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+              <span class="footer__item-value">0372 746 842</span>
+            </a>
+            <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+              <span class="footer__item-value">behance.net/linlinhh ↗</span>
+            </a>
+            <div class="footer__item footer__item--static">
+              <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+              <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
+            </div>
+          </div>
+
+          <div class="footer__contact-row">
+            <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
+              <span class="footer__item-value">Trúc Linh ↗</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
+              <span class="footer__item-value">Instagram ↗</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+              <span class="footer__item-value">LinkedIn ↗</span>
+            </a>
+            <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+              <span class="footer__item-value">ArtStation ↗</span>
+            </a>
+          </div>
+        </div>
+
+      <p class="footer__bottom">
+        © <span id="year"></span>
+        <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ID của dự án MÀ TRANG NÀY thể hiện — phải khớp với 1 key trong
+       js/data-2d.js hoặc js/data-3d.js. File này hiện đóng vai trò trang
+       chi tiết của CRUSADER (khớp với data-detail="../crusader/index.html"
+       trên card CRUSADER ở project/3d/index-3d.html).
+
+       MUỐN TẠO DỰ ÁN MỚI: copy nguyên thư mục chứa file này sang
+       project/<tên-dự-án-mới>/, đổi PROJECT_ID bên dưới cho khớp, thêm 1
+       object mới vào data-2d.js/data-3d.js (cùng key), rồi thêm
+       data-detail="../<tên-dự-án-mới>/index.html" vào card tương ứng
+       trong index-2d.html/3d.html — vậy là xong, không cần sửa gì trong script.js. -->
+  <script>
+    window.PROJECT_ID = 'crusader';
+  </script>
+  <script src="../../js/data-3d.js"></script>
+  <script src="../../js/script.js"></script>
+</body>
+</html>

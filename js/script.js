@@ -1,15 +1,29 @@
 /* ==========================================================================
-   script.js — JavaScript thuần (Vanilla JS), dùng chung cho cả 3 trang.
+   script.js — JavaScript thuần (Vanilla JS), dùng chung cho cả các trang.
    Mỗi module tự kiểm tra phần tử DOM có tồn tại hay không (if (!el) return;)
-   nên file này an toàn khi nhúng vào index.html, 2d.html lẫn 3d.html
-   dù mỗi trang không có đủ tất cả các phần tử.
+   nên file này an toàn khi nhúng vào index.html, 2d.html, 3d.html hay trang
+   chi tiết dự án, dù mỗi trang không có đủ tất cả các phần tử.
    ========================================================================== */
+
+/* Dữ liệu dự án giờ được TÁCH thành 2 file riêng: data-2d.js (PROJECTS_2D)
+   và data-3d.js (PROJECTS_3D) — mỗi file phụ trách đúng 1 mảng, dễ quản lý
+   khi số dự án tăng lên. Dòng dưới đây gộp cả 2 lại thành 1 object PROJECTS
+   duy nhất, để phần còn lại của script.js (và toàn bộ logic bên dưới) vẫn
+   dùng PROJECTS[id] như cũ, không cần quan tâm dữ liệu đến từ mấy file.
+   Nếu 1 trang nào đó không nhúng data-2d.js/data-3d.js (ví dụ index.html),
+   PROJECTS đơn giản là {} — không lỗi gì cả. */
+const PROJECTS = Object.assign(
+  {},
+  typeof PROJECTS_2D !== 'undefined' ? PROJECTS_2D : {},
+  typeof PROJECTS_3D !== 'undefined' ? PROJECTS_3D : {}
+);
 
 document.addEventListener('DOMContentLoaded', () => {
   initLanguage();
   initHeaderScroll();
   initMobileNav();
   initPageTransitions();
+  initHeroSound();
   initGalleryFilter();
   initGalleryBadges();
   initLightbox();
@@ -62,6 +76,39 @@ function initMobileNav() {
 }
 
 /* --------------------------------------------------------------------------
+   2b. ÂM THANH CHO VIDEO HERO (index.html)
+   Trình duyệt luôn chặn autoplay có tiếng, nên video showreel bắt buộc phải
+   autoplay ở trạng thái muted trước. Nút này để người xem tự bật tiếng lên
+   — đúng chuẩn UX cho video nền toàn màn hình.
+   -------------------------------------------------------------------------- */
+function initHeroSound() {
+  const video = document.getElementById('heroVideo');
+  const toggle = document.getElementById('heroSoundToggle');
+  if (!video || !toggle) return;
+
+  const icon = toggle.querySelector('.hero__sound-icon');
+  const label = toggle.querySelector('[data-vi][data-en]');
+
+  const setLabel = (isMuted) => {
+    if (icon) icon.textContent = isMuted ? '🔇' : '🔊';
+    if (label) {
+      label.dataset.vi = isMuted ? 'Bật âm thanh' : 'Tắt âm thanh';
+      label.dataset.en = isMuted ? 'Unmute' : 'Mute';
+      label.textContent = document.documentElement.lang === 'en'
+        ? label.dataset.en
+        : label.dataset.vi;
+    }
+    toggle.setAttribute('aria-pressed', String(!isMuted));
+  };
+
+  toggle.addEventListener('click', () => {
+    video.muted = !video.muted;
+    if (!video.muted) video.play().catch(() => {}); // 1 số trình duyệt cần gọi lại play() sau khi unmute
+    setLabel(video.muted);
+  });
+}
+
+/* --------------------------------------------------------------------------
    3. BỘ CHUYỂN NGÔN NGỮ (VI / EN)
    Cơ chế: mọi phần tử mang cả 2 thuộc tính data-vi + data-en sẽ được JS
    đổi textContent theo ngôn ngữ đang chọn. Với phần tử cần chèn markup
@@ -100,6 +147,12 @@ function applyLanguage(lang) {
   // gọi lại hàm cập nhật riêng của nó (được initProjectDetail() gán vào).
   if (typeof window.__refreshProjectDetail === 'function') {
     window.__refreshProjectDetail(lang);
+  }
+
+  // Tương tự, nếu modal xem nhanh (lightbox) đang mở, render lại mô tả
+  // song ngữ ngay lập tức (được initLightbox() gán vào).
+  if (typeof window.__refreshLightbox === 'function') {
+    window.__refreshLightbox();
   }
 
   try {
@@ -225,7 +278,7 @@ function initGalleryFilter() {
    "còn nhiều ảnh hơn" để người xem biết có thể bấm vào xem đầy đủ.
    -------------------------------------------------------------------------- */
 function initGalleryBadges() {
-  if (typeof PROJECTS === 'undefined') return; // trang không nhúng data.js thì bỏ qua
+  if (!Object.keys(PROJECTS).length) return; // trang không nhúng data-2d.js/data-3d.js thì bỏ qua
 
   document.querySelectorAll('.card__media[data-id]').forEach((trigger) => {
     const project = PROJECTS[trigger.dataset.id];
@@ -271,7 +324,7 @@ function initLightbox() {
     Array.from(document.querySelectorAll('.card:not(.is-hidden) .card__media'));
 
   const renderTrigger = (trigger) => {
-    const { title, subtitle, desc, img, model, tools, id } = trigger.dataset;
+    const { title, subtitle, descVi, descEn, desc, img, model, tools } = trigger.dataset;
 
     // Dự án 3D có sẵn file .glb (data-model) thì hiển thị model-viewer
     // ngay trong modal để xem 360°; còn lại hiển thị ảnh tĩnh.
@@ -289,7 +342,13 @@ function initLightbox() {
 
     modalSubtitle.textContent = subtitle || '';
     modalTitle.textContent = title || '';
-    modalDesc.textContent = desc || '';
+
+    // data-desc-vi / data-desc-en là cặp song ngữ mới cho phần mô tả dài.
+    // Card nào chưa kịp cập nhật (chỉ còn data-desc cũ, 1 ngôn ngữ) vẫn
+    // chạy được bình thường nhờ fallback này.
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'vi';
+    const bilingualDesc = lang === 'en' ? descEn : descVi;
+    modalDesc.textContent = bilingualDesc || desc || '';
 
     modalTools.innerHTML = '';
     (tools || '')
@@ -307,16 +366,26 @@ function initLightbox() {
       modalCounter.textContent = `${currentIndex + 1} / ${currentTriggers.length}`;
     }
 
-    // Nút "Xem đầy đủ dự án" chỉ hiện khi card có data-id VÀ project đó
-    // thật sự có nhiều slide trong data.js (đáng để mở trang riêng xem thêm)
+    // Nút "Xem đầy đủ dự án" chỉ hiện khi card có data-detail — đường dẫn
+    // tới trang chi tiết RIÊNG của dự án đó (project/<slug>/index.html).
+    // Không phải project nào cũng có trang riêng ngay; card nào chưa có
+    // data-detail thì modal chỉ dừng ở bản xem nhanh này, không có nút này.
     if (modalFullLink) {
-      const project = typeof PROJECTS !== 'undefined' ? PROJECTS[id] : null;
-      if (id && project && project.slides && project.slides.length > 1) {
-        modalFullLink.href = `project.html?id=${encodeURIComponent(id)}`;
+      const detailHref = trigger.dataset.detail;
+      if (detailHref) {
+        modalFullLink.href = detailHref;
         modalFullLink.hidden = false;
       } else {
         modalFullLink.hidden = true;
       }
+    }
+  };
+
+  // Nếu người dùng đổi ngôn ngữ trong lúc modal đang mở, render lại mô tả
+  // ngay lập tức thay vì phải đóng/mở lại mới thấy ngôn ngữ mới.
+  window.__refreshLightbox = () => {
+    if (modal.classList.contains('is-open') && currentTriggers[currentIndex]) {
+      renderTrigger(currentTriggers[currentIndex]);
     }
   };
 
@@ -354,7 +423,17 @@ function initLightbox() {
     }
     const trigger = event.target.closest('.card__media');
     if (trigger) {
-      openModal(trigger);
+      // Card nào ĐÃ CÓ trang chi tiết riêng (data-detail) thì đi thẳng tới
+      // đó luôn — không cần qua modal xem nhanh nữa. Đây chính là cách để
+      // "nâng cấp" 1 card từ chế độ xem nhanh lên trang riêng: chỉ cần
+      // thêm data-detail="đường-dẫn/tới/trang.html" vào card, không cần
+      // sửa gì trong file JS này. Card nào CHƯA có data-detail vẫn mở
+      // modal xem nhanh như bình thường.
+      if (trigger.dataset.detail) {
+        navigateWithFade(trigger.dataset.detail);
+      } else {
+        openModal(trigger);
+      }
       return;
     }
     if (event.target.closest('[data-close-modal]') || event.target === closeBtn) {
@@ -379,17 +458,21 @@ function initLightbox() {
 }
 
 /* --------------------------------------------------------------------------
-   8. TRANG CHI TIẾT DỰ ÁN (project.html)
-   Đọc ?id=... trên URL, tra trong PROJECTS (data.js), render gallery lớn
-   (nhiều ảnh/model) + thông tin dự án. Chỉ chạy khi trang có #projectDetail
-   (tức đang ở project.html) và đã nhúng data.js.
+   8. TRANG CHI TIẾT DỰ ÁN (project/<slug>/index.html)
+   Mỗi dự án giờ có 1 trang RIÊNG (thư mục project/<slug>/), không dùng
+   chung 1 project.html?id=... nữa. Mỗi trang chỉ cần khai báo:
+     <script>window.PROJECT_ID = 'crusader';</script>
+   ngay TRƯỚC khi nhúng js/data.js và js/script.js. Script vẫn đọc thêm
+   ?id=... trên URL làm phương án dự phòng (ví dụ khi mở project-template
+   trực tiếp mà chưa set PROJECT_ID).
    -------------------------------------------------------------------------- */
 function initProjectDetail() {
   const root = document.getElementById('projectDetail');
-  if (!root || typeof PROJECTS === 'undefined') return;
+  if (!root || !Object.keys(PROJECTS).length) return;
 
   const params = new URLSearchParams(window.location.search);
-  const project = PROJECTS[params.get('id')];
+  const projectId = (typeof window.PROJECT_ID === 'string' && window.PROJECT_ID) || params.get('id');
+  const project = PROJECTS[projectId];
 
   const notFoundEl = document.getElementById('projectNotFound');
 
@@ -450,6 +533,15 @@ function initProjectDetail() {
       mv.setAttribute('shadow-intensity', '1');
       mv.setAttribute('alt', project.title);
       mainEl.appendChild(mv);
+    } else if (slide.type === 'video') {
+      const video = document.createElement('video');
+      video.className = 'project-gallery__media';
+      video.src = slide.src;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      if (slide.poster) video.poster = slide.poster;
+      mainEl.appendChild(video);
     } else {
       const img = document.createElement('img');
       img.className = 'project-gallery__media';
@@ -477,6 +569,13 @@ function initProjectDetail() {
       thumbImg.src = slide.poster || slide.src;
       thumbImg.alt = '';
       thumb.appendChild(thumbImg);
+
+      if (slide.type === 'video') {
+        const playIcon = document.createElement('span');
+        playIcon.className = 'project-gallery__thumb-play';
+        playIcon.textContent = '▶';
+        thumb.appendChild(playIcon);
+      }
 
       thumb.addEventListener('click', () => renderSlide(index));
       thumbsEl.appendChild(thumb);

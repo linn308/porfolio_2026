@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linh Nguyen — Multimedia Designer</title>
+  <title>Truc Linh — Multimedia Designer</title>
   <meta name="description" content="Portfolio của Nguyễn Trần Trúc Bạch Linh — Multimedia Designer: 2D Design & 3D / Web3D.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,13 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <!-- Nền động (motion) cố định phía sau toàn bộ trang — xem style.css mục 2 -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="bg-blob bg-blob--1"></span>
+    <span class="bg-blob bg-blob--2"></span>
+    <span class="bg-blob bg-blob--3"></span>
+  </div>
 
   <!-- ============ HEADER ============
        Menu chỉ còn đúng 2 mục lớn: 2D và 3D, cộng About/Contact,
@@ -32,8 +39,8 @@
       </button>
 
       <nav class="nav" id="nav">
-        <a href="project/2d/2d.html" class="nav__tab">2D</a>
-        <a href="project/3d/3d.html" class="nav__tab">3D</a>
+        <a href="project/2d/index-2d.html" class="nav__tab">2D</a>
+        <a href="project/3d/index-3d.html" class="nav__tab">3D</a>
         <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
 
         <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
@@ -45,21 +52,36 @@
   </header>
 
   <main>
-    <!-- ============ 1. HERO SECTION ============ -->
+    <!-- ============ 1. HERO SECTION ============
+         Video showreel là banner riêng, KHÔNG còn chồng chữ lên trên nữa.
+         Khối chữ + khung Web3D (.hero-content) nằm ngay bên dưới, tách
+         bạch rõ ràng khỏi video — bấm nút cuộn xuống để đi tới đó. -->
     <section class="hero" id="home">
-      <div class="container hero__inner">
+      <div class="hero__media" aria-hidden="true">
+        <!-- Thay file assets/videos/showreel.mp4 bằng video của bạn -->
+        <video id="heroVideo" class="hero__video" autoplay loop muted playsinline
+          poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop">
+          <source src="assets/videos/showreel.mp4" type="video/mp4">
+        </video>
+        <div class="hero__scrim"></div>
+      </div>
 
-        <div class="hero__viewport">
-          <div class="viewport-frame">
-            <span class="viewport-tag">Showreel · Motion & 3D</span>
-            <!-- Thay file assets/videos/showreel.mp4 bằng video của bạn -->
-            <video class="viewport-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop">
-              <source src="assets/videos/showreel.mp4" type="video/mp4">
-            </video>
-          </div>
-          <p class="viewport-caption" data-vi="Cel-look Anime & 3D Layout Reel — Trúc Linh" data-en="Cel-look Anime & 3D Layout Reel — linn">Cel-look Anime & 3D Layout Reel — Trúc Linh</p>
-        </div>
+      <button type="button" class="hero__sound-toggle" id="heroSoundToggle" aria-pressed="false"
+        aria-label="Bật/tắt âm thanh video">
+        <span class="hero__sound-icon" aria-hidden="true">🔇</span>
+        <span data-vi="Bật âm thanh" data-en="Unmute">Bật âm thanh</span>
+      </button>
 
+      <!-- Nút cuộn xuống — cuộn mượt tới khối nội dung (.hero-content) -->
+      <a href="#heroContent" class="hero__scroll" aria-label="Cuộn xuống nội dung tiếp theo">
+        <span aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <!-- Khối nội dung: chữ giới thiệu + khung Web3D, nằm dưới video,
+         KHÔNG chồng lên video/nút bấm nữa. -->
+    <section class="hero-content" id="heroContent">
+      <div class="container hero-content__inner">
         <div class="hero__text">
           <p class="kicker" data-vi="Đà Lạt, Việt Nam" data-en="Da Lat, Vietnam">
             <span class="kicker__dot"></span>
@@ -79,13 +101,13 @@
             hiện phát triển song song 2D Design, Video Editing và 3D Animation.
           </p>
           <div class="hero__cta">
-            <a href="project/2d/2d.html" class="btn btn--warm" data-vi="Khám phá 2D" data-en="Explore 2D">Khám phá 2D</a>
-            <a href="project/3d/3d.html" class="btn btn--primary" data-vi="Khám phá 3D" data-en="Explore 3D">Khám phá 3D</a>
+            <a href="project/2d/index-2d.html" class="btn btn--warm" data-vi="Khám phá 2D" data-en="Explore 2D">Khám phá 2D</a>
+            <a href="project/3d/index-3d.html" class="btn btn--primary" data-vi="Khám phá 3D" data-en="Explore 3D">Khám phá 3D</a>
           </div>
         </div>
 
-        <div class="hero__viewport">
-          <div class="viewport-frame">
+        <div class="hero__pip">
+          <div class="viewport-frame viewport-frame--pip">
             <span class="viewport-tag">Web3D · Interactive</span>
             <!-- Thay src bằng file .glb thật của bạn -->
             <model-viewer
@@ -102,9 +124,8 @@
               interaction-prompt="none"
             ></model-viewer>
           </div>
-          <p class="viewport-caption" data-vi="Kéo để xoay 360° · Cuộn để zoom" data-en="Drag to rotate 360° · Scroll to zoom">Kéo để xoay 360° · Cuộn để zoom</p>
+          <p class="viewport-caption" data-vi="Kéo để xoay 360°" data-en="Drag to rotate 360°">Kéo để xoay 360°</p>
         </div>
-
       </div>
     </section>
   </main>
@@ -216,6 +237,7 @@
               <span class="tag">Photoshop</span>
               <span class="tag">Illustrator</span>
               <span class="tag">InDesign</span>
+              <span class="tag">Figma</span>
             </div>
           </div>
 
@@ -258,13 +280,13 @@
         </div>
 
         <div class="explore__panels">
-          <a href="project/2d/2d.html" class="explore-panel explore-panel--2d">
+          <a href="project/2d/index-2d.html" class="explore-panel explore-panel--2d">
             <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
             <div class="explore-panel__content">
               <h3 class="explore-panel__label">2D</h3>
-              <p class="explore-panel__desc" data-vi="Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign." data-en="Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign.">Layout, Poster, Editorial Design — Photoshop, Illustrator, InDesign.</p>
+              <p class="explore-panel__desc" data-vi="Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign." data-en="Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign.">Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign.</p>
               <div class="explore-panel__list">
-                <span class="tag">Layout</span>
+                <span class="tag">Illustration</span>
                 <span class="tag">Poster</span>
                 <span class="tag">Editorial</span>
                 <span class="tag">Design</span>
@@ -276,15 +298,17 @@
             </div>
           </a>
 
-          <a href="project/3d/3d.html" class="explore-panel explore-panel--3d">
+          <a href="project/3d/index-3d.html" class="explore-panel explore-panel--3d">
             <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
             <div class="explore-panel__content">
               <h3 class="explore-panel__label">3D</h3>
-              <p class="explore-panel__desc" data-vi="Model, Layout, Animation — Maya, ZBrush." data-en="Model, Layout, Animation — Maya, ZBrush.">Model, Layout, Animation, — Maya, ZBrush</p>
+              <p class="explore-panel__desc" data-vi="Model, Animation,... — Maya, 3ds Max,..." data-en="Model, Animation,... — Maya, 3ds Max,...">Model, Animation,... — Maya, 3ds Max,...</p>
               <div class="explore-panel__list">
                 <span class="tag">Model</span>
+                <span class="tag">Rigging</span>
                 <span class="tag">Layout</span>
-                <span class="tag">Anim</span>
+                <span class="tag">Animation</span>
+                <span class="tag">Cel-look</span>
               </div>
               <span class="explore-panel__arrow">
                 <span data-vi="Xem thư viện 3D" data-en="View 3D gallery">Xem gallery 3D</span>
@@ -304,45 +328,66 @@
         <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
         <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
       </div>
-        <!-- Hàng 1:  Thông tin liên hệ-->
-      <div class="footer__contact">
-        <a href="mailto:linhh1188@gmail.com" class="footer__item">
-          <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
-          <span class="footer__item-value">linhh1188@gmail.com</span>
-        </a>
-        <a href="tel:+84372746842" class="footer__item">
-          <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
-          <span class="footer__item-value">0372 746 842</span>
-        </a>
-        <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
-          <span class="footer__item-value">behance.net/linlinhh ↗</span>
-        </a>
-        <div class="footer__item footer__item--static">
-          <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
-          <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
-        </div>
-      </div>
+        <!-- Toàn bộ 3 hàng liên hệ giờ nằm chung 1 khối (.footer__contact-block)
+             — chỉ bo góc + viền + đổ bóng 1 lần duy nhất ở ngoài cùng, các
+             hàng bên trong nối liền mạch bằng đường kẻ 1px, không còn kiểu
+             3 khối rời rạc ghép bằng margin âm (vốn làm góc bo tròn bị lệch/vỡ
+             ở chỗ nối). Hàng 3 chỉ có 2 mục nên dùng "--2" để tự canh giữa. -->
+        <div class="footer__contact-block">
+          <!-- Hàng 1: Thông tin liên hệ -->
+          <div class="footer__contact-row">
+            <a href="mailto:linhh1188@gmail.com" class="footer__item">
+              <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+              <span class="footer__item-value">linhh1188@gmail.com</span>
+            </a>
+            <a href="tel:+84372746842" class="footer__item">
+              <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+              <span class="footer__item-value">0372 746 842</span>
+            </a>
+            <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+              <span class="footer__item-value">linlinhh ↗</span>
+            </a>
+            <div class="footer__item footer__item--static">
+              <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+              <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
+            </div>
+          </div>
 
-        <!-- Hàng 2: Mạng xã hội / Nền tảng khác (4 box căn giữa nếu thiếu) -->
-      <div class="footer__contact footer__contact--sub">
-        <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
-          <span class="footer__item-value">Trúc Linh ↗</span>
-        </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
-          <span class="footer__item-value">Instagram ↗</span>
-        </a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
-          <span class="footer__item-value">LinkedIn ↗</span>
-        </a>
-        <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
-          <span class="footer__item-value">ArtStation ↗</span>
-        </a>
-      </div>
+          <!-- Hàng 2: Mạng xã hội -->
+          <div class="footer__contact-row">
+            <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
+              <span class="footer__item-value">Trúc Linh ↗</span>
+            </a>
+            <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
+              <span class="footer__item-value">tr__.lin._ ↗</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+              <span class="footer__item-value">LinkedIn ↗</span>
+            </a>
+            <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+              <span class="footer__item-value">ArtStation ↗</span>
+            </a>
+          </div>
+
+          <!-- Hàng 3: Mạng xã hội bổ sung — chỉ 2 mục nên tự canh giữa -->
+          <div class="footer__contact-row footer__contact-row--2">
+            <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Github" data-en="Github">Github</span>
+              <span class="footer__item-value">linn308 ↗</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Vimeo" data-en="Vimeo">Vimeo</span>
+              <span class="footer__item-value">Vimeo ↗</span>
+            </a>
+          </div>
+        </div>
+
+      <!-- CopyRight -->
       <p class="footer__bottom">
         © <span id="year"></span>
         <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>

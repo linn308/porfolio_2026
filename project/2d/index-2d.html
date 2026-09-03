@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2D Design — Linh Nguyen</title>
-  <meta name="description" content="Gallery 2D Design của Linh Nguyen: Layout, Poster, Editorial, Design.">
+  <title>2D Design — Truc Linh</title>
+  <meta name="description" content="Gallery 2D Design của Truc Linh: Layout, Poster, Editorial, Design.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,13 @@
   <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
+
+  <!-- Nền động (motion) cố định phía sau toàn bộ trang — xem style.css mục 2 -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="bg-blob bg-blob--1"></span>
+    <span class="bg-blob bg-blob--2"></span>
+    <span class="bg-blob bg-blob--3"></span>
+  </div>
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" id="header">
@@ -27,9 +34,9 @@
       </button>
 
       <nav class="nav" id="nav">
-        <a href="../2d/2d.html" class="nav__tab is-active--2d">2D</a>
-        <a href="../3d/3d.html" class="nav__tab">3D</a>
-        <a href="../../index.html#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+        <a href="../2d/index-2d.html" class="nav__tab is-active--2d">2D</a>
+        <a href="../3d/index-3d.html" class="nav__tab">3D</a>
+        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
 
         <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
           <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
@@ -49,10 +56,10 @@
         <p class="kicker kicker--warm" data-vi="Vũ trụ 2D" data-en="2D Universe"><span class="kicker__dot"></span> 2D Universe</p>
         <h1 class="sub-hero__title" data-vi="Thiết Kế 2D &amp; Editorial" data-en="2D Design &amp; Editorial">2D Design &amp; Editorial</h1>
         <p class="sub-hero__desc"
-          data-vi="Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator và InDesign."
-          data-en="Layout, posters and editorial composition — where typography, grid systems and imagery meet on both print and screen. Built with Photoshop, Illustrator and InDesign.">
+          data-vi="Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator InDesign và hơn nữa."
+          data-en="Layout, posters and editorial composition — where typography, grid systems and imagery meet on both print and screen. Built with Photoshop, Illustrator InDesign and so on.">
           Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh
-          gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator và InDesign.
+          gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator, InDesign và hơn nữa.
         </p>
       </div>
     </section>
@@ -63,6 +70,7 @@
 
         <div class="filter-bar filter-bar--warm" id="filterBar" role="tablist" aria-label="Lọc dự án 2D">
           <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true" data-vi="Tất cả" data-en="All">Tất cả</button>
+          <button class="filter-btn" data-filter="illustration" role="tab" aria-selected="false" data-vi="Illustration" data-en="Illustration">Illustration</button>
           <button class="filter-btn" data-filter="layout" role="tab" aria-selected="false">Layout</button>
           <button class="filter-btn" data-filter="poster" role="tab" aria-selected="false">Poster</button>
           <button class="filter-btn" data-filter="editorial" role="tab" aria-selected="false">Editorial</button>
@@ -73,13 +81,37 @@
 
           <!-- Card thật — có data-id="magazine-layout" trùng key trong data.js,
                nên JS tự thêm badge số ảnh + nút "Xem đầy đủ dự án" trong modal. -->
+
+          <article class="card card--2d" data-category="illustration">
+            <button class="card__media" type="button"
+              data-id="Ghibli-custom-cards"
+              data-title="Ghibli - Custom Cards"
+              data-subtitle="Flat Illustration"
+              data-img="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop"
+              data-desc-vi="Một dự án thiết kế bộ bài tây lấy cảm hứng từ thế giới hoạt hình của Studio Ghibli — minh họa được dựng trong Illustrator."
+              data-desc-en="A tarot/playing card deck design project inspired by the animated worlds of Studio Ghibli — illustrations built in Illustrator."
+              data-tools="Illustrator">
+              <img src="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=800&auto=format&fit=crop" alt="Ghibli - Custom Cards — Illutration" loading="lazy">
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category" data-vi="Illustration" data-en="Illustration">Illustration</p>
+              <h3 class="card__title">Ghibli - Custom Cards</h3>
+              <p class="card__desc" data-vi="Flat Illustration" data-en="Flat Illustration">Flat Illustration</p>
+              <div class="card__tags">
+                <span class="tag">Illustrator</span>
+              </div>
+            </div>
+          </article>
+
           <article class="card card--2d" data-category="editorial">
             <button class="card__media" type="button"
               data-id="magazine-layout"
               data-title="Magazine Layout"
               data-subtitle="Editorial Composition"
               data-img="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Dàn trang tạp chí &amp; bố cục editorial: xây dựng lưới (grid system), phân cấp typography và phối hợp hình ảnh — minh họa được dựng trong Illustrator, chỉnh sửa ảnh trong Photoshop."
+              data-desc-vi="Dàn trang tạp chí &amp; bố cục editorial: xây dựng lưới (grid system), phân cấp typography và phối hợp hình ảnh — minh họa được dựng trong Illustrator, chỉnh sửa ảnh trong Photoshop."
+              data-desc-en="Magazine layout &amp; editorial composition: building the grid system, typographic hierarchy and image pairing — illustrations built in Illustrator, photo editing in Photoshop."
               data-tools="InDesign, Illustrator, Photoshop">
               <img src="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=800&auto=format&fit=crop" alt="Magazine Layout — Editorial Composition" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
@@ -109,7 +141,8 @@
               data-title="[Tên dự án] — Poster Series"
               data-subtitle="Poster Design"
               data-img="https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Placeholder — thay bằng mô tả dự án poster thật của bạn: concept, bảng màu, thông điệp thị giác chính."
+              data-desc-vi="Placeholder — thay bằng mô tả dự án poster thật của bạn: concept, bảng màu, thông điệp thị giác chính."
+              data-desc-en="Placeholder — replace with your real poster project: concept, color palette, key visual message."
               data-tools="Illustrator, Photoshop">
               <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
               <img src="https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Poster Series" loading="lazy">
@@ -132,7 +165,8 @@
               data-title="[Tên dự án] — Editorial Layout Study"
               data-subtitle="Layout Design"
               data-img="https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Placeholder — thay bằng dự án layout thật: hệ thống lưới, khoảng trắng, phân cấp nội dung."
+              data-desc-vi="Placeholder — thay bằng dự án layout thật: hệ thống lưới, khoảng trắng, phân cấp nội dung."
+              data-desc-en="Placeholder — replace with your real layout project: grid system, white space, content hierarchy."
               data-tools="InDesign, Photoshop">
               <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
               <img src="https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Editorial Layout Study" loading="lazy">
@@ -155,7 +189,8 @@
               data-title="[Tên dự án] — Visual Design Concept"
               data-subtitle="Graphic Design"
               data-img="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Placeholder — thay bằng dự án graphic design / branding thật: mood board, hệ thống nhận diện, ứng dụng thực tế."
+              data-desc-vi="Placeholder — thay bằng dự án graphic design / branding thật: mood board, hệ thống nhận diện, ứng dụng thực tế."
+              data-desc-en="Placeholder — replace with your real graphic design / branding project: mood board, identity system, real-world application."
               data-tools="Illustrator, Photoshop">
               <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
               <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Visual Design Concept" loading="lazy">
@@ -263,7 +298,7 @@
     </div>
   </div>
 
-  <script src="../../js/data.js"></script>
+  <script src="../../js/data-2d.js"></script>
   <script src="../../js/script.js"></script>
 </body>
 </html>

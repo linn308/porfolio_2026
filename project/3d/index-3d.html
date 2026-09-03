@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D &amp; Web3D — Linh Nguyen</title>
-  <meta name="description" content="Gallery 3D &amp; Web3D của Linh Nguyen: Model, Layout, Animation, Web3D Interactive.">
+  <title>3D &amp; Web3D — Truc Linh</title>
+  <meta name="description" content="Gallery 3D &amp; Web3D của Truc Linh: Model, Layout, Animation, Web3D Interactive.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,13 @@
   <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
+
+  <!-- Nền động (motion) cố định phía sau toàn bộ trang — xem style.css mục 2 -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="bg-blob bg-blob--1"></span>
+    <span class="bg-blob bg-blob--2"></span>
+    <span class="bg-blob bg-blob--3"></span>
+  </div>
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" id="header">
@@ -30,9 +37,9 @@
       </button>
 
       <nav class="nav" id="nav">
-        <a href="2d.html" class="nav__tab">2D</a>
-        <a href="3d.html" class="nav__tab is-active--3d">3D</a>
-        <a href="../../index.html#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+        <a href="../2d/index-2d.html" class="nav__tab">2D</a>
+        <a href="../3d/index-3d.html" class="nav__tab is-active--3d">3D</a>
+        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
 
         <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
           <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
@@ -47,10 +54,10 @@
     <section class="sub-hero">
       <div class="container">
         <p class="breadcrumb">
-          <a href="index.html" data-vi="Home" data-en="Home">Home</a> <span>/</span> <span class="breadcrumb__current">3D</span>
+          <a href="../../index.html" data-vi="Home" data-en="Home">Home</a> <span>/</span> <span class="breadcrumb__current">3D</span>
         </p>
         <p class="kicker" data-vi="Vũ trụ 3D" data-en="3D Universe"><span class="kicker__dot"></span> 3D Universe</p>
-        <h1 class="sub-hero__title" data-vi="Hoạt Hình 3D &amp; Web3D Tương Tác" data-en="3D Animation &amp; Web3D Interactive">3D Animation &amp; Web3D Interactive</h1>
+        <h1 class="sub-hero__title" data-vi="3D Game &amp; Phim 3D" data-en="3D Game &amp; 3D Film">3D Game &amp; Phim 3D</h1>
         <p class="sub-hero__desc"
           data-vi="Từ modeling, Cel-look animation đến việc đưa mô hình 3D thẳng lên trình duyệt. Các dự án Model &amp; Web3D bên dưới có thể xoay 360° và zoom trực tiếp ngay trên card."
           data-en="From modeling and Cel-look animation to bringing 3D models straight into the browser. The Model &amp; Web3D projects below can be rotated 360° and zoomed directly on the card.">
@@ -79,10 +86,12 @@
           <article class="card" data-category="model">
             <button class="card__media" type="button"
               data-id="crusader"
+              data-detail="3d-crusader.html"
               data-title="CRUSADER"
               data-subtitle="3D Game Design — Excellent Project"
               data-model="assets/models/crusader.glb"
-              data-desc="Đồ án 3D Game Design đạt loại xuất sắc. Modeling &amp; texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop."
+              data-desc-vi="Đồ án 3D Game Design đạt loại xuất sắc. Modeling &amp; texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop."
+              data-desc-en="A 3D Game Design project graded excellent. Character/prop modeling and texturing done in Maya and ZBrush, with surface detail and preview renders finished in Photoshop."
               data-tools="Maya, ZBrush, Photoshop">
               <!-- Thay src bằng file .glb thật của bạn -->
               <model-viewer
@@ -114,7 +123,8 @@
               data-title="FIGHT FOR LIFE"
               data-subtitle="3D Short Film — Excellent Project"
               data-img="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
+              data-desc-vi="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
+              data-desc-en="A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film."
               data-tools="Cel-look, Storyboard, Layout">
               <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
@@ -142,7 +152,8 @@
               data-title="[Tên dự án] — Layout / Storyboard Study"
               data-subtitle="Layout Artist"
               data-img="https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=1400&auto=format&fit=crop"
-              data-desc="Placeholder — thay bằng dự án layout/storyboard 3D thật: bố cục khung hình, camera blocking, nhịp kể chuyện."
+              data-desc-vi="Placeholder — thay bằng dự án layout/storyboard 3D thật: bố cục khung hình, camera blocking, nhịp kể chuyện."
+              data-desc-en="Placeholder — replace with your real 3D layout/storyboard project: frame composition, camera blocking, story pacing."
               data-tools="Maya, Storyboard">
               <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
               <img src="https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Layout / Storyboard Study" loading="lazy">
@@ -165,7 +176,8 @@
               data-title="[Tên dự án] — Web3D Interactive Prototype"
               data-subtitle="Web3D · Three.js"
               data-model="assets/models/web3d-placeholder.glb"
-              data-desc="Placeholder — thay bằng dự án Web3D thật khi hoàn thiện: model nhúng trực tiếp trên web, tương tác xoay/zoom bằng Three.js."
+              data-desc-vi="Placeholder — thay bằng dự án Web3D thật khi hoàn thiện: model nhúng trực tiếp trên web, tương tác xoay/zoom bằng Three.js."
+              data-desc-en="Placeholder — replace with your real Web3D project once finished: model embedded directly on the web, rotate/zoom interaction powered by Three.js."
               data-tools="Three.js, glTF, JavaScript">
               <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
               <model-viewer
@@ -278,7 +290,7 @@
     </div>
   </div>
 
-  <script src="../../js/data.js"></script>
+  <script src="../../js/data-3d.js"></script>
   <script src="../../js/script.js"></script>
 </body>
 </html>
