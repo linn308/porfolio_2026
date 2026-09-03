@@ -38,33 +38,29 @@ const PROJECTS_2D = {
     ],
   },
 
-  /* ---- Các project bên dưới là PLACEHOLDER — thay slides/desc/tools
-     bằng dự án thật khi bạn có, giữ nguyên cấu trúc object. ---- */
-
-  'poster-series': {
-    title: '[Tên dự án] — Poster Series',
+  collageart: {
+    title: 'Collage Art - Poster',
     category: { vi: 'Poster', en: 'Poster' },
     subtitle: { vi: 'Poster Design', en: 'Poster Design' },
     desc: {
-      vi: 'Placeholder — thay bằng mô tả dự án poster thật của bạn: concept, bảng màu, thông điệp thị giác chính.',
-      en: 'Placeholder — replace with your real poster project: concept, color palette, key visual message.',
+      vi: 'Bức tranh cắt dán nghệ thuật - sử dụng các kỹ thuật cắt và ghép đa chất liệu để tạo thành một bản thể phức tạp. Mang lại một góc nhìn đa diện và ẩn dụ về sự hình thành danh tính trong thời đại hình ảnh số.',
+      en: 'An artistic collage—utilizing multi-material cutting and assembly techniques to create a complex entity—offering a multifaceted, metaphorical perspective on identity formation in the age of digital imagery.',
     },
-    tools: ['Illustrator', 'Photoshop'],
+    tools: ['Photoshop'],
     slides: [
-      { type: 'image', src: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1400&auto=format&fit=crop' },
+      { type: 'image', src: '../../assets/2d/Collage Art/01.webp' },
     ],
   },
 
-  'layout-study-2d': {
-    title: '[Tên dự án] — Editorial Layout Study',
-    category: { vi: 'Layout', en: 'Layout' },
-    subtitle: { vi: 'Layout Design', en: 'Layout Design' },
+  TYYM: {
+    title: 'The Yin-Yang Master — Movie Poster',
+    category: { vi: 'Poster', en: 'Poster' },
+    subtitle: { vi: 'Poster Điện ảnh', en: 'Movie Poster' },
     desc: {
-      vi: 'Placeholder — thay bằng dự án layout thật: hệ thống lưới, khoảng trắng, phân cấp nội dung.',
-      en: 'Placeholder — replace with your real layout project: grid system, white space, content hierarchy.',
+      vi: 'Poster phim điện ảnh "Âm Dương Sư: Tình Nhã Tập" - nổi bật với bố cục nhân vật xếp lớp mang đậm phong cách thẩm mỹ kỳ ảo phương Đông; tác phẩm sử dụng bảng màu trầm tối làm chủ đạo, điểm xuyết sắc vàng nhằm khơi gợi bầu không khí vừa huyền bí vừa kịch tính của thế giới Âm Dương Sư.',
+      en: 'The movie poster for "The Yin-Yang Master: Dream of Eternity" - features a layered character composition steeped in Eastern fantasy aesthetics, utilizing a palette of deep, dark tones accented with gold to evoke the mysterious and dramatic atmosphere of the Yin-Yang Master world.',
     },
-    tools: ['InDesign', 'Photoshop'],
+    tools: ['Photoshop'],
     slides: [
       { type: 'image', src: 'https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1400&auto=format&fit=crop' },
     ],
