@@ -56,8 +56,8 @@
         <p class="kicker kicker--warm" data-vi="Vũ trụ 2D" data-en="2D Universe"><span class="kicker__dot"></span> 2D Universe</p>
         <h1 class="sub-hero__title" data-vi="Thiết Kế 2D &amp; Editorial" data-en="2D Design &amp; Editorial">2D Design &amp; Editorial</h1>
         <p class="sub-hero__desc"
-          data-vi="Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator InDesign và hơn nữa."
-          data-en="Layout, posters and editorial composition — where typography, grid systems and imagery meet on both print and screen. Built with Photoshop, Illustrator InDesign and so on.">
+          data-vi="Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator, InDesign và hơn nữa."
+          data-en="Layout, posters and editorial composition — where typography, grid systems and imagery meet on both print and screen. Built with Photoshop, Illustrator, InDesign and so on.">
           Layout, poster và editorial composition — nơi typography, lưới bố cục (grid) và hình ảnh
           gặp nhau trên trang giấy lẫn màn hình. Dựng bằng Photoshop, Illustrator, InDesign và hơn nữa.
         </p>
@@ -68,6 +68,7 @@
     <section class="gallery-section" id="gallery">
       <div class="container">
 
+        <!-- FILTER -->
         <div class="filter-bar filter-bar--warm" id="filterBar" role="tablist" aria-label="Lọc dự án 2D">
           <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true" data-vi="Tất cả" data-en="All">Tất cả</button>
           <button class="filter-btn" data-filter="illustration" role="tab" aria-selected="false" data-vi="Illustration" data-en="Illustration">Illustration</button>
@@ -84,14 +85,15 @@
 
           <article class="card card--2d" data-category="illustration">
             <button class="card__media" type="button"
-              data-id="Ghibli-custom-cards"
+              data-id="ghibli"
+              data-detail="2d-ghibli.html"
               data-title="Ghibli - Custom Cards"
               data-subtitle="Flat Illustration"
-              data-img="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop"
+              data-img="../../assets/2d/ghibli/1.webp"
               data-desc-vi="Một dự án thiết kế bộ bài tây lấy cảm hứng từ thế giới hoạt hình của Studio Ghibli — minh họa được dựng trong Illustrator."
               data-desc-en="A tarot/playing card deck design project inspired by the animated worlds of Studio Ghibli — illustrations built in Illustrator."
               data-tools="Illustrator">
-              <img src="https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=800&auto=format&fit=crop" alt="Ghibli - Custom Cards — Illutration" loading="lazy">
+              <img src="../../assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illutration" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -221,51 +223,80 @@
         <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
         <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
       </div>
-        <!-- Hàng 1:  Thông tin liên hệ-->
-      <div class="footer__contact">
-        <a href="mailto:linhh1188@gmail.com" class="footer__item">
-          <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
-          <span class="footer__item-value">linhh1188@gmail.com</span>
-        </a>
-        <a href="tel:+84372746842" class="footer__item">
-          <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
-          <span class="footer__item-value">0372 746 842</span>
-        </a>
-        <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
-          <span class="footer__item-value">behance.net/linlinhh ↗</span>
-        </a>
-        <div class="footer__item footer__item--static">
-          <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
-          <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
-        </div>
-      </div>
+        <!-- Toàn bộ 3 hàng liên hệ giờ nằm chung 1 khối (.footer__contact-block)
+             — chỉ bo góc + viền + đổ bóng 1 lần duy nhất ở ngoài cùng, các
+             hàng bên trong nối liền mạch bằng đường kẻ 1px, không còn kiểu
+             3 khối rời rạc ghép bằng margin âm (vốn làm góc bo tròn bị lệch/vỡ
+             ở chỗ nối). Hàng 3 chỉ có 2 mục nên dùng "--2" để tự canh giữa. -->
+        <div class="footer__contact-block">
+          <!-- Hàng 1: Thông tin liên hệ -->
+          <div class="footer__contact-row">
+            <a href="mailto:linhh1188@gmail.com" class="footer__item">
+              <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+              <span class="footer__item-value">linhh1188@gmail.com</span>
+            </a>
+            <a href="tel:+84372746842" class="footer__item">
+              <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+              <span class="footer__item-value">0372 746 842</span>
+            </a>
+            <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+              <span class="footer__item-value">linlinhh</span>
+            </a>
+            <a href="https://maps.app.goo.gl/8XnVu9hN2r2VNTqu9" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+              <span class="footer__item-value">Đà Lạt, Việt Nam</span>
+            </a>
+            <!-- Nội dung không kèm link
+            <div class="footer__item footer__item--static">
+              <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+              <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
+            </div> -->
 
-        <!-- Hàng 2: Mạng xã hội / Nền tảng khác (4 box căn giữa nếu thiếu) -->
-      <div class="footer__contact footer__contact--sub">
-        <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
-          <span class="footer__item-value">Trúc Linh ↗</span>
-        </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
-          <span class="footer__item-value">Instagram ↗</span>
-        </a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
-          <span class="footer__item-value">LinkedIn ↗</span>
-        </a>
-        <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
-          <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
-          <span class="footer__item-value">ArtStation ↗</span>
-        </a>
-      </div>
+            
+          </div>
+
+          <!-- Hàng 2: Mạng xã hội -->
+          <div class="footer__contact-row">
+            <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
+              <span class="footer__item-value">Trúc Linh</span>
+            </a>
+            <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
+              <span class="footer__item-value">tr__.lin._</span>
+            </a>
+            <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+              <span class="footer__item-value">LinkedIn</span>
+            </a>
+            <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+              <span class="footer__item-value">ArtStation</span>
+            </a>
+          </div>
+
+          <!-- Hàng 3: Mạng xã hội bổ sung — chỉ 2 mục nên tự canh giữa -->
+          <div class="footer__contact-row footer__contact-row--2">
+            <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Github" data-en="Github">Github</span>
+              <span class="footer__item-value">linn308</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Vimeo" data-en="Vimeo">Vimeo</span>
+              <span class="footer__item-value">Vimeo</span>
+            </a>
+          </div>
+        </div>
+
+      <!-- CopyRight -->
       <p class="footer__bottom">
         © <span id="year"></span>
         <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>
       </p>
     </div>
   </footer>
+
 
   <!-- ============ LIGHTBOX (modal xem chi tiết + Prev/Next) ============ -->
   <div class="modal" id="projectModal" aria-hidden="true">

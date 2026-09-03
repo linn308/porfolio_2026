@@ -482,7 +482,7 @@ function initProjectDetail() {
     return;
   }
 
-  document.title = `${project.title} — Linh Nguyen`;
+  document.title = `${project.title} — linn.`;
 
   const titleEl = document.getElementById('projectTitle');
   const categoryEl = document.getElementById('projectCategory');

@@ -58,10 +58,10 @@
          bạch rõ ràng khỏi video — bấm nút cuộn xuống để đi tới đó. -->
     <section class="hero" id="home">
       <div class="hero__media" aria-hidden="true">
-        <!-- Thay file assets/videos/showreel.mp4 bằng video của bạn -->
+        <!-- SHOWREELS / thêm poster -->
         <video id="heroVideo" class="hero__video" autoplay loop muted playsinline
           poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop">
-          <source src="assets/videos/showreel.mp4" type="video/mp4">
+          <source src="assets/shared/showreel.mp4" type="video/mp4">
         </video>
         <div class="hero__scrim"></div>
       </div>
@@ -78,8 +78,7 @@
       </a>
     </section>
 
-    <!-- Khối nội dung: chữ giới thiệu + khung Web3D, nằm dưới video,
-         KHÔNG chồng lên video/nút bấm nữa. -->
+    <!-- Khối nội dung / CONTENT -->
     <section class="hero-content" id="heroContent">
       <div class="container hero-content__inner">
         <div class="hero__text">
@@ -108,9 +107,10 @@
 
         <div class="hero__pip">
           <div class="viewport-frame viewport-frame--pip">
-            <span class="viewport-tag">Web3D · Interactive</span>
-            <!-- Thay src bằng file .glb thật của bạn -->
-            <model-viewer
+            <span class="viewport-tag">Trúc Linh · Linn</span>
+
+            <!-- Thay src bằng file .glb thật (3D) -->
+            <!-- <model-viewer
               class="viewport-model"
               src="assets/models/crusader-preview.glb"
               poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop"
@@ -122,9 +122,16 @@
               shadow-intensity="1"
               exposure="1.05"
               interaction-prompt="none"
-            ></model-viewer>
+            ></model-viewer> -->
+
+            <!-- Ảnh avatar tĩnh (2D) — thay src bằng ảnh thật -->
+            <img
+              class="viewport-model"
+              src="assets/shared/avatar.jpg"
+              alt="Trúc Linh · Linn"
+            >
           </div>
-          <p class="viewport-caption" data-vi="Kéo để xoay 360°" data-en="Drag to rotate 360°">Kéo để xoay 360°</p>
+          <!-- <p class="viewport-caption" data-vi="Kéo để xoay 360°" data-en="Drag to rotate 360°">Kéo để xoay 360°</p> -->
         </div>
       </div>
     </section>
@@ -281,7 +288,7 @@
 
         <div class="explore__panels">
           <a href="project/2d/index-2d.html" class="explore-panel explore-panel--2d">
-            <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
+            <span class="explore-panel__bg" style="background-image: url('assets/shared/pattern-grid.webp');" aria-hidden="true"></span>
             <div class="explore-panel__content">
               <h3 class="explore-panel__label">2D</h3>
               <p class="explore-panel__desc" data-vi="Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign." data-en="Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign.">Illustration, Poster, Editorial Design — Photoshop, Illustrator, InDesign.</p>
@@ -299,7 +306,7 @@
           </a>
 
           <a href="project/3d/index-3d.html" class="explore-panel explore-panel--3d">
-            <span class="explore-panel__bg" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop');" aria-hidden="true"></span>
+            <span class="explore-panel__bg" style="background-image: url('assets/shared/pattern-line.webp');" aria-hidden="true"></span>
             <div class="explore-panel__content">
               <h3 class="explore-panel__label">3D</h3>
               <p class="explore-panel__desc" data-vi="Model, Animation,... — Maya, 3ds Max,..." data-en="Model, Animation,... — Maya, 3ds Max,...">Model, Animation,... — Maya, 3ds Max,...</p>
@@ -346,31 +353,38 @@
             </a>
             <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
-              <span class="footer__item-value">linlinhh ↗</span>
+              <span class="footer__item-value">linlinhh</span>
             </a>
+            <a href="https://maps.app.goo.gl/8XnVu9hN2r2VNTqu9" target="_blank" rel="noopener noreferrer" class="footer__item">
+              <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
+              <span class="footer__item-value">Đà Lạt, Việt Nam</span>
+            </a>
+            <!-- Nội dung không kèm link
             <div class="footer__item footer__item--static">
               <span class="footer__item-label" data-vi="Địa điểm" data-en="Location">Location</span>
               <span class="footer__item-value">Đà Lạt, Lâm Đồng</span>
-            </div>
+            </div> -->
+
+            
           </div>
 
           <!-- Hàng 2: Mạng xã hội -->
           <div class="footer__contact-row">
             <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="Facebook" data-en="Facebook">Facebook</span>
-              <span class="footer__item-value">Trúc Linh ↗</span>
+              <span class="footer__item-value">Trúc Linh</span>
             </a>
             <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="Instagram" data-en="Instagram">Instagram</span>
-              <span class="footer__item-value">tr__.lin._ ↗</span>
+              <span class="footer__item-value">tr__.lin._</span>
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__item">
+            <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
-              <span class="footer__item-value">LinkedIn ↗</span>
+              <span class="footer__item-value">LinkedIn</span>
             </a>
             <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
-              <span class="footer__item-value">ArtStation ↗</span>
+              <span class="footer__item-value">ArtStation</span>
             </a>
           </div>
 
@@ -378,11 +392,11 @@
           <div class="footer__contact-row footer__contact-row--2">
             <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="Github" data-en="Github">Github</span>
-              <span class="footer__item-value">linn308 ↗</span>
+              <span class="footer__item-value">linn308</span>
             </a>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__item">
               <span class="footer__item-label" data-vi="Vimeo" data-en="Vimeo">Vimeo</span>
-              <span class="footer__item-value">Vimeo ↗</span>
+              <span class="footer__item-value">Vimeo</span>
             </a>
           </div>
         </div>

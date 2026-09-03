@@ -14,22 +14,27 @@
 
 const PROJECTS_2D = {
 
-  'magazine-layout': {
-    title: 'Magazine Layout',
-    category: { vi: 'Editorial', en: 'Editorial' },
+  ghibli: {
+    title: 'Ghibli - Custom Cards',
+    category: { vi: 'Illustration', en: 'Illustration' },
     subtitle: {
-      vi: 'Editorial Composition',
-      en: 'Editorial Composition',
+      vi: 'Flat Illustration',
+      en: 'Flat Illustration',
     },
     desc: {
-      vi: 'Dàn trang tạp chí và bố cục editorial: xây dựng lưới (grid system), phân cấp typography và phối hợp hình ảnh — minh họa được dựng trong Illustrator, chỉnh sửa ảnh trong Photoshop. Bộ ảnh gồm bìa, spread đôi trang và chi tiết typography.',
-      en: 'Magazine layout and editorial composition: building the grid system, typographic hierarchy and image pairing — illustrations built in Illustrator, photo editing in Photoshop. The set includes the cover, double-page spreads and typography close-ups.',
+      vi: 'Bộ bài tây lấy cảm hứng từ thế giới hoạt hình Studio Ghibli — minh họa dựng trong Illustrator, mỗi lá bài là 1 khung cảnh riêng.',
+      en: 'A tarot/playing card deck inspired by the animated worlds of Studio Ghibli — illustrated in Illustrator, each card its own scene.',
     },
-    tools: ['InDesign', 'Illustrator', 'Photoshop'],
+    tools: ['Illustrator'],
     slides: [
-      { type: 'image', src: 'https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1400&auto=format&fit=crop' },
+      { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/1.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/2.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/3.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/4.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/5.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/6.webp' },
+
     ],
   },
 

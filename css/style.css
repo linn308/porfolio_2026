@@ -40,7 +40,11 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  /* Đúng bằng chiều cao header (88px, xem .header__inner) — không được
+     lệch số, nếu không khi cuộn neo tới 1 section sẽ dư ra 1 khe hở nhỏ
+     lộ ra phần section phía trên (đây chính là lỗi "dư 1 phần nhỏ phía
+     trên của media" khi bấm nút cuộn ở Hero). */
+  scroll-padding-top: 88px;
 }
 
 body {
@@ -236,6 +240,20 @@ body.no-scroll { overflow: hidden; }
 }
 
 .skill-group .tag:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+/* Trang chi tiết dự án: tag công cụ (#projectTools) áp CÙNG hiệu ứng hover
+   như tag trong "Toolkit" ở index.html — chỉ tag đang trỏ chuột vào mới
+   sáng lên, các tag còn lại giữ nguyên. */
+.project-info__tools .tag {
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.project-info__tools .tag:hover {
   border-color: var(--accent);
   color: var(--text-primary);
   background: var(--accent-soft);
@@ -477,8 +495,14 @@ body.no-scroll { overflow: hidden; }
 }
 
 /* --- Khối nội dung dưới video: chữ + khung Web3D nằm cạnh nhau, dòng
-   chảy bình thường (không còn position:absolute đè lên video) --- */
+   chảy bình thường (không còn position:absolute đè lên video) ---
+   min-height khớp công thức với .hero (100svh trừ chiều cao header) để
+   khi bấm nút cuộn xuống, section này lấp ĐẦY ĐÚNG 1 màn hình — không còn
+   để lộ 1 mẩu nhỏ của section Experience phía dưới như trước. */
 .hero-content {
+  min-height: calc(100svh - 88px);
+  display: flex;
+  align-items: center;
   padding: 90px 0 110px;
   border-top: 1px solid var(--border-color);
 }
@@ -540,7 +564,11 @@ body.no-scroll { overflow: hidden; }
   box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.5);
 }
 
-.viewport-model { width: 100%; height: 100%; --poster-color: transparent; }
+/* object-fit:cover không ảnh hưởng gì tới <model-viewer> (nó tự quản lý
+   khung hình riêng), nhưng cần thiết nếu sau này bạn đổi sang <img> tĩnh
+   (avatar) trong khung PiP này — ảnh sẽ tự lấp đầy khung vuông, không bị
+   méo/kéo dãn. */
+.viewport-model { width: 100%; height: 100%; object-fit: cover; --poster-color: transparent; }
 
 .viewport-tag {
   position: absolute;
