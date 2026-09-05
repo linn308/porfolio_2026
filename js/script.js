@@ -423,17 +423,11 @@ function initLightbox() {
     }
     const trigger = event.target.closest('.card__media');
     if (trigger) {
-      // Card nào ĐÃ CÓ trang chi tiết riêng (data-detail) thì đi thẳng tới
-      // đó luôn — không cần qua modal xem nhanh nữa. Đây chính là cách để
-      // "nâng cấp" 1 card từ chế độ xem nhanh lên trang riêng: chỉ cần
-      // thêm data-detail="đường-dẫn/tới/trang.html" vào card, không cần
-      // sửa gì trong file JS này. Card nào CHƯA có data-detail vẫn mở
-      // modal xem nhanh như bình thường.
-      if (trigger.dataset.detail) {
-        navigateWithFade(trigger.dataset.detail);
-      } else {
-        openModal(trigger);
-      }
+      // Bấm vào card LUÔN mở modal xem nhanh trước (dù card có data-detail
+      // hay không) — chỉ khi bấm nút "Xem đầy đủ dự án" bên trong modal
+      // (xử lý ở nhánh #modalFullLink phía trên) mới thật sự điều hướng
+      // sang trang chi tiết riêng của dự án.
+      openModal(trigger);
       return;
     }
     if (event.target.closest('[data-close-modal]') || event.target === closeBtn) {
@@ -489,18 +483,57 @@ function initProjectDetail() {
   const subtitleEl = document.getElementById('projectSubtitle');
   const descEl = document.getElementById('projectDesc');
   const toolsEl = document.getElementById('projectTools');
-  const mainEl = document.getElementById('projectMain');
-  const thumbsEl = document.getElementById('projectThumbs');
+  const styleTagsEl = document.getElementById('projectStyleTags');
+  const styleGroupEl = document.getElementById('projectStyleGroup');
+  const teamEl = document.getElementById('projectTeam');
+  const teamDescEl = document.getElementById('projectTeamDesc');
+  const galleryEl = document.getElementById('projectGallery');
+  const coverEl = document.getElementById('projectCover');
 
   if (titleEl) titleEl.textContent = project.title;
 
-  // Các trường có bản dịch (category/subtitle/desc) được cập nhật qua
+  // --- Cover / thumbnail đại diện — hiện to, trên cùng, TRƯỚC cả tên dự án.
+  // Ưu tiên project.cover nếu bạn khai báo riêng trong data-2d.js/data-3d.js
+  // (object { type, src, poster } giống format của slides), không có thì
+  // tự lấy luôn slides[0] làm đại diện — nên không cần sửa data cũ vẫn
+  // chạy được ngay (ví dụ CRUSADER: slides[0] sẵn là video showreel). ---
+  if (coverEl) {
+    const cover = project.cover || project.slides[0];
+    coverEl.innerHTML = '';
+    if (cover) {
+      if (cover.type === 'model') {
+        const mv = document.createElement('model-viewer');
+        mv.setAttribute('src', cover.src);
+        if (cover.poster) mv.setAttribute('poster', cover.poster);
+        mv.setAttribute('camera-controls', '');
+        mv.setAttribute('shadow-intensity', '1');
+        mv.setAttribute('alt', project.title);
+        coverEl.appendChild(mv);
+      } else if (cover.type === 'video') {
+        const video = document.createElement('video');
+        video.src = cover.src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        if (cover.poster) video.poster = cover.poster;
+        coverEl.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = cover.src;
+        img.alt = project.title;
+        coverEl.appendChild(img);
+      }
+    }
+  }
+
+  // Các trường có bản dịch (category/subtitle/desc/team) được cập nhật qua
   // hàm riêng, và hàm này cũng được gán vào window.__refreshProjectDetail
   // để applyLanguage() gọi lại mỗi khi người dùng đổi ngôn ngữ.
   const updateTranslatedText = (lang) => {
     if (categoryEl) categoryEl.textContent = project.category[lang];
     if (subtitleEl) subtitleEl.textContent = project.subtitle[lang];
     if (descEl) descEl.textContent = project.desc[lang];
+    if (teamDescEl && project.team) teamDescEl.textContent = project.team[lang];
   };
   window.__refreshProjectDetail = updateTranslatedText;
   updateTranslatedText(getStoredLang());
@@ -515,84 +548,152 @@ function initProjectDetail() {
     });
   }
 
-  // --- Gallery: 1 khung lớn + dải thumbnail bên dưới để chọn nhanh ---
-  let currentSlide = 0;
-
-  const renderSlide = (index) => {
-    if (!mainEl || !project.slides.length) return;
-    currentSlide = (index + project.slides.length) % project.slides.length;
-    const slide = project.slides[currentSlide];
-
-    mainEl.innerHTML = '';
-    if (slide.type === 'model') {
-      const mv = document.createElement('model-viewer');
-      mv.className = 'project-gallery__media';
-      mv.setAttribute('src', slide.src);
-      if (slide.poster) mv.setAttribute('poster', slide.poster);
-      mv.setAttribute('camera-controls', '');
-      mv.setAttribute('shadow-intensity', '1');
-      mv.setAttribute('alt', project.title);
-      mainEl.appendChild(mv);
-    } else if (slide.type === 'video') {
-      const video = document.createElement('video');
-      video.className = 'project-gallery__media';
-      video.src = slide.src;
-      video.controls = true;
-      video.playsInline = true;
-      video.preload = 'metadata';
-      if (slide.poster) video.poster = slide.poster;
-      mainEl.appendChild(video);
-    } else {
-      const img = document.createElement('img');
-      img.className = 'project-gallery__media';
-      img.src = slide.src;
-      img.alt = project.title;
-      mainEl.appendChild(img);
-    }
-
-    if (thumbsEl) {
-      thumbsEl.querySelectorAll('.project-gallery__thumb').forEach((thumb, i) => {
-        thumb.classList.toggle('is-active', i === currentSlide);
+  // Tag phong cách/chủ đề — mảng riêng biệt với tools (công cụ). Cả nhóm
+  // tự ẩn nếu project không khai báo styleTags trong data-2d.js/data-3d.js.
+  if (styleGroupEl) {
+    const hasStyleTags = Array.isArray(project.styleTags) && project.styleTags.length > 0;
+    styleGroupEl.hidden = !hasStyleTags;
+    if (hasStyleTags && styleTagsEl) {
+      styleTagsEl.innerHTML = '';
+      project.styleTags.forEach((tagName) => {
+        const span = document.createElement('span');
+        span.className = 'tag tag--style';
+        span.textContent = tagName;
+        styleTagsEl.appendChild(span);
       });
     }
-  };
-
-  if (thumbsEl) {
-    thumbsEl.innerHTML = '';
-    project.slides.forEach((slide, index) => {
-      const thumb = document.createElement('button');
-      thumb.type = 'button';
-      thumb.className = 'project-gallery__thumb';
-      thumb.setAttribute('aria-label', `${project.title} — ${index + 1}`);
-
-      const thumbImg = document.createElement('img');
-      thumbImg.src = slide.poster || slide.src;
-      thumbImg.alt = '';
-      thumb.appendChild(thumbImg);
-
-      if (slide.type === 'video') {
-        const playIcon = document.createElement('span');
-        playIcon.className = 'project-gallery__thumb-play';
-        playIcon.textContent = '▶';
-        thumb.appendChild(playIcon);
-      }
-
-      thumb.addEventListener('click', () => renderSlide(index));
-      thumbsEl.appendChild(thumb);
-    });
   }
 
-  const prevBtn = document.getElementById('projectPrev');
-  const nextBtn = document.getElementById('projectNext');
-  if (prevBtn) prevBtn.addEventListener('click', () => renderSlide(currentSlide - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => renderSlide(currentSlide + 1));
+  // Khối "Dự án nhóm" — chỉ hiện khi project.team tồn tại trong data.js
+  // (object { vi, en } mô tả phần bạn đóng góp).
+  if (teamEl) {
+    teamEl.hidden = !project.team;
+  }
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') renderSlide(currentSlide - 1);
-    if (event.key === 'ArrowRight') renderSlide(currentSlide + 1);
+  // --- Gallery kiểu "zodiac"/Pinterest: hiện TẤT CẢ ảnh/video/model cùng
+  // lúc trong 1 lưới masonry, mỗi ô tự co theo đúng tỉ lệ nội dung thật —
+  // không còn kiểu "1 khung lớn + dải thumbnail nhỏ chọn từng cái" nữa.
+  // Riêng slide ẢNH có thêm khả năng bấm để phóng to (xem initGalleryLightbox
+  // bên dưới) — video/model đã có tương tác riêng (play, xoay 360°) ngay
+  // trong ô nên không cần phóng to thêm, bấm vào đó vẫn dùng đúng công cụ
+  // gốc của nó. ---
+  if (galleryEl) {
+    galleryEl.innerHTML = '';
+    const zoomableSlides = []; // chỉ chứa slide ảnh, theo đúng thứ tự hiển thị
+
+    project.slides.forEach((slide) => {
+      const tile = document.createElement('div');
+      tile.className = 'project-gallery__tile';
+
+      if (slide.type === 'model') {
+        const mv = document.createElement('model-viewer');
+        mv.setAttribute('src', slide.src);
+        if (slide.poster) mv.setAttribute('poster', slide.poster);
+        mv.setAttribute('camera-controls', '');
+        mv.setAttribute('shadow-intensity', '1');
+        mv.setAttribute('alt', project.title);
+        tile.appendChild(mv);
+        const badge = document.createElement('span');
+        badge.className = 'project-gallery__tile-badge';
+        badge.textContent = 'Model 3D';
+        tile.appendChild(badge);
+      } else if (slide.type === 'video') {
+        const video = document.createElement('video');
+        video.src = slide.src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        if (slide.poster) video.poster = slide.poster;
+        tile.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = slide.src;
+        img.alt = project.title;
+        img.loading = 'lazy';
+        tile.appendChild(img);
+
+        // Đánh dấu ô này là "bấm để phóng to" + nhớ vị trí của nó trong
+        // danh sách zoomableSlides để lightbox biết mở đúng ảnh nào.
+        tile.classList.add('project-gallery__tile--zoomable');
+        tile.dataset.zoomIndex = String(zoomableSlides.length);
+        zoomableSlides.push({ src: slide.src, alt: project.title });
+      }
+
+      galleryEl.appendChild(tile);
+    });
+
+    initGalleryLightbox(galleryEl, zoomableSlides);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8b. LIGHTBOX PHÓNG TO ẢNH (trang chi tiết dự án)
+   Bấm vào 1 ảnh trong gallery zodiac (#projectGallery) sẽ mở ảnh đó to hơn,
+   dễ nhìn/theo dõi hơn, kèm Prev/Next để lướt qua các ảnh khác trong cùng
+   dự án. Chỉ áp dụng cho slide ẢNH — được gọi lại mỗi lần initProjectDetail()
+   render xong gallery, với đúng danh sách ảnh (zoomableSlides) của dự án đó.
+   -------------------------------------------------------------------------- */
+function initGalleryLightbox(galleryEl, slides) {
+  const lightbox = document.getElementById('galleryLightbox');
+  if (!lightbox || !galleryEl || !slides.length) return;
+
+  const imgEl = document.getElementById('lightboxImg');
+  const counterEl = document.getElementById('lightboxCounter');
+  const closeBtn = document.getElementById('lightboxClose');
+  let currentIndex = 0;
+
+  const render = () => {
+    const slide = slides[currentIndex];
+    imgEl.src = slide.src;
+    imgEl.alt = slide.alt || '';
+    if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${slides.length}`;
+  };
+
+  const open = (index) => {
+    currentIndex = index;
+    render();
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+  };
+
+  const close = () => {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  };
+
+  const goTo = (offset) => {
+    currentIndex = (currentIndex + offset + slides.length) % slides.length;
+    render();
+  };
+
+  galleryEl.addEventListener('click', (event) => {
+    const tile = event.target.closest('.project-gallery__tile--zoomable');
+    if (!tile) return;
+    open(Number(tile.dataset.zoomIndex));
   });
 
-  renderSlide(0);
+  lightbox.addEventListener('click', (event) => {
+    if (event.target.closest('[data-close-lightbox]') || event.target === closeBtn) {
+      close();
+      return;
+    }
+    if (event.target.closest('#lightboxPrev')) {
+      goTo(-1);
+      return;
+    }
+    if (event.target.closest('#lightboxNext')) {
+      goTo(1);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox.classList.contains('is-open')) return;
+    if (event.key === 'Escape') close();
+    if (event.key === 'ArrowLeft') goTo(-1);
+    if (event.key === 'ArrowRight') goTo(1);
+  });
 }
 
 /* --------------------------------------------------------------------------

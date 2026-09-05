@@ -12,79 +12,8 @@
    Xem phần "GIẢI THÍCH CÁC TRƯỜNG DỮ LIỆU" ở cuối file này.
    ========================================================================== */
 
-const PROJECTS_2D = {
-
-  ghibli: {
-    title: 'Ghibli - Custom Cards',
-    category: { vi: 'Illustration', en: 'Illustration' },
-    subtitle: {
-      vi: 'Flat Illustration',
-      en: 'Flat Illustration',
-    },
-    desc: {
-      vi: 'Bộ bài tây lấy cảm hứng từ thế giới hoạt hình Studio Ghibli — minh họa dựng trong Illustrator, mỗi lá bài là 1 khung cảnh riêng.',
-      en: 'A tarot/playing card deck inspired by the animated worlds of Studio Ghibli — illustrated in Illustrator, each card its own scene.',
-    },
-    tools: ['Illustrator'],
-    slides: [
-      { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/1.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/2.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/3.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/4.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/5.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/6.webp' },
-
-    ],
-  },
-
-  collageart: {
-    title: 'Collage Art - Poster',
-    category: { vi: 'Poster', en: 'Poster' },
-    subtitle: { vi: 'Poster Design', en: 'Poster Design' },
-    desc: {
-      vi: 'Bức tranh cắt dán nghệ thuật - sử dụng các kỹ thuật cắt và ghép đa chất liệu để tạo thành một bản thể phức tạp. Mang lại một góc nhìn đa diện và ẩn dụ về sự hình thành danh tính trong thời đại hình ảnh số.',
-      en: 'An artistic collage—utilizing multi-material cutting and assembly techniques to create a complex entity—offering a multifaceted, metaphorical perspective on identity formation in the age of digital imagery.',
-    },
-    tools: ['Photoshop'],
-    slides: [
-      { type: 'image', src: '../../assets/2d/Collage Art/01.webp' },
-    ],
-  },
-
-  TYYM: {
-    title: 'The Yin-Yang Master — Movie Poster',
-    category: { vi: 'Poster', en: 'Poster' },
-    subtitle: { vi: 'Poster Điện ảnh', en: 'Movie Poster' },
-    desc: {
-      vi: 'Poster phim điện ảnh "Âm Dương Sư: Tình Nhã Tập" - nổi bật với bố cục nhân vật xếp lớp mang đậm phong cách thẩm mỹ kỳ ảo phương Đông; tác phẩm sử dụng bảng màu trầm tối làm chủ đạo, điểm xuyết sắc vàng nhằm khơi gợi bầu không khí vừa huyền bí vừa kịch tính của thế giới Âm Dương Sư.',
-      en: 'The movie poster for "The Yin-Yang Master: Dream of Eternity" - features a layered character composition steeped in Eastern fantasy aesthetics, utilizing a palette of deep, dark tones accented with gold to evoke the mysterious and dramatic atmosphere of the Yin-Yang Master world.',
-    },
-    tools: ['Photoshop'],
-    slides: [
-      { type: 'image', src: 'https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1400&auto=format&fit=crop' },
-    ],
-  },
-
-  'design-concept': {
-    title: '[Tên dự án] — Visual Design Concept',
-    category: { vi: 'Design', en: 'Design' },
-    subtitle: { vi: 'Graphic Design', en: 'Graphic Design' },
-    desc: {
-      vi: 'Placeholder — thay bằng dự án graphic design / branding thật: mood board, hệ thống nhận diện, ứng dụng thực tế.',
-      en: 'Placeholder — replace with your real graphic design / branding project: mood board, identity system, real-world application.',
-    },
-    tools: ['Illustrator', 'Photoshop'],
-    slides: [
-      { type: 'image', src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1618172193622-ae2d025f4032?q=80&w=1400&auto=format&fit=crop' },
-    ],
-  },
-
-};
-
-/* ==========================================================================
-   GIẢI THÍCH CÁC TRƯỜNG DỮ LIỆU (áp dụng cho cả data-2d.js và data-3d.js)
+   /* ==========================================================================
+   GIẢI THÍCH CÁC TRƯỜNG DỮ LIỆU CHUNG CHO PROJECT
    ==========================================================================
    key (vd: 'magazine-layout')
      — "Tên định danh" của dự án. PHẢI khớp 100% với data-id trên thẻ
@@ -106,3 +35,138 @@ const PROJECTS_2D = {
                 'src' của video/model nên dùng đường dẫn tương đối kiểu
                 '../../assets/...' (tính từ project/<slug>/index.html).
    ========================================================================== */
+
+const PROJECTS_2D = {
+
+  ghibli: {
+    title: 'Ghibli - Custom Cards',
+    category: { vi: 'Illustration', en: 'Illustration' },
+    subtitle: {
+      vi: 'Flat Illustration',
+      en: 'Flat Illustration',
+    },
+    desc: {
+      vi: 'Bộ bài tây lấy cảm hứng từ thế giới hoạt hình Studio Ghibli — minh họa dựng trong Illustrator, mỗi lá bài là 1 khung cảnh riêng.',
+      en: 'A tarot/playing card deck inspired by the animated worlds of Studio Ghibli — illustrated in Illustrator, each card its own scene.',
+    },
+    tools: ['Illustrator'],
+    styleTags: ['Flat Illustration', 'Character Design', 'Card'],
+    // team: { vi: 'Dự án nhóm — Đóng góp: toàn bộ minh họa & layout bộ bài.', en: 'Team project — Contribution: all illustrations & deck layout.' }, // bỏ comment nếu là dự án nhóm
+    slides: [
+      { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/1.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/2.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/3.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/4.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/5.webp' },
+      { type: 'image', src: '../../assets/2d/ghibli/6.webp' },
+
+    ],
+  },
+
+  CA: {
+    title: 'Collage Art - Poster',
+    category: { vi: 'Poster', en: 'Poster' },
+    subtitle: { vi: 'Poster Design', en: 'Poster Design' },
+    desc: {
+      vi: 'Bức tranh cắt dán nghệ thuật - sử dụng các kỹ thuật cắt và ghép đa chất liệu để tạo thành một bản thể phức tạp. Mang lại một góc nhìn đa diện và ẩn dụ về sự hình thành danh tính trong thời đại hình ảnh số.',
+      en: 'An artistic collage—utilizing multi-material cutting and assembly techniques to create a complex entity—offering a multifaceted, metaphorical perspective on identity formation in the age of digital imagery.',
+    },
+    tools: ['Photoshop'],
+    styleTags: ['Collage Art','Poster Design','VisualArt' ,'Mixed Media', 'Digital Art'],
+    slides: [
+      { type: 'image', src: '../../assets/2d/CA/01.webp' },
+    ],
+  },
+
+  TYYM: {
+    title: 'The Yin-Yang Master — Movie Poster',
+    category: { vi: 'Poster', en: 'Poster' },
+    subtitle: { vi: 'Poster Điện ảnh', en: 'Movie Poster' },
+    desc: {
+      vi: 'Poster phim điện ảnh "Âm Dương Sư: Tình Nhã Tập" - nổi bật với bố cục nhân vật xếp lớp mang đậm phong cách thẩm mỹ kỳ ảo phương Đông; tác phẩm sử dụng bảng màu trầm tối làm chủ đạo, điểm xuyết sắc vàng nhằm khơi gợi bầu không khí vừa huyền bí vừa kịch tính của thế giới Âm Dương Sư.',
+      en: 'The movie poster for "The Yin-Yang Master: Dream of Eternity" - features a layered character composition steeped in Eastern fantasy aesthetics, utilizing a palette of deep, dark tones accented with gold to evoke the mysterious and dramatic atmosphere of the Yin-Yang Master world.',
+    },
+    tools: ['Photoshop'],
+    styleTags: ['Movie Poster', 'Poster Design', 'Key Visual', 'Fantasy Art', 'Character Poster'],
+    slides: [
+      { type: 'image', src: '../../assets/2d/TYYM/00.webp' },
+      { type: 'image', src: '../../assets/2d/TYYM/01.webp' },
+    ],
+  },
+
+  LB: {
+    title: 'Local Brands - Magazine Layout',
+    category: { vi: 'Editorial', en: 'Editorial' },
+    subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
+    desc: {
+      vi: 'Thiết kế chú trọng vào hệ thống lưới (grid layout) hiện đại, typography phá cách cùng nhịp điệu hình ảnh phóng khoáng để bắt trọn tinh thần thời trang đường phố của giới trẻ.',
+      en: 'The design emphasizes a modern grid layout, unconventional typography, and a dynamic visual rhythm to capture the spirit of youth street fashion.',
+    },
+    tools: ['Indesign', 'Photoshop'],
+        styleTags: ['Typography', 'Fashion Magazine','Minimalist' , 'Modern', 'Grid System'],
+    team: { 
+      vi: 'Đóng góp: Lên ý tưởng concept & Dàn trang chính.', 
+      en: 'Contribution: Concept Idealisation & Main Editorial Layout Designer.' },
+    slides: [
+      { type: 'image', src: '../../assets/2d/LB/000.webp' },
+      { type: 'image', src: '../../assets/2d/LB/001.webp' },
+      { type: 'image', src: '../../assets/2d/LB/002.webp' },
+      { type: 'image', src: '../../assets/2d/LB/02.webp' },
+      { type: 'image', src: '../../assets/2d/LB/03.webp' },
+      { type: 'image', src: '../../assets/2d/LB/04.webp' },
+      { type: 'image', src: '../../assets/2d/LB/05.webp' },
+      { type: 'image', src: '../../assets/2d/LB/06.webp' },
+      { type: 'image', src: '../../assets/2d/LB/07.webp' },
+      { type: 'image', src: '../../assets/2d/LB/08.webp' },
+      { type: 'image', src: '../../assets/2d/LB/09.webp' },
+      { type: 'image', src: '../../assets/2d/LB/10.webp' },
+      { type: 'image', src: '../../assets/2d/LB/11.webp' },
+      { type: 'image', src: '../../assets/2d/LB/12.webp' },
+      { type: 'image', src: '../../assets/2d/LB/13.webp' },
+      { type: 'image', src: '../../assets/2d/LB/14.webp' },
+      { type: 'image', src: '../../assets/2d/LB/15.webp' },
+      { type: 'image', src: '../../assets/2d/LB/16.webp' },
+      { type: 'image', src: '../../assets/2d/LB/17.webp' },
+      { type: 'image', src: '../../assets/2d/LB/18.webp' },
+    ],
+  },
+
+  elle: {
+    title: 'Elle - Magazine Layout',
+    category: { vi: 'Editorial', en: 'Editorial' },
+    subtitle: { vi: 'Magazine Cover', en: 'Magazine Cover' },
+    desc: {
+      vi: 'lấy cảm hứng từ Nghệ sĩ Suboi và album "No Nê". Ý tưởng tập trung vào việc kết hợp ngôn ngữ thời trang cao cấp với tư duy typography hiện đại, tạo nên một ấn phẩm đậm tính nghệ thuật và cá tính thương hiệu.',
+      en: 'Inspired by the artist Suboi and her album "No Nê", the concept focuses on blending the language of high fashion with modern typographic sensibilities to create a publication rich in artistic flair and brand personality.',
+    },
+    tools: ['Indesign', 'Photoshop'],
+        styleTags: ['Modern Editorial', 'Pop Culture','Fashion Magazine' , 'Magazine Cover', 'Editorial Concept Design'],
+    slides: [
+      { type: 'image', src: '../../assets/2d/elle/000.webp' },
+      { type: 'image', src: '../../assets/2d/elle/001.webp' },
+      { type: 'image', src: '../../assets/2d/elle/002.webp' },
+    ],
+  },
+
+  coffee: {
+    title: 'Coffee - Specialized Magazine',
+    category: { vi: 'Editorial', en: 'Editorial' },
+    subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
+    desc: {
+      vi: 'Thiết kế tập trung vào việc xử lý bố cục mạng lưới linh hoạt, kết hợp bảng màu "Earth Tones" để truyền tải trọn vẹn câu chuyện từ canh tác, chế biến đến công nghệ pha chế hiện đại.',
+      en: 'The design focuses on a flexible grid system, incorporating an "Earth Tones" palette (natural brown, beige, and black) to convey a narrative that bridges traditional cultivation with modern technological transformation.',
+    },
+    tools: ['Indesign', 'Photoshop'],
+        styleTags: ['Technical Minimalist', 'Earthy','Special Subject Magazine Design' , 'Print Design', 'Editorial Concept Design'],
+    slides: [
+      { type: 'image', src: '../../assets/2d/coffee/00.webp' },
+      { type: 'image', src: '../../assets/2d/coffee/01.webp' },
+      { type: 'image', src: '../../assets/2d/coffee/02.webp' },
+    ],
+  },
+
+
+  
+};
+

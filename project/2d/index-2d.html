@@ -25,8 +25,8 @@
   <header class="site-header" id="header">
     <div class="container header__inner">
       <a href="../../index.html" class="logo">
-        <span class="logo__name">linn.</span>
-        <span class="logo__role" data-vi="2D Artist" data-en="2D Artist">Nghệ sĩ 2D</span>
+        <span class="logo__name" data-vi="trúc linh" data-en="linn.">linn.</span>
+        <span class="logo__role" data-vi="Nghệ sĩ 2D" data-en="2D Artist">Nghệ sĩ 2D</span>
       </a>
 
       <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">
@@ -80,13 +80,35 @@
 
         <div class="gallery" id="galleryGrid">
 
-          <!-- Card thật — có data-id="magazine-layout" trùng key trong data.js,
-               nên JS tự thêm badge số ảnh + nút "Xem đầy đủ dự án" trong modal. -->
+<!-- /* ==========================================================================
+          GIẢI THÍCH CÁC TRƯỜNG DỮ LIỆU CHUNG CHO PROJECT
+          ==========================================================================
+          key (vd: 'magazine-layout')
+            — "Tên định danh" của dự án. PHẢI khớp 100% với data-id trên thẻ
+              .card__media của card tương ứng trong index-2d.html/3d.html. Đây là sợi
+              dây duy nhất nối 1 card ngoài gallery với dữ liệu chi tiết của nó.
 
+          title      — Tên dự án, hiển thị y nguyên ở cả 2 ngôn ngữ (không dịch).
+          category   — { vi, en }: nhãn nhỏ phía trên tiêu đề trang chi tiết.
+          subtitle   — { vi, en }: dòng phụ đề ngắn dưới tiêu đề.
+          desc       — { vi, en }: đoạn mô tả dài, hiển thị ở phần "About".
+          tools      — mảng string: các phần mềm/công nghệ dùng cho dự án,
+                        hiển thị dạng tag, KHÔNG cần dịch (Photoshop vẫn là
+                        Photoshop dù ở ngôn ngữ nào).
+          slides     — mảng các "trang" trong gallery lớn của trang chi tiết,
+                        render theo đúng thứ tự khai báo. Mỗi phần tử có dạng:
+                          { type: 'image', src: '...' }
+                          { type: 'video', src: '...', poster: '...' }
+                          { type: 'model', src: '....glb', poster: '...' }
+                        'src' của video/model nên dùng đường dẫn tương đối kiểu
+                        '../../assets/...' (tính từ project/<slug>/index.html).
+          ========================================================================== */           -->
+   
+          <!-- GHIBLI -->
           <article class="card card--2d" data-category="illustration">
             <button class="card__media" type="button"
               data-id="ghibli"
-              data-detail="2d-ghibli.html"
+              data-detail="2d-ghibli.html"  
               data-title="Ghibli - Custom Cards"
               data-subtitle="Flat Illustration"
               data-img="../../assets/2d/ghibli/1.webp"
@@ -103,19 +125,26 @@
               <div class="card__tags">
                 <span class="tag">Illustrator</span>
               </div>
+              <div class="card__tags">
+                <span class="tag tag--style">Flat Illustration</span>
+                <span class="tag tag--style">Character Design</span>
+                <span class="tag tag--style">Cel-look</span>
+              </div>
             </div>
           </article>
 
+          <!-- Collage ART -->
           <article class="card card--2d" data-category="poster">
             <button class="card__media" type="button"
-              data-id="collageart"
+              data-id="CA"
+              data-detail="2d-CA.html"  
               data-title="Collage Art - Poster"
               data-subtitle="Poster Design"
-              data-img="../../assets/2d/Collage Art/01.webp"
+              data-img="../../assets/2d/CA/01.webp"
               data-desc-vi="Bức tranh cắt dán nghệ thuật - sử dụng các kỹ thuật cắt và ghép đa chất liệu để tạo thành một bản thể phức tạp. Mang lại một góc nhìn đa diện và ẩn dụ về sự hình thành danh tính trong thời đại hình ảnh số."
               data-desc-en="An artistic collage—utilizing multi-material cutting and assembly techniques to create a complex entity—offering a multifaceted, metaphorical perspective on identity formation in the age of digital imagery."
               data-tools="Photoshop">
-              <img src="../../assets/2d/Collage Art/01.webp" alt="Collage Art - Poster" loading="lazy">
+              <img src="../../assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -125,83 +154,147 @@
               <div class="card__tags">
                 <span class="tag">Photoshop</span>
               </div>
+              <div class="card__tags">
+                <span class="tag tag--style">Collage Art</span>
+                <span class="tag tag--style">Poster Design</span>
+                <span class="tag tag--style">Visual Art</span>
+                <span class="tag tag--style">Mixed Media</span>
+                <span class="tag tag--style">Digital Art</span>
+              </div>
             </div>
           </article>
 
-          <!--
-            CÁC CARD BÊN DƯỚI LÀ MẪU (PLACEHOLDER) — có gắn badge "Placeholder"
-            và viền nét đứt. Thay data-title/data-img/data-desc/data-tools
-            bằng dự án thật, và cập nhật object tương ứng trong data.js
-            (cùng data-id) nếu muốn có trang chi tiết nhiều ảnh.
-          -->
-
-          <article class="card card--2d card--placeholder" data-category="poster">
+          <!-- The Yin-Yang Master -->
+          <article class="card card--2d" data-category="poster">
             <button class="card__media" type="button"
               data-id="TYYM"
+              data-detail="2d-TYYM.html"  
               data-title="The Yin-Yang Master — Movie Poster"
               data-subtitle="Movie Poster"
-              data-img="https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1400&auto=format&fit=crop"
+              data-img="../../assets/2d/TYYM/00.webp"
               data-desc-vi="Poster phim điện ảnh 'Âm Dương Sư: Tình Nhã Tập' - nổi bật với bố cục nhân vật xếp lớp mang đậm phong cách thẩm mỹ kỳ ảo phương Đông; tác phẩm sử dụng bảng màu trầm tối làm chủ đạo, điểm xuyết sắc vàng nhằm khơi gợi bầu không khí vừa huyền bí vừa kịch tính của thế giới Âm Dương Sư."
               data-desc-en="The movie poster for 'The Yin-Yang Master: Dream of Eternity' features a layered character composition steeped in Eastern fantasy aesthetics, utilizing a palette of deep, dark tones accented with gold to evoke the mysterious and dramatic atmosphere of the Yin-Yang Master world."
               data-tools="Photoshop">
-              <!-- <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span> -->
-              <img src="https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Poster Series" loading="lazy">
+              <img src="../../assets/2d/TYYM/00.webp" alt="The Yin-Yang Master — Movie Poster" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
               <p class="card__category" data-vi="Poster" data-en="Poster">Poster</p>
               <h3 class="card__title">The Yin-Yang Master — Movie Poster</h3>
               <p class="card__desc" data-vi="Poster Điện ảnh" data-en="Movie Poster">Movie Poster</p>
+              <!-- tools -->
               <div class="card__tags">
                 <span class="tag">Photoshop</span>
+              </div>
+              <!-- tags -->
+              <div class="card__tags">
+                <span class="tag tag--style">Movie Poster</span>
+                <span class="tag tag--style">Poster Design</span>
+                <span class="tag tag--style">Key Visual</span>
+                <span class="tag tag--style">Fantasy Art</span>
+                <span class="tag tag--style">Character Poster</span>
               </div>
             </div>
           </article>
 
-          <article class="card card--2d card--placeholder" data-category="layout">
+          <!-- Local Brands -->
+          <article class="card card--2d" data-category="editorial">
             <button class="card__media" type="button"
-              data-id="layout-study-2d"
-              data-title="[Tên dự án] — Editorial Layout Study"
-              data-subtitle="Layout Design"
-              data-img="https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1400&auto=format&fit=crop"
-              data-desc-vi="Placeholder — thay bằng dự án layout thật: hệ thống lưới, khoảng trắng, phân cấp nội dung."
-              data-desc-en="Placeholder — replace with your real layout project: grid system, white space, content hierarchy."
+              data-id="LB"
+              data-detail="2d-LB.html" 
+              data-title="Local Brands - Magazine Layout"
+              data-subtitle="Editorial Design"
+              data-img="../../assets/2d/LB/000.webp"
+              data-desc-vi="Thiết kế chú trọng vào hệ thống lưới (grid layout) hiện đại, typography phá cách cùng nhịp điệu hình ảnh phóng khoáng để bắt trọn tinh thần thời trang đường phố của giới trẻ."
+              data-desc-en="The design emphasizes a modern grid layout, unconventional typography, and a dynamic visual rhythm to capture the spirit of youth street fashion."
               data-tools="InDesign, Photoshop">
-              <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
-              <img src="https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Editorial Layout Study" loading="lazy">
+              <img src="../../assets/2d/LB/000.webp" alt="Local Brands - Magazine Layout" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
-              <p class="card__category">Layout</p>
-              <h3 class="card__title">[Tên dự án] — Editorial Layout Study</h3>
-              <p class="card__desc" data-vi="Layout Design" data-en="Layout Design">Layout Design</p>
+              <p class="card__category">Editorial</p>
+              <h3 class="card__title">Local Brands - Magazine Layout</h3>
+              <p class="card__desc" data-vi="Thiết kế Tạp chí" data-en="Editorial Design">Editorial Designn</p>
+              <!-- tools -->
               <div class="card__tags">
                 <span class="tag">InDesign</span>
                 <span class="tag">Photoshop</span>
               </div>
+              <!-- tags -->
+              <div class="card__tags">
+                <span class="tag tag--style">Typography</span>
+                <span class="tag tag--style">Fashion Magazine</span>
+                <span class="tag tag--style">Minimalist</span>
+                <span class="tag tag--style">Modern</span>
+                <span class="tag tag--style">Grid System</span>
+              </div>
             </div>
           </article>
 
-          <article class="card card--2d card--placeholder" data-category="design">
+          <!-- Elle -->
+          <article class="card card--2d" data-category="editorial">
             <button class="card__media" type="button"
-              data-id="design-concept"
-              data-title="[Tên dự án] — Visual Design Concept"
-              data-subtitle="Graphic Design"
-              data-img="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1400&auto=format&fit=crop"
-              data-desc-vi="Placeholder — thay bằng dự án graphic design / branding thật: mood board, hệ thống nhận diện, ứng dụng thực tế."
-              data-desc-en="Placeholder — replace with your real graphic design / branding project: mood board, identity system, real-world application."
-              data-tools="Illustrator, Photoshop">
-              <span class="card__placeholder-badge" data-vi="Placeholder" data-en="Placeholder">Placeholder</span>
-              <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop" alt="Placeholder — Visual Design Concept" loading="lazy">
+              data-id="elle"
+              data-detail="2d-elle.html" 
+              data-title="Elle - Magazine Cover"
+              data-subtitle="Editorial Design"
+              data-img="../../assets/2d/elle/000.webp"
+              data-desc-vi="Lấy cảm hứng từ Nghệ sĩ Suboi và album 'No Nê'. Ý tưởng tập trung vào việc kết hợp ngôn ngữ thời trang cao cấp với tư duy typography hiện đại, tạo nên một ấn phẩm đậm tính nghệ thuật và cá tính thương hiệu."
+              data-desc-en="Inspired by the artist Suboi and her album 'No Nê', the concept focuses on blending the language of high fashion with modern typographic sensibilities to create a publication rich in artistic flair and brand personality."
+              data-tools="InDesign, Photoshop">
+              <img src="../../assets/2d/elle/000.webp" alt="Local Brands - Magazine Cover" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
-              <p class="card__category" data-vi="Design" data-en="Design">Design</p>
-              <h3 class="card__title">[Tên dự án] — Visual Design Concept</h3>
-              <p class="card__desc" data-vi="Graphic Design" data-en="Graphic Design">Graphic Design</p>
+              <p class="card__category">Editorial</p>
+              <h3 class="card__title">Elle - Magazine Cover</h3>
+              <p class="card__desc" data-vi="Thiết kế Tạp chí" data-en="Editorial Design">Editorial Design</p>
+              <!-- tools -->
               <div class="card__tags">
-                <span class="tag">Illustrator</span>
+                <span class="tag">InDesign</span>
                 <span class="tag">Photoshop</span>
+              </div>
+              <!-- tags -->
+              <div class="card__tags">
+                <span class="tag tag--style">Modern Editorial</span>
+                <span class="tag tag--style">Pop Culture</span>
+                <span class="tag tag--style">Fashion Magazine</span>
+                <span class="tag tag--style">Magazine Cover</span>
+                <span class="tag tag--style">Editorial Concept Design</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Coffee -->
+          <article class="card card--2d" data-category="editorial">
+            <button class="card__media" type="button"
+              data-id="coffee"
+              data-detail="2d-coffee.html" 
+              data-title="Coffee - Specialized Magazine"
+              data-subtitle="Editorial Design"
+              data-img="../../assets/2d/coffee/00.webp"
+              data-desc-vi="Thiết kế tập trung vào việc xử lý bố cục mạng lưới linh hoạt, kết hợp bảng màu 'Earth Tones' để truyền tải trọn vẹn câu chuyện từ canh tác, chế biến đến công nghệ pha chế hiện đại."
+              data-desc-en="The design focuses on a flexible grid system, incorporating an 'Earth Tones' palette (natural brown, beige, and black) to convey a narrative that bridges traditional cultivation with modern technological transformation."
+              data-tools="InDesign, Photoshop">
+              <img src="../../assets/2d/coffee/00.webp" alt="Coffee - Specialized Magazine" loading="lazy">
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <p class="card__category">Editorial</p>
+              <h3 class="card__title">Coffee - Specialized Magazine</h3>
+              <p class="card__desc" data-vi="Thiết kế Tạp chí" data-en="Editorial Design">Editorial Design</p>
+              <!-- tools -->
+              <div class="card__tags">
+                <span class="tag">InDesign</span>
+                <span class="tag">Photoshop</span>
+              </div>
+              <!-- tags -->
+              <div class="card__tags">
+                <span class="tag tag--style">Technical Minimalist</span>
+                <span class="tag tag--style">Earthy</span>
+                <span class="tag tag--style">Special Subject Magazine Design</span>
+                <span class="tag tag--style">Print Design</span>
+                <span class="tag tag--style">Editorial Concept Design</span>
               </div>
             </div>
           </article>

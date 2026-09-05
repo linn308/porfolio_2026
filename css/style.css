@@ -232,32 +232,30 @@ body.no-scroll { overflow: hidden; }
   color: var(--text-primary);
 }
 
-/* Skill section: KHÔNG sáng toàn bộ khi hover cả nhóm — chỉ tag đang được
-   trỏ chuột vào mới đổi màu, các tag còn lại trong nhóm giữ nguyên. */
-.skill-group .tag {
+/* Hover từng tag riêng lẻ — ÁP DỤNG MỌI NƠI có .tag (Toolkit ở index,
+   "Tools used" ở trang chi tiết dự án, và tag công cụ/phong cách ngay
+   trên card ngoài gallery) — chỉ tag đang trỏ chuột mới sáng lên, các
+   tag còn lại trong cùng nhóm giữ nguyên, không sáng đồng loạt. */
+.tag {
   transition: border-color var(--transition-fast), color var(--transition-fast),
     background-color var(--transition-fast);
 }
 
-.skill-group .tag:hover {
+.tag:hover {
   border-color: var(--accent);
   color: var(--text-primary);
   background: var(--accent-soft);
 }
 
-/* Trang chi tiết dự án: tag công cụ (#projectTools) áp CÙNG hiệu ứng hover
-   như tag trong "Toolkit" ở index.html — chỉ tag đang trỏ chuột vào mới
-   sáng lên, các tag còn lại giữ nguyên. */
-.project-info__tools .tag {
-  transition: border-color var(--transition-fast), color var(--transition-fast),
-    background-color var(--transition-fast);
+/* Tag "phong cách / chủ đề" — viền màu nhạt sẵn để phân biệt trực quan
+   với tag công cụ (Illustrator, Photoshop...), vẫn dùng chung hiệu ứng
+   hover ở trên */
+.tag--style {
+  border-color: rgba(56, 189, 248, 0.3);
+  color: var(--text-secondary);
 }
 
-.project-info__tools .tag:hover {
-  border-color: var(--accent);
-  color: var(--text-primary);
-  background: var(--accent-soft);
-}
+.card--2d .tag--style { border-color: rgba(231, 184, 105, 0.35); }
 
 /* --- Filter pills: dùng cho bộ lọc con trong từng trang 2D / 3D --- */
 .filter-bar {
@@ -600,99 +598,137 @@ body.no-scroll { overflow: hidden; }
 }
 
 /* ==========================================================================
-   6. EXPLORE SPLIT-SELECTOR (index.html)
-   2 khối lớn 2D / 3D — hover để phóng to, click để đi tới trang tương ứng.
-   Đây là "cửa vào" chính thay cho gallery gộp chung trước đây.
-   ========================================================================== */
-.explore {
+   6. FEATURED PROJECTS (index.html)
+   Thay cho 2 khối lớn 2D/3D trước đây — giờ hiện thẳng vài card dự án
+   THẬT (dùng lại đúng component .card/.gallery từ trang gallery, layout
+   masonry kiểu "zodiac"/Pinterest), theo từng nhóm 2D/3D, mỗi nhóm có link
+   "Xem tất cả" dẫn sang trang gallery đầy đủ.
+   THÊM/BỚT card ở trang chủ: copy nguyên khối <article class="card">...
+   từ index-2d.html/index-3d.html dán vào đây — card tự hoạt động y hệt
+   (mở modal, hiệu ứng hover...) vì dùng chung 1 bộ CSS/JS. */
+.featured {
   padding: 40px 0 110px;
   border-top: 1px solid var(--border-color);
 }
 
-.explore__panels {
+.featured__group {
+  margin-bottom: 64px;
+}
+
+.featured__group:last-child {
+  margin-bottom: 0;
+}
+
+.featured__group-head {
   display: flex;
-  gap: 20px;
-  min-height: 420px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.explore-panel {
-  position: relative;
-  flex: 1;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: flex-end;
-  padding: 36px;
-  transition: flex-grow var(--transition-base), border-color var(--transition-fast);
-}
-
-/* Khi hover 1 panel, panel đó nở ra, panel còn lại thu nhỏ lại một chút
-   — hiệu ứng "tương tác" gợi cảm giác gallery cho khu vực chọn hướng */
-.explore__panels:hover .explore-panel { flex-grow: 0.85; }
-.explore__panels .explore-panel:hover { flex-grow: 1.35; }
-
-.explore-panel__bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: saturate(0.7) brightness(0.55);
-  transition: transform 6s ease, filter var(--transition-base);
-}
-
-.explore-panel:hover .explore-panel__bg {
-  transform: scale(1.08);
-  filter: saturate(0.9) brightness(0.4);
-}
-
-.explore-panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(15, 15, 18, 0.92) 0%, rgba(15, 15, 18, 0.15) 65%);
-}
-
-.explore-panel__content { position: relative; z-index: 2; width: 100%; }
-
-.explore-panel__label {
+.featured__group-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  margin-bottom: 8px;
+  font-size: 1.6rem;
 }
 
-.explore-panel--2d .explore-panel__label { color: var(--accent-warm); }
-.explore-panel--3d .explore-panel__label { color: var(--accent); }
+.featured__group--2d .featured__group-title { color: var(--accent-warm); }
+.featured__group--3d .featured__group-title { color: var(--accent); }
 
-.explore-panel__desc {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  max-width: 320px;
-  margin-bottom: 18px;
-}
-
-.explore-panel__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.explore-panel__arrow {
+.featured__more {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
 }
 
-.explore-panel--2d .explore-panel__arrow { color: var(--accent-warm); }
-.explore-panel--3d .explore-panel__arrow { color: var(--accent); }
+.featured__more:hover { color: var(--text-primary); }
+.featured__group--2d .featured__more:hover { color: var(--accent-warm); }
+.featured__group--3d .featured__more:hover { color: var(--accent); }
 
-.explore-panel__arrow-icon { transition: transform var(--transition-base); }
-.explore-panel:hover .explore-panel__arrow-icon { transform: translateX(6px); }
+.featured__more-icon { transition: transform var(--transition-fast); }
+.featured__more:hover .featured__more-icon { transform: translateX(4px); }
+
+/* Lưới ảnh 5 cột cho khối Explore ở trang chủ — chỉ hiện ảnh, kích thước
+   ô cố định (vuông), KHÔNG có .card__body/text (khác với .gallery masonry
+   dùng ở trang danh sách 2D/3D). Ô cuối cùng luôn là 1 thẻ <a> dẫn sang
+   trang 2D/3D tương ứng, không phải dự án thật nên không có data-id và
+   không mở modal khi bấm. */
+.showcase {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.showcase .card {
+  margin-bottom: 0;
+  break-inside: auto;
+}
+
+.showcase .card__media {
+  aspect-ratio: 1 / 1;
+}
+
+.showcase .card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit:cover;
+}
+
+.showcase .card__media model-viewer {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.showcase .card__body { display: none; }
+
+.showcase__item--more {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-base), transform var(--transition-base),
+    background var(--transition-base);
+}
+
+.showcase__item--more:hover {
+  transform: translateY(-6px);
+  background: var(--bg-elevated);
+}
+
+.featured__group--2d .showcase__item--more:hover { border-color: rgba(231, 184, 105, 0.45); }
+.featured__group--3d .showcase__item--more:hover { border-color: rgba(56, 189, 248, 0.4); }
+
+.showcase__item-icon { font-size: 1.5rem; }
+
+.showcase__item-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  padding: 0 10px;
+}
+
+@media (max-width: 1024px) {
+  .showcase { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 620px) {
+  .showcase { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ==========================================================================
    7. SUB-HERO / BREADCRUMB (index-2d.html, 3d.html)
@@ -734,10 +770,36 @@ body.no-scroll { overflow: hidden; }
    ========================================================================== */
 .gallery-section { padding: 60px 0 110px; }
 
+/* Masonry kiểu "zodiac" (giống grid Pinterest): KHÔNG ép ảnh vào khung cố
+   định nữa — khung tự co giãn theo đúng tỉ lệ ảnh/video thật (ảnh dọc thì
+   card cao, ảnh ngang thì card thấp). Dùng CSS columns (multi-column) —
+   thuần CSS, không cần JS đo kích thước ảnh. */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 26px;
+  columns: 3 150px;
+  column-gap: 18px;
+}
+
+/* Trang danh sách 2D/3D (index-2d.html/index-3d.html): giữ đúng layout
+   "zodiac"/masonry (khung tự co theo tỉ lệ ảnh thật), chỉ đổi mật độ lên
+   7 cột và bỏ hết nội dung phụ trong .card__body — chỉ còn lại category
+   (tag) + tên dự án. Mô tả/tools/style-tags vẫn còn trong data-* attribute
+   trên .card__media nên modal xem nhanh KHÔNG bị mất thông tin, chỉ ẩn
+   phần hiển thị ngoài card. */
+.gallery .card__body {
+  padding: 14px 16px;
+}
+
+.gallery .card__desc,
+.gallery .card__body .card__tags {
+  display: none;
+}
+
+.gallery .card__category { margin-bottom: 6px; }
+.gallery .card__title { font-size: 0.92rem; line-height: 1.3; }
+
+.gallery .card {
+  break-inside: avoid;
+  margin-bottom: 26px;
 }
 
 .gallery__empty {
@@ -779,15 +841,15 @@ body.no-scroll { overflow: hidden; }
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
   overflow: hidden;
   cursor: pointer;
   background: var(--bg-elevated);
 }
 
 .card__media img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  display: block;
+  width: 100%;
+  height: auto; /* chiều cao tự theo tỉ lệ ảnh thật, không còn ép cắt 4:3 */
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
@@ -797,10 +859,12 @@ body.no-scroll { overflow: hidden; }
    Áp CÙNG hiệu ứng hover (zoom nhẹ + tối màu) như ảnh thường, để card dùng
    model-viewer (CRUSADER, Web3D placeholder) và card dùng ảnh (FIGHT FOR LIFE,
    Layout placeholder) trông đồng bộ khi hover — trước đây chỉ ảnh mới có
-   hiệu ứng này nên 2 card đầu/cuối (model-viewer) và 2 card giữa (ảnh) lệch nhau. */
+   hiệu ứng này nên 2 card đầu/cuối (model-viewer) và 2 card giữa (ảnh) lệch nhau.
+   Riêng model-viewer vẫn giữ tỉ lệ khung cố định (4:3) — vì đây là khung
+   WebGL, không có "kích thước tự nhiên" như ảnh để tự co giãn theo được. */
 .card__media model-viewer {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 4 / 3;
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
@@ -872,6 +936,23 @@ body.no-scroll { overflow: hidden; }
   z-index: 2;
   font-family: var(--font-mono);
   font-size: 0.68rem;
+  color: var(--text-primary);
+  background: rgba(15, 15, 18, 0.75);
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+/* Badge "Dự án nhóm" — chỉ hiện trên card nào được đánh dấu team project
+   (xem HTML: .card--team) */
+.card__team-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
   color: var(--text-primary);
   background: rgba(15, 15, 18, 0.75);
   border: 1px solid var(--border-color);
@@ -1226,77 +1307,163 @@ a.footer__item:hover .footer__item-value {
 
 .project-gallery-section { padding: 48px 0 60px; }
 
-.project-gallery__main {
+/* Masonry "zodiac" cho trang chi tiết dự án: KHÔNG còn kiểu "1 khung lớn +
+   dải thumbnail nhỏ chọn từng cái" nữa — giờ hiện TẤT CẢ ảnh/video/model
+   cùng lúc trong 1 lưới, mỗi ô tự co theo đúng tỉ lệ nội dung thật. */
+.project-gallery {
+  columns: 2 380px;
+  column-gap: 20px;
+}
+
+.project-gallery__tile {
   position: relative;
-  aspect-ratio: 16 / 9;
+  break-inside: avoid;
+  margin-bottom: 20px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
-  margin-bottom: 16px;
 }
 
-.project-gallery__media {
+.project-gallery__tile img,
+.project-gallery__tile video {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  --poster-color: transparent;
+  height: auto; /* tự theo tỉ lệ ảnh/video thật, không ép cắt */
 }
 
-.project-gallery__thumbs {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-}
-
-.project-gallery__thumb {
-  position: relative;
-  flex: 0 0 92px;
+/* model-viewer vẫn cần 1 tỉ lệ khung tối thiểu (không có kích thước "tự
+   nhiên" trước khi tải xong) — dùng 4:3 làm mặc định hợp lý */
+.project-gallery__tile model-viewer {
+  width: 100%;
   aspect-ratio: 4 / 3;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-  opacity: 0.55;
-  transition: opacity var(--transition-fast), border-color var(--transition-fast);
 }
 
-.project-gallery__thumb-play {
+.project-gallery__tile-badge {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text-primary);
-  background: rgba(15, 15, 18, 0.35);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.project-gallery__thumb:hover { opacity: 0.85; }
-
-.project-gallery__thumb.is-active {
-  opacity: 1;
-  border-color: var(--accent);
-}
-
-.project-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
-
-.project-info {
-  display: grid;
-  grid-template-columns: 1.4fr 0.6fr;
-  gap: 48px;
-  padding-top: 44px;
-  margin-top: 44px;
-  border-top: 1px solid var(--border-color);
+  background: rgba(15, 15, 18, 0.7);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
 }
 
 .project-info__desc {
   color: var(--text-secondary);
   font-size: 1.02rem;
-  max-width: 620px;
-  margin-bottom: 28px;
+}
+
+/* Thumbnail/video đại diện dự án — đặt to, trên cùng, trước cả tên dự án.
+   Nội dung được initProjectDetail() đổ vào (#projectCover) dựa theo
+   project.cover hoặc slides[0] — xem js/script.js. */
+.project-cover {
+  margin-top: 28px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.project-cover img,
+.project-cover video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: cover;
+}
+
+.project-cover model-viewer {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Bố cục chính của trang chi tiết: TRÁI là gallery zodiac (ảnh/video/model
+   nhỏ hơn, nhiều cột), PHẢI là toàn bộ thông tin dự án — theo đúng tỉ lệ
+   5:2 trên desktop. Dưới 1024px tự gập về 1 cột, gallery lên trước. */
+.project-body {
+  display: grid;
+  grid-template-columns: 5fr 2fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Gallery bên trái giờ nhỏ hơn bản cũ (từng chiếm full-width 2 cột lớn),
+   tăng mật độ lên 4-5 cột cho khớp tỉ lệ 5:2 với cột thông tin. */
+.project-body__gallery .project-gallery {
+  columns: 3 130px;
+  column-gap: 16px;
+}
+
+/* Cột thông tin bên phải: dính theo khi cuộn trang, để luôn thấy tên/tag/
+   tool dù đang cuộn xem ảnh dài ở cột trái. Giới hạn chiều cao + tự cuộn
+   riêng nếu nội dung (mô tả dài) vượt quá viewport. */
+.project-body__info {
+  position: sticky;
+  top: 110px;
+  max-height: calc(100svh - 130px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.project-body__info .project-hero__title {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  margin-top: 8px;
+}
+
+.project-body__info .project-hero__subtitle { margin-bottom: 20px; }
+
+.project-body__info .project-info__desc {
+  max-width: none;
+  margin-bottom: 24px;
+}
+
+.project-body__info .project-team { margin: 0 0 24px; }
+.project-body__info .project-info__style { margin-top: 24px; }
+
+@media (max-width: 1024px) {
+  .project-body { grid-template-columns: 1fr; gap: 36px; }
+  .project-body__gallery .project-gallery { columns: 3 150px; }
+  .project-body__info {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .project-cover img,
+  .project-cover video { max-height: 46vh; }
+  .project-body__gallery .project-gallery { columns: 2 130px; }
+}
+
+/* Style/Theme tag group trong trang chi tiết — cùng bố cục với "Tools used"
+   nhưng cách nhau 1 khoảng, tự ẩn nếu project không khai báo styleTags */
+.project-info__style { margin-top: 28px; }
+
+/* Khối "Dự án nhóm" — callout riêng, viền màu nhấn để nổi bật, chỉ hiện
+   khi project.team có trong data-2d.js/data-3d.js (xem script.js) */
+.project-team {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border: 1px solid var(--accent-warm);
+  border-radius: var(--radius-md);
+  background: var(--accent-warm-soft);
+}
+
+.project-team__desc {
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+  margin-top: 6px;
 }
 
 .project-back {
@@ -1323,10 +1490,7 @@ a.footer__item:hover .footer__item-value {
   .footer__contact { grid-template-columns: repeat(2, 1fr); }
   .footer__contact-row { grid-template-columns: repeat(2, 1fr); }
 
-  .explore__panels { flex-direction: column; min-height: unset; }
-  .explore-panel { min-height: 450px; }
-  .explore__panels:hover .explore-panel { flex-grow: 1; }
-  .explore__panels .explore-panel:hover { flex-grow: 1; }
+  .gallery { columns: 2 150px; }
 }
 
 @media (max-width: 900px) {
@@ -1408,7 +1572,7 @@ a.footer__item:hover .footer__item-value {
     padding-bottom: 60px;
   }
 
-  .gallery { grid-template-columns: 1fr; }
+  .gallery { columns: 1 130px; }
   .footer__contact { grid-template-columns: 1fr; }
   .footer__contact-row,
   .footer__contact-row--2 { grid-template-columns: 1fr; }
@@ -1416,9 +1580,135 @@ a.footer__item:hover .footer__item-value {
   .modal__nav { width: 38px; height: 38px; }
 
   .project-hero { padding: 130px 0 32px; }
-  .project-info { grid-template-columns: 1fr; gap: 32px; }
 }
 
 @media (max-width: 900px) {
   .lang-switch { margin-left: 0; margin-top: 14px; }
+}
+
+/* ==========================================================================
+   14. LIGHTBOX PHÓNG TO ẢNH (trang chi tiết dự án — project/<slug>/*.html)
+   Khác với .modal ở trang danh sách 2D/3D (khung cố định 16:9, object-fit
+   cover — dùng để LIỆT KÊ nhanh nhiều dự án), lightbox này dùng để XEM RÕ
+   1 ảnh: không crop, ảnh giữ nguyên tỉ lệ thật và hiện tối đa trong viewport
+   (object-fit: contain). Chỉ áp dụng cho slide ảnh trong #projectGallery —
+   xem js/script.js (initGalleryLightbox). ========================================================================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.lightbox.is-open { opacity: 1; visibility: visible; }
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 10, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.lightbox__panel {
+  position: relative;
+  z-index: 1;
+  max-width: min(92vw, 1200px);
+  max-height: 90vh;
+  display: flex;
+  transform: scale(0.96);
+  transition: transform var(--transition-base);
+}
+
+.lightbox.is-open .lightbox__panel { transform: scale(1); }
+
+.lightbox__img {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+.lightbox__close,
+.lightbox__nav {
+  position: fixed;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-opa-8);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.lightbox__close:hover,
+.lightbox__nav:hover { border-color: var(--accent); color: var(--accent); }
+
+.lightbox__close { top: 22px; right: 26px; font-size: 1rem; }
+.lightbox__nav { top: 50%; transform: translateY(-50%); }
+.lightbox__nav--prev { left: 20px; }
+.lightbox__nav--next { right: 20px; }
+.lightbox__nav-icon { font-size: 1.4rem; line-height: 1; }
+
+.lightbox__counter {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--bg-surface-opa-8);
+  border: 1px solid var(--border-color);
+  padding: 5px 12px;
+  border-radius: 100px;
+}
+
+/* Gợi ý "bấm để phóng to" ngay trên ô ảnh trong gallery zodiac */
+.project-gallery__tile--zoomable { cursor: zoom-in; }
+
+.project-gallery__tile--zoomable::after {
+  content: '⤢';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: rgba(15, 15, 18, 0.65);
+  border: 1px solid var(--border-color);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.project-gallery__tile--zoomable:hover::after { opacity: 1; }
+.project-gallery__tile--zoomable img { transition: transform var(--transition-base); }
+.project-gallery__tile--zoomable:hover img { transform: scale(1.04); }
+
+@media (max-width: 620px) {
+  .lightbox__close,
+  .lightbox__nav { width: 38px; height: 38px; }
+  .lightbox__close { top: 14px; right: 14px; }
+  .lightbox__nav--prev { left: 10px; }
+  .lightbox__nav--next { right: 10px; }
 }

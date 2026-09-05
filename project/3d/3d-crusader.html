@@ -32,7 +32,7 @@
   <header class="site-header" id="header">
     <div class="container header__inner">
       <a href="../../index.html" class="logo">
-        <span class="logo__name">linn.</span>
+        <span class="logo__name" data-vi="Trúc Linh" data-en="linn.">linn.</span>
         <span class="logo__role" data-vi="Chi tiết dự án" data-en="Detail Project">Chi tiết dự án</span>
       </a>
 
@@ -65,39 +65,54 @@
       <section class="project-hero">
         <div class="container">
           <button type="button" class="project-back" id="projectBackBtn" data-vi="← Quay lại" data-en="← Back">← Quay lại</button>
-          <div class="project-hero__head">
-            <div class="project-hero__text">
-              <p class="kicker" id="projectCategory">—</p>
-              <h1 class="project-hero__title" id="projectTitle">—</h1>
-              <p class="project-hero__subtitle" id="projectSubtitle"></p>
-            </div>
-          </div>
+
+          <!-- Thumbnail/video đại diện dự án — to, trên cùng, trước cả tên
+               dự án. JS (initProjectDetail) tự đổ vào đây: ưu tiên
+               project.cover nếu có khai báo trong data-3d.js, không thì
+               tự lấy slides[0] làm ảnh/video đại diện — xem js/script.js.
+               CRUSADER: slides[0] sẵn là video showreel nên tự động hiện
+               video ở đây, không cần khai báo thêm gì. -->
+          <div class="project-cover" id="projectCover"></div>
         </div>
       </section>
 
       <section class="project-gallery-section">
         <div class="container">
+          <!-- Bố cục 5:2 — TRÁI là gallery zodiac (nhỏ hơn, 4-5 cột),
+               PHẢI là toàn bộ thông tin dự án (tên, category, mô tả,
+               tools, style tags, dự án nhóm nếu có). Dưới 1024px tự gập
+               về 1 cột, gallery lên trước — xem style.css mục .project-body. -->
+          <div class="project-body">
 
-          <!-- Khung lớn: hiển thị ảnh hoặc model-viewer đang chọn -->
-          <div class="project-gallery__main" id="projectMain">
-            <button class="modal__nav modal__nav--prev" id="projectPrev" aria-label="Ảnh trước"><span class="modal__nav-icon">‹</span></button>
-            <button class="modal__nav modal__nav--next" id="projectNext" aria-label="Ảnh tiếp theo"><span class="modal__nav-icon">›</span></button>
-          </div>
-
-          <!-- Dải thumbnail — bấm để chọn nhanh -->
-          <div class="project-gallery__thumbs" id="projectThumbs"></div>
-
-          <div class="project-info">
-            <div class="project-info__main">
-              <p class="kicker" data-vi="Về dự án" data-en="About this project"><span class="kicker__dot"></span> About</p>
-              <p class="project-info__desc" id="projectDesc"></p>
+            <div class="project-body__gallery">
+              <div class="project-gallery" id="projectGallery"></div>
             </div>
-            <div class="project-info__tools">
+
+            <aside class="project-body__info">
+              <p class="kicker" id="projectCategory">—</p>
+              <h1 class="project-hero__title" id="projectTitle">—</h1>
+              <p class="project-hero__subtitle" id="projectSubtitle"></p>
+
+              <p class="project-info__desc" id="projectDesc"></p>
+
+              <!-- Chỉ hiện nếu project.team có trong data-3d.js (đóng góp
+                   của bạn trong dự án nhóm) -->
+              <div class="project-team" id="projectTeam" hidden>
+                <p class="kicker" data-vi="Dự án nhóm" data-en="Team Project"><span class="kicker__dot"></span> Team Project</p>
+                <p class="project-team__desc" id="projectTeamDesc"></p>
+              </div>
+
               <p class="kicker" data-vi="Công cụ sử dụng" data-en="Tools used"><span class="kicker__dot"></span> Tools used</p>
               <div class="card__tags" id="projectTools"></div>
-            </div>
-          </div>
 
+              <!-- Tag phong cách/chủ đề — tự ẩn nếu project không khai báo styleTags -->
+              <div class="project-info__style" id="projectStyleGroup" hidden>
+                <p class="kicker" data-vi="Phong cách / Chủ đề" data-en="Style / Theme"><span class="kicker__dot"></span> Style / Theme</p>
+                <div class="card__tags" id="projectStyleTags"></div>
+              </div>
+            </aside>
+
+          </div>
         </div>
       </section>
     </div>
@@ -196,6 +211,25 @@
        object mới vào data-2d.js/data-3d.js (cùng key), rồi thêm
        data-detail="<tên-file-vừa-tạo>.html" vào card tương ứng trong
        index-2d.html/index-3d.html — vậy là xong, không cần sửa gì script.js. -->
+  <!-- ============ LIGHTBOX ẢNH (phóng to ảnh trong gallery zodiac) ============
+       Chỉ áp dụng cho slide dạng ảnh trong #projectGallery — video/model đã
+       có tương tác riêng (play, xoay 360°) ngay trong ô nên không cần phóng
+       to thêm. Xem js/script.js (initGalleryLightbox). -->
+  <div class="lightbox" id="galleryLightbox" aria-hidden="true">
+    <div class="lightbox__backdrop" data-close-lightbox></div>
+    <button class="lightbox__close" id="lightboxClose" aria-label="Đóng">✕</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Ảnh trước">
+      <span class="lightbox__nav-icon">‹</span>
+    </button>
+    <button class="lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Ảnh tiếp theo">
+      <span class="lightbox__nav-icon">›</span>
+    </button>
+    <div class="lightbox__panel" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to">
+      <img src="" alt="" class="lightbox__img" id="lightboxImg">
+    </div>
+    <p class="lightbox__counter" id="lightboxCounter"></p>
+  </div>
+
   <script>
     window.PROJECT_ID = 'crusader';
   </script>
