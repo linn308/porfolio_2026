@@ -39,31 +39,31 @@
 const PROJECTS_2D = {
 
   ghibli: {
-    title: 'Ghibli - Custom Cards',
-    category: { vi: 'Illustration', en: 'Illustration' },
-    subtitle: {
-      vi: 'Flat Illustration',
-      en: 'Flat Illustration',
-    },
-    desc: {
-      vi: 'Bộ bài tây lấy cảm hứng từ thế giới hoạt hình Studio Ghibli — minh họa dựng trong Illustrator, mỗi lá bài là 1 khung cảnh riêng.',
-      en: 'A tarot/playing card deck inspired by the animated worlds of Studio Ghibli — illustrated in Illustrator, each card its own scene.',
-    },
-    tools: ['Illustrator'],
-    styleTags: ['Flat Illustration', 'Character Design', 'Card'],
-    // team: { vi: 'Dự án nhóm — Đóng góp: toàn bộ minh họa & layout bộ bài.', en: 'Team project — Contribution: all illustrations & deck layout.' }, // bỏ comment nếu là dự án nhóm
-    slides: [
-      { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/1.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/2.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/3.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/4.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/5.webp' },
-      { type: 'image', src: '../../assets/2d/ghibli/6.webp' },
+      title: 'Ghibli - Custom Cards',
+      // cover: { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
+      category: { vi: 'Illustration', en: 'Illustration' },
+      subtitle: {
+        vi: 'Flat Illustration',
+        en: 'Flat Illustration',
+      },
+      desc: {
+        vi: 'Bộ bài Tây minh họa lấy cảm hứng từ thế giới hoạt hình huyền diệu của Studio Ghibli. Thiết kế kết hợp giữa phong cách minh họa phẳng hiện đại, nét vẽ tối giản và bảng màu cổ điển mộc mạc, tái hiện sinh động các nhân vật kinh điển như Chihiro, Haku, Howl, Sophie trên từng lá bài.',
+        en: 'A custom playing card deck inspired by the magical world of Studio Ghibli. The design blends modern flat vector illustrations with a warm vintage color palette, bringing iconic characters like Chihiro, Haku, Howl, and Sophie to life across classic card suits',
+      },
+      tools: ['Illustrator'],
+      styleTags: ['Flat Illustration', 'Character Design', 'Vector Art', 'Creative Project', 'Retro Aesthetic'],
+      // team: { vi: 'Dự án nhóm — Đóng góp: toàn bộ minh họa & layout bộ bài.', en: 'Team project — Contribution: all illustrations & deck layout.' }, // bỏ comment nếu là dự án nhóm
+      slides: [
+        { type: 'image', src: '../../assets/2d/ghibli/poster.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/1.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/2.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/3.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/4.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/5.webp' },
+        { type: 'image', src: '../../assets/2d/ghibli/6.webp' },
 
-    ],
-  },
-
+      ],
+    },
   CA: {
     title: 'Collage Art - Poster',
     category: { vi: 'Poster', en: 'Poster' },
@@ -81,6 +81,7 @@ const PROJECTS_2D = {
 
   TYYM: {
     title: 'The Yin-Yang Master — Movie Poster',
+    cover: { type: 'image', src: '../../assets/2d/TYYM/00.webp' },
     category: { vi: 'Poster', en: 'Poster' },
     subtitle: { vi: 'Poster Điện ảnh', en: 'Movie Poster' },
     desc: {
@@ -90,13 +91,13 @@ const PROJECTS_2D = {
     tools: ['Photoshop'],
     styleTags: ['Movie Poster', 'Poster Design', 'Key Visual', 'Fantasy Art', 'Character Poster'],
     slides: [
-      { type: 'image', src: '../../assets/2d/TYYM/00.webp' },
       { type: 'image', src: '../../assets/2d/TYYM/01.webp' },
     ],
   },
 
   LB: {
     title: 'Local Brands - Magazine Layout',
+    cover: { type: 'image', src: '../../assets/2d/LB/001.webp' },
     category: { vi: 'Editorial', en: 'Editorial' },
     subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
     desc: {
@@ -110,7 +111,6 @@ const PROJECTS_2D = {
       en: 'Contribution: Concept Idealisation & Main Editorial Layout Designer.' },
     slides: [
       { type: 'image', src: '../../assets/2d/LB/000.webp' },
-      { type: 'image', src: '../../assets/2d/LB/001.webp' },
       { type: 'image', src: '../../assets/2d/LB/002.webp' },
       { type: 'image', src: '../../assets/2d/LB/02.webp' },
       { type: 'image', src: '../../assets/2d/LB/03.webp' },
@@ -149,8 +149,8 @@ const PROJECTS_2D = {
     ],
   },
 
-  coffee: {
-    title: 'Coffee - Specialized Magazine',
+  TC: {
+    title: 'Tech Crunch - Specialized Magazine',
     category: { vi: 'Editorial', en: 'Editorial' },
     subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
     desc: {
@@ -160,13 +160,30 @@ const PROJECTS_2D = {
     tools: ['Indesign', 'Photoshop'],
         styleTags: ['Technical Minimalist', 'Earthy','Special Subject Magazine Design' , 'Print Design', 'Editorial Concept Design'],
     slides: [
-      { type: 'image', src: '../../assets/2d/coffee/00.webp' },
-      { type: 'image', src: '../../assets/2d/coffee/01.webp' },
-      { type: 'image', src: '../../assets/2d/coffee/02.webp' },
+      { type: 'image', src: '../../assets/2d/TC/00.webp' },
+      { type: 'image', src: '../../assets/2d/TC/01.webp' },
+      { type: 'image', src: '../../assets/2d/TC/02.webp' },
+    ],
+  },
+
+  wired: {
+    title: 'Wired - Tech Magazine Cover',
+    category: { vi: 'Editorial', en: 'Editorial' },
+    subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
+    desc: {
+      vi: 'Concept thiết kế bìa và dàn trang cho tạp chí WIRED với chủ đề "Việt Nam trong cuộc đua Metaverse". Ấn phẩm ứng dụng phong cách thiết kế tương lai kết hợp dải màu Neon, hiệu ứng wireframe 3D và bố cục mạng lưới hiện đại để phản ánh trọn vẹn tinh thần công nghệ số vượt giới hạn.',
+      en: 'Cover design and layout concept for WIRED magazine, themed "Vietnam in the Metaverse Race." The publication employs a futuristic design style—combining neon color palettes, 3D wireframe effects, and a modern grid layout—to fully capture the spirit of boundary-pushing digital technology.',
+    },
+    tools: ['Indesign', 'Photoshop'],
+        styleTags: ['Cyberpunk Aesthetic', 'Futuristic','Virtual Reality' , 'Tech Magazine', 'Metaverse'],
+    slides: [
+      { type: 'image', src: '../../assets/2d/wired/00.webp' },
+      { type: 'image', src: '../../assets/2d/wired/01.webp' },
+      { type: 'image', src: '../../assets/2d/wired/02.webp' },
     ],
   },
 
 
-  
+
 };
 

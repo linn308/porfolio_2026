@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGalleryFilter();
   initGalleryBadges();
   initLightbox();
+  initShowcaseCards();
   initProjectDetail();
   initBackButton();
   setFooterYear();
@@ -208,6 +209,28 @@ function initPageTransitions() {
     link.addEventListener('click', (event) => {
       event.preventDefault();
       navigateWithFade(href);
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   4b. CARD ẢNH Ở TRANG CHỦ (.showcase) — bấm là đi thẳng tới trang chi tiết
+   Card ở trang chủ giờ chỉ còn ảnh, không có modal xem nhanh (khối modal
+   đầy đủ chỉ nhúng ở index-2d.html/index-3d.html) — nên bấm vào card ở đây
+   ĐI THẲNG tới trang chi tiết luôn, dùng đúng data-detail đã khai báo trên
+   .card__media. Card nào chưa có data-detail (project chưa có trang riêng)
+   thì bấm không làm gì, tránh dẫn tới link rỗng/rác.
+   -------------------------------------------------------------------------- */
+function initShowcaseCards() {
+  const showcases = document.querySelectorAll('.showcase');
+  if (!showcases.length) return;
+
+  showcases.forEach((showcase) => {
+    showcase.addEventListener('click', (event) => {
+      const trigger = event.target.closest('.card__media');
+      if (!trigger) return;
+      const href = trigger.dataset.detail;
+      if (href) navigateWithFade(href);
     });
   });
 }
@@ -423,11 +446,15 @@ function initLightbox() {
     }
     const trigger = event.target.closest('.card__media');
     if (trigger) {
-      // Bấm vào card LUÔN mở modal xem nhanh trước (dù card có data-detail
-      // hay không) — chỉ khi bấm nút "Xem đầy đủ dự án" bên trong modal
-      // (xử lý ở nhánh #modalFullLink phía trên) mới thật sự điều hướng
-      // sang trang chi tiết riêng của dự án.
-      openModal(trigger);
+      // Có data-detail (đã có trang chi tiết riêng) → đi thẳng sang đó.
+      // Chưa có (project chưa làm trang riêng) → tạm mở modal xem nhanh
+      // như cũ, để vẫn xem được ảnh/mô tả thay vì bấm vào không có gì.
+      const href = trigger.dataset.detail;
+      if (href) {
+        navigateWithFade(href);
+      } else {
+        openModal(trigger);
+      }
       return;
     }
     if (event.target.closest('[data-close-modal]') || event.target === closeBtn) {
@@ -493,13 +520,20 @@ function initProjectDetail() {
   if (titleEl) titleEl.textContent = project.title;
 
   // --- Cover / thumbnail đại diện — hiện to, trên cùng, TRƯỚC cả tên dự án.
-  // Ưu tiên project.cover nếu bạn khai báo riêng trong data-2d.js/data-3d.js
-  // (object { type, src, poster } giống format của slides), không có thì
-  // tự lấy luôn slides[0] làm đại diện — nên không cần sửa data cũ vẫn
-  // chạy được ngay (ví dụ CRUSADER: slides[0] sẵn là video showreel). ---
+  // PHẢI khai báo project.cover trong data-2d.js/data-3d.js mới có, KHÔNG
+  // còn tự lấy slides[0] làm đại diện như trước nữa:
+  //   - project.cover = { type, src, poster } → hiện media đó ở khu cover.
+  //   - KHÔNG khai báo project.cover (hoặc = false) → ẩn hẳn khu cover này,
+  //     không có gì hiện ra ở đây.
+  // Nếu cover.src trùng với src của 1 slide nào đó trong project.slides,
+  // gallery bên dưới sẽ tự bỏ đúng slide đó ra để không lặp lại ảnh — nếu
+  // bạn muốn ảnh đó xuất hiện ở CẢ 2 nơi, chỉ cần đặt src khác nhau (ví dụ
+  // 1 bản crop riêng cho cover).
+  const cover = project.cover || null;
+
   if (coverEl) {
-    const cover = project.cover || project.slides[0];
     coverEl.innerHTML = '';
+    coverEl.hidden = !cover;
     if (cover) {
       if (cover.type === 'model') {
         const mv = document.createElement('model-viewer');
@@ -570,9 +604,12 @@ function initProjectDetail() {
     teamEl.hidden = !project.team;
   }
 
-  // --- Gallery kiểu "zodiac"/Pinterest: hiện TẤT CẢ ảnh/video/model cùng
-  // lúc trong 1 lưới masonry, mỗi ô tự co theo đúng tỉ lệ nội dung thật —
-  // không còn kiểu "1 khung lớn + dải thumbnail nhỏ chọn từng cái" nữa.
+  // --- Gallery kiểu "zodiac"/Pinterest: hiện ảnh/video/model trong
+  // project.slides. Nếu project.cover trùng src với 1 slide nào đó, slide
+  // đó tự bị bỏ khỏi đây để không lặp lại ảnh (xem so khớp cover ở trên).
+  // Số cột được TỰ CHỌN theo số lượng ảnh hiển thị — càng nhiều ảnh, chia
+  // càng nhiều cột; chỉ 1-2 ảnh thì hiện full khung cho dễ nhìn. Muốn đổi
+  // ngưỡng/số cột, sửa trong pickGalleryColumnClass() ở mục 8c bên dưới.
   // Riêng slide ẢNH có thêm khả năng bấm để phóng to (xem initGalleryLightbox
   // bên dưới) — video/model đã có tương tác riêng (play, xoay 360°) ngay
   // trong ô nên không cần phóng to thêm, bấm vào đó vẫn dùng đúng công cụ
@@ -580,8 +617,11 @@ function initProjectDetail() {
   if (galleryEl) {
     galleryEl.innerHTML = '';
     const zoomableSlides = []; // chỉ chứa slide ảnh, theo đúng thứ tự hiển thị
+    const renderedSlides = cover
+      ? project.slides.filter((slide) => slide.src !== cover.src)
+      : project.slides;
 
-    project.slides.forEach((slide) => {
+    renderedSlides.forEach((slide) => {
       const tile = document.createElement('div');
       tile.className = 'project-gallery__tile';
 
@@ -622,12 +662,36 @@ function initProjectDetail() {
       galleryEl.appendChild(tile);
     });
 
+    // Xóa hết class số-cột cũ (đổi ngôn ngữ/re-render không bị dính class
+    // của lần trước) rồi gán đúng 1 class theo số ảnh đang hiển thị.
+    galleryEl.classList.remove(
+      'project-gallery--full',
+      'project-gallery--cols-2',
+      'project-gallery--cols-3',
+      'project-gallery--cols-5'
+    );
+    galleryEl.classList.add(pickGalleryColumnClass(renderedSlides.length));
+
     initGalleryLightbox(galleryEl, zoomableSlides);
   }
 }
 
 /* --------------------------------------------------------------------------
-   8b. LIGHTBOX PHÓNG TO ẢNH (trang chi tiết dự án)
+   8b. SỐ CỘT GALLERY THEO SỐ LƯỢNG ẢNH
+   1-2 ảnh: hiện full khung (1 cột, ảnh to, dễ nhìn — chia cột với quá ít
+   ảnh sẽ bị trống trải, không đẹp). Nhiều ảnh hơn thì chia nhỏ dần để vẫn
+   giữ được kiểu "zodiac" gọn gàng. Muốn đổi ngưỡng hoặc số cột, chỉ cần
+   sửa trong hàm này — không cần sửa gì khác.
+   -------------------------------------------------------------------------- */
+function pickGalleryColumnClass(count) {
+  if (count <= 2) return 'project-gallery--full';
+  if (count <= 4) return 'project-gallery--cols-2';
+  if (count <= 8) return 'project-gallery--cols-3';
+  return 'project-gallery--cols-5';
+}
+
+/* --------------------------------------------------------------------------
+   8c. LIGHTBOX PHÓNG TO ẢNH (trang chi tiết dự án)
    Bấm vào 1 ảnh trong gallery zodiac (#projectGallery) sẽ mở ảnh đó to hơn,
    dễ nhìn/theo dõi hơn, kèm Prev/Next để lướt qua các ảnh khác trong cùng
    dự án. Chỉ áp dụng cho slide ẢNH — được gọi lại mỗi lần initProjectDetail()

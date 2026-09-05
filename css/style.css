@@ -165,8 +165,11 @@ body.no-scroll { overflow: hidden; }
 }
 
 .kicker--warm { color: var(--accent-warm); }
+
 .kicker__dot {
-  width: 6px; height: 6px; border-radius: 50%;
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%;
   background: currentColor;
   box-shadow: 0 0 8px currentColor;
 }
@@ -677,7 +680,7 @@ body.no-scroll { overflow: hidden; }
 .showcase .card__media img {
   width: 100%;
   height: 100%;
-  object-fit:cover;
+  object-fit: cover;
 }
 
 .showcase .card__media model-viewer {
@@ -960,6 +963,77 @@ body.no-scroll { overflow: hidden; }
   border-radius: 100px;
   backdrop-filter: blur(4px);
 }
+
+/* ==========================================================================
+   9. QUOTES (index.html)
+   ========================================================================== */
+.quotes {
+  padding: 110px 0;
+  background: var(--bg-surface-opa-8);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  /* opacity: 0.5; */
+}
+
+.quotes__inner {
+  text-align: center;
+}
+
+/* ==========================================================================
+   10. ABOUT ME & CONTACT (index.html)
+   ========================================================================== */
+.contact {
+  padding: 110px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  /* opacity: 0.5; */
+  min-height: calc(100svh - 88px);
+}
+
+.contact__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+
+.contact__heading {
+  margin-bottom: 40px;
+}
+
+.contact__field {
+  margin-bottom: 28px;
+}
+
+.contact__field:last-child { margin-bottom: 0; }
+
+.contact__title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.contact__subtitle {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.contact__detail{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.contact__link { transition: opacity var(--transition-fast); }
+.contact__link:hover { opacity: 0.6; text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .contact { padding: 64px 0; }
+  .contact__inner { grid-template-columns: 1fr; gap: 48px; }
+}
+
 
 /* ==========================================================================
    9. EXPERIENCE & SKILLS (index.html)
@@ -1396,12 +1470,18 @@ a.footer__item:hover .footer__item-value {
   align-items: start;
 }
 
-/* Gallery bên trái giờ nhỏ hơn bản cũ (từng chiếm full-width 2 cột lớn),
-   tăng mật độ lên 4-5 cột cho khớp tỉ lệ 5:2 với cột thông tin. */
+/* Gallery bên trái giờ nhỏ hơn bản cũ (từng chiếm full-width 2 cột lớn) —
+   số cột KHÔNG cố định nữa, JS (pickGalleryColumnClass trong script.js) tự
+   gán 1 trong 4 class dưới đây tùy số lượng ảnh đang hiển thị: quá ít ảnh
+   (1-2) thì hiện full khung cho dễ nhìn, nhiều ảnh hơn thì chia nhỏ dần. */
 .project-body__gallery .project-gallery {
-  columns: 3 130px;
   column-gap: 16px;
 }
+
+.project-body__gallery .project-gallery.project-gallery--full { columns: 1; }
+.project-body__gallery .project-gallery.project-gallery--cols-2 { columns: 2 220px; }
+.project-body__gallery .project-gallery.project-gallery--cols-3 { columns: 3 170px; }
+.project-body__gallery .project-gallery.project-gallery--cols-5 { columns: 4 130px; }
 
 /* Cột thông tin bên phải: dính theo khi cuộn trang, để luôn thấy tên/tag/
    tool dù đang cuộn xem ảnh dài ở cột trái. Giới hạn chiều cao + tự cuộn
@@ -1431,7 +1511,7 @@ a.footer__item:hover .footer__item-value {
 
 @media (max-width: 1024px) {
   .project-body { grid-template-columns: 1fr; gap: 36px; }
-  .project-body__gallery .project-gallery { columns: 3 150px; }
+  .project-body__gallery .project-gallery.project-gallery--cols-5 { columns: 3 150px; }
   .project-body__info {
     position: static;
     max-height: none;
@@ -1443,7 +1523,9 @@ a.footer__item:hover .footer__item-value {
 @media (max-width: 620px) {
   .project-cover img,
   .project-cover video { max-height: 46vh; }
-  .project-body__gallery .project-gallery { columns: 2 130px; }
+  .project-body__gallery .project-gallery.project-gallery--cols-2,
+  .project-body__gallery .project-gallery.project-gallery--cols-3,
+  .project-body__gallery .project-gallery.project-gallery--cols-5 { columns: 2 130px; }
 }
 
 /* Style/Theme tag group trong trang chi tiết — cùng bố cục với "Tools used"
