@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truc Linh — Multimedia Designer</title>
+  <meta name="description" content="Portfolio của Nguyễn Trần Trúc Bạch Linh — Multimedia Designer: 2D Design & 3D / Web3D.">
+  <script>
+    // Doc truoc lua chon sang/toi da luu, gan ngay len <html> TRUOC khi CSS
+    // duoc ap dung — tranh hien tuong "chop toi" 1 nhip roi moi chuyen sang
+    // sang khi tai trang (initThemeToggle() trong js/script.js chi chay
+    // sau khi DOM dung xong). Xem them js/script.js muc "2b".
+    (function () {
+      try {
+        if (localStorage.getItem('linh-portfolio-theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Oooh+Baby&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+  <!-- model-viewer: cần cho khung 3D ở Hero -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-home">
+ 
+<!-- ============ LOADING SCREEN ============
+       Chạy TRƯỚC mọi nội dung khác — xem style.css mục "LOADING SCREEN
+       (PRELOADER)" và initLoadingScreen() trong js/script.js. Đặt ngay
+       đầu <body> (trước cả .bg-scene) để hiện full-screen ngay bằng CSS
+       thuần, không cần chờ JS. Khối này GIỐNG NHAU ở mọi trang — copy
+       nguyên y hệt sang các trang khác (index-3d.html, trang chi tiết dự
+       án khác...) nếu chưa có. -->
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <svg class="page-loader__spiral" id="pageLoaderSpiral" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="pageLoaderGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop class="page-loader__gradient-stop page-loader__gradient-stop--start" offset="0%"></stop>
+          <stop class="page-loader__gradient-stop page-loader__gradient-stop--end" offset="100%"></stop>
+        </linearGradient>
+      </defs>
+      <path class="page-loader__spiral-path" id="pageLoaderSpiralPath" d="M150.0 150.0 L150.5 150.06 L150.97 150.23 L151.41 150.52 L151.78 150.91 L152.08 151.39 L152.28 151.95 L152.38 152.57 L152.35 153.24 L152.2 153.93 L151.91 154.62 L151.49 155.29 L150.94 155.93 L150.26 156.49 L149.45 156.98 L148.54 157.36 L147.53 157.61 L146.44 157.72 L145.3 157.67 L144.12 157.46 L142.93 157.07 L141.75 156.5 L140.62 155.75 L139.56 154.81 L138.59 153.71 L137.74 152.44 L137.04 151.02 L136.51 149.47 L136.17 147.81 L136.04 146.06 L136.14 144.26 L136.48 142.43 L137.06 140.6 L137.88 138.8 L138.96 137.07 L140.28 135.45 L141.83 133.96 L143.6 132.64 L145.56 131.52 L147.71 130.64 L150.0 130.0 L152.41 129.64 L154.9 129.58 L157.44 129.83 L159.99 130.4 L162.5 131.29 L164.94 132.51 L167.26 134.05 L169.42 135.89 L171.38 138.03 L173.1 140.43 L174.54 143.08 L175.68 145.93 L176.48 148.96 L176.92 152.12 L176.97 155.36 L176.63 158.65 L175.88 161.93 L174.73 165.15 L173.17 168.26 L171.21 171.21 L168.88 173.95 L166.2 176.43 L163.19 178.61 L159.89 180.43 L156.34 181.88 L152.59 182.9 L148.68 183.47 L144.68 183.58 L140.64 183.2 L136.61 182.34 L132.65 180.97 L128.84 179.12 L125.22 176.8 L121.86 174.03 L118.82 170.83 L116.14 167.25 L113.88 163.33 L112.08 159.1 L110.77 154.64 L110.0 150.0 L109.78 145.24 L110.13 140.43 L111.07 135.64 L112.58 130.93 L114.66 126.39 L117.3 122.07 L120.47 118.06 L124.14 114.4 L128.26 111.17 L132.78 108.43 L137.65 106.21 L142.8 104.57 L148.17 103.54 L153.69 103.14 L159.27 103.41 L164.83 104.35 L170.3 105.96 L175.6 108.22 L180.65 111.13 L185.36 114.64 L189.66 118.74 L193.48 123.35 L196.77 128.44 L199.45 133.93 L201.49 139.76 L202.84 145.84 L203.46 152.1 L203.34 158.45 L202.45 164.79 L200.81 171.05 L198.42 177.12 L195.3 182.92 L191.49 188.35 L187.02 193.34 L181.95 197.81 L176.33 201.68 L170.25 204.88 L163.77 207.37 L156.99 209.09 L150.0 210.0 L142.89 210.08 L135.76 209.31 L128.71 207.7 L121.85 205.24 L115.28 201.97 L109.08 197.91 L103.37 193.1 L98.22 187.62 L93.72 181.52 L89.95 174.87 L86.96 167.78 L84.81 160.32 L83.55 152.61 L83.21 144.74 L83.8 136.83 L85.33 128.99 L87.79 121.32 L91.17 113.95 L95.42 106.97 L100.5 100.5 L106.35 94.64 L112.9 89.46 L120.07 85.07 L127.75 81.52 L135.86 78.89 L144.27 77.23 L152.89 76.56 L161.58 76.91 L170.22 78.3 L178.7 80.71 L186.89 84.13 L194.67 88.51 L201.93 93.82 L208.55 99.99 L214.44 106.94 L219.5 114.59 L223.65 122.83 L226.82 131.56 L228.95 140.66 L230.0 150.0 L229.94 159.46 L228.76 168.91 L226.46 178.21 L223.06 187.23 L218.6 195.83 L213.11 203.9 L206.68 211.32 L199.37 217.96 L191.29 223.73 L182.53 228.53 L173.21 232.29 L163.45 234.94 L153.4 236.43 L143.17 236.73 L132.93 235.82 L122.81 233.69 L112.95 230.37 L103.5 225.88 L94.59 220.29 L86.36 213.64 L78.93 206.03 L72.41 197.55 L66.9 188.31 L62.5 178.43 L59.28 168.05 L57.29 157.3 L56.57 146.33 L57.16 135.3 L59.05 124.35 L62.23 113.65 L66.68 103.34 L72.33 93.57 L79.14 84.5 L87.0 76.24 L95.83 68.93 L105.51 62.68 L115.91 57.59 L126.89 53.74 L138.31 51.19 L150.0 50.0 L161.81 50.2 L173.58 51.79 L185.13 54.77 L196.31 59.12 L206.95 64.77 L216.89 71.68 L226.0 79.74 L234.14 88.87 L241.18 98.94 L247.01 109.82 L251.54 121.36 L254.69 133.42 L256.42 145.82 L256.67 158.4 L255.43 170.97 L252.71 183.37 L248.53 195.42 L242.94 206.95 L235.99 217.79 L227.78 227.78 L218.41 236.78 L208.0 244.64 L196.68 251.26 L184.61 256.52 L171.95 260.34 L158.87 262.65 L145.54 263.41 L132.17 262.6 L118.92 260.2 L105.99 256.25 L93.56 250.77 L81.82 243.85 L70.92 235.55 L61.03 225.99 L52.3 215.28 L44.86 203.57 L38.82 191.01 L34.29 177.78 L31.33 164.05 L30.0 150.0 L30.34 135.84 L32.34 121.75 L36.01 107.95 L41.3 94.61 L48.14 81.94 L56.47 70.12 L66.17 59.31 L77.11 49.68 L89.17 41.37 L102.16 34.52 L115.93 29.21 L130.29 25.55 L145.03 23.6 L159.96 23.39 L174.87 24.95 L189.55 28.26 L203.8 33.3 L217.4 40.01 L230.17 48.3 L241.92 58.08 L252.48 69.21 L261.7 81.55 L269.42 94.95 L275.54 109.21 L279.95 124.15 L282.59 139.56 L283.4 155.24 L282.35 170.96 L279.45 186.51 L274.72 201.66 L268.22 216.21 L260.03 229.94 L250.24 242.66 L238.97 254.18 L226.39 264.33 L212.65 272.96 L197.94 279.94 L182.45 285.16 L166.4 288.53 L150.0 290.0 L133.49 289.53 L117.08 287.1 L101.02 282.75 L85.53 276.52 L70.83 268.48 L57.13 258.74 L44.62 247.41 L33.5 234.64 L23.92 220.61 L16.04 205.49 L9.96 189.49 L5.8 172.84 L3.61 155.75 L3.45 138.47 L5.33 121.22 L9.24 104.27 L15.14 87.83 L22.96 72.15 L32.6 57.45 L43.93 43.93 L56.83 31.81 L71.1 21.25 L86.57 12.42 L103.03 5.44 L120.25 0.43 L138.0 -2.53 L156.03 -3.38 L174.09 -2.1 L191.94 1.3 L209.32 6.8 L225.98 14.33 L241.69 23.79 L256.23 35.08 L269.38 48.04 L280.96 62.5 L290.78 78.27 L298.7 95.14 L304.61 112.88 L308.39 131.25 L310.0 150.0"></path>
+    </svg>
+    <div class="page-loader__inner">
+      <p class="page-loader__logo">linn.</p>
+    </div>
+    <p class="page-loader__text" data-vi="Đang tải trải nghiệm..." data-en="Loading experience...">Đang tải trải nghiệm...</p>
+  </div> 
+  <!-- Nền động (motion) cố định phía sau toàn bộ trang — xem style.css mục 2 -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="bg-blob bg-blob--1"></span>
+    <span class="bg-blob bg-blob--2"></span>
+    <span class="bg-blob bg-blob--3"></span>
+  </div>
+
+  <!-- ============ HEADER ============
+       Menu chỉ còn đúng 2 mục lớn: 2D và 3D, cộng About/Contact,
+       cộng bộ chuyển ngôn ngữ VI/EN ở cuối (xem script.js: initLanguage). -->
+  <header class="site-header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo">
+        <span class="logo__name" data-vi="trúc linh" data-en="linn.">linn.</span>
+        <span class="logo__role" data-vi="Multimedia Designer" data-en="Multimedia Designer">Multimedia Designer</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+        <a href="project/2d/index-2d.html" class="nav__tab">2D</a>
+        <a href="project/3d/index-3d.html" class="nav__tab">3D</a>
+        
+
+        <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
+          <button type="button" class="lang-switch__btn" data-lang-btn="vi">VI</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 1. HERO SECTION ============
+         Video showreel là banner riêng, KHÔNG còn chồng chữ lên trên nữa.
+         Khối chữ + khung Web3D (.hero-content) nằm ngay bên dưới, tách
+         bạch rõ ràng khỏi video — bấm nút cuộn xuống để đi tới đó. -->
+    <section class="hero" id="home">
+      <div class="hero__media" aria-hidden="true">
+        <!-- SHOWREELS / thêm poster -->
+        <!-- <video id="heroVideo" class="hero__video" autoplay loop muted playsinline
+          poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop">
+          <source src="assets/shared/showreel.mp4" type="video/mp4">
+        </video> -->
+        <div class="hero__scrim"></div>
+      </div>
+
+      <!-- ============ 2 KHỐI TÁCH RIÊNG: chữ (.hero__intro) vs decor+avatar ============
+           Yêu cầu: trước khi cuộn, avatar + decor + chữ phải nằm gọn trong
+           dải nền .hero__media, và LUÔN tách rõ làm 2 khối — chữ
+           (Portfolio + Welcome to my...) ở 1 khối, decor viết tay (chú
+           thích + mũi tên trỏ vào avatar) đi CHUNG với avatar ở khối còn
+           lại. Avatar vẫn nằm trong DOM ở .hero-content (initHeroPipParallax
+           kéo lên đúng vị trí này lúc scroll=0) nên "đi chung" ở đây nghĩa
+           là .hero__decor được định vị (xem style.css) để luôn rơi vào
+           đúng vùng avatar xuất hiện — không còn nằm chung khối với chữ.
+           Desktop: .hero__intro phủ kín .hero (giữ nguyên vị trí cũ).
+           Mobile: .hero__intro CHỈ chiếm phần TRÊN của .hero, .hero__decor
+           chiếm phần DƯỚI còn lại (đúng chỗ avatar), 2 vùng khớp mép nhau
+           — không chồng lấn. -->
+      <div class="hero__intro">
+        <!-- CHỮ "Portfolio" 2 DÒNG "Port" / "folio" + PHÓNG TO TỪNG CHỮ —
+             JS (initHeroPortfolioText() trong js/script.js) tách data-word
+             của mỗi dòng thành từng ký tự <span class="hero__portfolio-letter">
+             để animate phóng to (scale 0 → 1), xem style.css. -->
+        <div class="hero__portfolio-text" aria-hidden="true">
+          <span class="hero__portfolio-line hero__portfolio-line--1" data-word="Port"></span>
+          <span class="hero__portfolio-line hero__portfolio-line--2" data-word="folio"></span>
+        </div>
+
+        <!-- CHỮ "Welcome to my..." CHẠY THEO ĐƯỜNG CONG — dùng SVG <textPath>
+             để mỗi chữ tự xoay bám theo path chéo, cả khối trượt vào từ
+             bên trái + fade-in lúc trang vừa load (xem keyframes
+             hero-welcome-slide-in trong style.css). -->
+        <div class="hero__welcome-text" aria-hidden="true">
+          <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path id="heroWelcomeTextPath" d="M -40,180 Q 350,620 770,420" fill="none"></path>
+            <text font-size="50">
+              <textPath href="#heroWelcomeTextPath" 
+                        xlink:href="#heroWelcomeTextPath" 
+                        startOffset="0%">
+                        Welcome to my...
+                        <!-- Thẻ animate chạy dọc theo hướng của path -->
+                          <animate attributeName="startOffset" 
+                          from="-100%" 
+                          to="0%" 
+                          dur="2s" 
+                          begin="0.8s" />
+              </textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- CHI TIẾT TRANG TRÍ VIẾT TAY — đi CHUNG khối với avatar (xem ghi
+           chú ở trên). Animate pop-in lúc load trang rồi đứng yên tại đây,
+           cuộn qua khối .hero thì cuộn ra khỏi màn hình cùng .hero, không
+           "đuổi" theo avatar xuống .hero-content. -->
+      <div class="hero__decor" aria-hidden="true">
+        <div class="hero__decor-item hero__decor-item--1">
+          <p class="hero__decor-text" data-vi="Gọi mình là Linh" data-en="Call me Linn">Cứ gọi mình là Linh</p>
+          <svg class="hero__decor-arrow hero__decor-arrow--1" viewBox="0 0 64 48" fill="none">
+            <path d="M4 6 C 22 10, 34 22, 52 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M42 36 L53 41 L47 29" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="hero__decor-item hero__decor-item--2">
+          <p class="hero__decor-text" data-vi="2+ năm kinh nghiệm" data-en="2+ years exp">2+ năm kinh nghiệm</p>
+          <svg class="hero__decor-arrow hero__decor-arrow--2" viewBox="0 0 60 30" fill="none">
+            <path d="M2 20 C 18 24, 34 18, 52 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M40 6 L53 8 L44 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="hero__decor-item hero__decor-item--3">
+          <p class="hero__decor-text" data-vi="Đam mê kể chuyện bằng hình ảnh" data-en="Visual storytelling enthusiast">Đam mê kể chuyện bằng hình ảnh</p>
+          <svg class="hero__decor-arrow hero__decor-arrow--3" viewBox="0 0 64 48" fill="none">
+            <path d="M60 6 C 42 10, 30 22, 12 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M22 36 L11 41 L17 29" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <span class="hero__decor-sparkle hero__decor-sparkle--1">✦</span>
+        <span class="hero__decor-sparkle hero__decor-sparkle--2">✦</span>
+        <span class="hero__decor-sparkle hero__decor-sparkle--3">✦</span>
+      </div>
+
+      <!-- Unmute -->
+      <!-- <button type="button" class="hero__sound-toggle" id="heroSoundToggle" aria-pressed="false"
+        aria-label="Bật/tắt âm thanh video">
+        <span class="hero__sound-icon" aria-hidden="true">🔇</span>
+        <span data-vi="Bật âm thanh" data-en="Unmute">Bật âm thanh</span>
+      </button> -->
+
+      <!-- Nút cuộn xuống — cuộn mượt tới khối nội dung (.hero-content) -->
+      <a href="#heroContent" class="hero__scroll" aria-label="Cuộn xuống nội dung tiếp theo">
+        <span aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <!-- Khối nội dung / CONTENT -->
+    <section class="hero-content" id="heroContent">
+      <div class="container hero-content__inner">
+        <!-- img -->
+        <div class="hero__pip-wrap">
+          <div class="hero__pip">
+            <div class="viewport-frame viewport-frame--pip">
+              <!-- <span class="viewport-tag">Trúc Linh · Linn</span> -->
+
+              <!-- Thay src bằng file .glb thật (3D) -->
+              <!-- <model-viewer
+                class="viewport-model"
+                src="assets/models/crusader-preview.glb"
+                poster="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=1200&auto=format&fit=crop"
+                alt="Mô hình 3D preview — kéo để xoay, cuộn để zoom"
+                camera-controls
+                auto-rotate
+                auto-rotate-delay="1200"
+                rotation-per-second="18deg"
+                shadow-intensity="1"
+                exposure="1.05"
+                interaction-prompt="none"
+              ></model-viewer> -->
+
+              <!-- Ảnh avatar tĩnh (2D) — thay src bằng ảnh thật -->
+              <img
+                class="viewport-model"
+                src="assets/shared/avatar.png"
+                alt="Trúc Linh · Linn"
+              >
+            </div>
+            <!-- <p class="viewport-caption" data-vi="Kéo để xoay 360°" data-en="Drag to rotate 360°">Kéo để xoay 360°</p> -->
+          </div>
+        </div>
+
+        <!-- text -->
+        <div class="hero__text">
+          <p class="kicker" data-vi="Đà Lạt, Việt Nam" data-en="Da Lat, Vietnam">
+            <span class="kicker__dot"></span>
+            Đà Lạt, Việt Nam
+          </p>
+          <h1 class="hero__title">
+            <span
+              class="hero__typewriter"
+              id="heroTypewriter"
+              data-vi-phrases='["Kết Nối Chiều Sâu 3D Vào Truyền Thông Thị Giác 2D","3D Artist &amp; Layout Artist tại Hibari Vietnam","Đam mê Cel-look Anime &amp; 3D Animation"]'
+              data-en-phrases='["Bridging 3D Depth into 2D &amp; Visual Communication","3D Artist &amp; Layout Artist at Hibari Vietnam","Passionate about Cel-look Anime &amp; 3D Animation"]'
+            ></span><span class="hero__typewriter-cursor" aria-hidden="true">|</span>
+          </h1>
+          <p class="hero__subtitle"
+            data-vi-html="Hơn 2 năm kinh nghiệm 3D Artist &amp; Layout Artist tại <strong>Hibari Vietnam</strong>, chuyên phong cách Cel-look Anime. Tốt nghiệp <strong>Arena Multimedia</strong>, hiện phát triển song song 2D Design, Video Editing và 3D Animation"
+            data-en-html="More than 2 years of experience as a 3D Artist &amp; Layout Artist at <strong>Hibari Vietnam</strong>, specializing in Cel-look Anime style. A graduate of <strong>Arena Multimedia</strong>, now growing 2D Design, Video Editing and 3D Animation side by side.">
+            Hơn 2 năm kinh nghiệm 3D Artist &amp; Layout Artist tại <strong>Hibari Vietnam</strong>,
+            chuyên phong cách Cel-look Anime. Tốt nghiệp <strong>Arena Multimedia</strong>,
+            hiện phát triển song song 2D Design, Video Editing và 3D Animation.
+          </p>
+          <div class="hero__cta">
+            <a href="project/2d/index-2d.html" class="btn btn--warm" data-vi="Khám phá 2D" data-en="Explore 2D">Khám phá 2D</a>
+            <a href="project/3d/index-3d.html" class="btn btn--primary" data-vi="Khám phá 3D" data-en="Explore 3D">Khám phá 3D</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+    <!-- ============ 2. QUOTES ============ -->
+      <section class="quotes" id="quotes">     
+        <div class="container quotes__inner">  
+            <p class="kicker" data-vi="Câu trích dẫn" data-en="Quote"><span class="kicker__dot"></span> Quote</p>
+            <h2 class="section-title" data-vi="Không khó đâu, chỉ là chưa quen thôi." data-en="It's not hard, it's just new.">Không khó đâu, chỉ là chưa quen thôi.</h2>
+            <p style=" color: var(--text-secondary); font-size: 0.92rem;" data-vi="Sưu tầm" data-en="Collected">Sưu tầm</p>
+        </div>
+      </section>
+    
+    <!-- ============ 3. ABOUT ME & CONTACT ============-->
+     <section class="contact" id="contact">
+      <div class="container contact__inner">
+
+        <!-- ========== 3.1. ABOUT ME/ Giới thiệu -->
+        <div class="contact__col reveal reveal--up">
+          <h2 class="section-title contact__heading" data-vi="Giới thiệu" data-en="About me">Giới thiệu</h2>
+          <!-- ========== a. Tên/ Name -->
+          <div class="contact__field">
+            <span class="contact__title" data-vi="Tên" data-en="Name">Tên</span>
+            <h3 class="contact__subtitle" data-vi="Nguyễn Trần Trúc Bạch Linh" data-en="Nguyen Tran Truc Bach Linh">Nguyễn Trần Trúc Bạch Linh</h3>
+          </div>
+          <!-- ========== b. Ngày sinh/ Date of birth -->
+          <div class="contact__field">
+            <span class="contact__title" data-vi="Ngày sinh" data-en="Date of birth">Ngày sinh</span>
+            <h3 class="contact__subtitle" data-vi="30.08.2002" data-en="August 30th, 2002">30.08.2002</h3>
+          </div>
+          <!-- ========== c. Địa điểm/ Address -->
+          <div class="contact__field">
+            <span class="contact__title" data-vi="Địa điểm" data-en="Address">Địa điểm</span>
+            <a href="https://maps.app.goo.gl/8XnVu9hN2r2VNTqu9" target="_blank" rel="noopener noreferrer" class="contact__subtitle" data-vi="Đà Lạt – Lâm Đồng, Việt Nam." data-en="Da Lat – Lam Dong, Viet Nam.">Đà Lạt – Lâm Đồng, Việt Nam.</a>
+          </div>
+        </div>
+
+        <!-- ========== 3.2. CONTACT/ Liên hệ -->
+        <div class="contact__col reveal reveal--up reveal--delay-1">
+          <h2 class="section-title contact__heading" data-vi="Liên hệ" data-en="Contact">Liên hệ</h2>
+          <div class="contact__detail">
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Điện thoại" data-en="Phone">Điện thoại</span>
+              <a href="tel:+84372746842" class="contact__subtitle contact__link">(+84) 372 746 842</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Email" data-en="Email">Email</span>
+              <a href="mailto:linhh1188@gmail.com" class="contact__subtitle contact__link">linhh1188@gmail.com</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Behance" data-en="Behance">Behance</span>
+              <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">behance.net/linlinhh</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Facebook" data-en="Facebook">Facebook</span>
+              <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">facebook.com/Trúc Linh</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Instagram" data-en="Instagram">Instagram</span>
+              <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">instagram.com/tr__.lin._</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+              <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">linkedin.com/Linh Nguyen</a>
+            </div>
+
+            <!-- <div class="contact__field">
+              <span class="contact__title" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
+              <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">ArtStation</a>
+            </div> -->
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Github" data-en="Github">Github</span>
+              <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">github.com/linn308</a>
+            </div>
+
+            <div class="contact__field">
+              <span class="contact__title" data-vi="Vimeo" data-en="Vimeo">Vimeo</span>
+              <a href="https://vimeo.com/user261213079?fl=pp&fe=sh" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">vimeo.com/tlinh</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+     </section>
+ 
+    <!-- ============ 4. EXPERIENCE, EDUCATION, ACHIEVEMENTS & SKILLS ============ -->
+    <section class="experience" id="experience">
+      <div class="container experience__inner">
+        
+        <!-- ========== a. Học vấn/ Education -->
+        <div class="education__timeline reveal reveal--left">
+          <p class="kicker" style="margin-top: 48px;" data-vi="Học tập" data-en="Learning"><span class="kicker__dot"></span> Học tập</p>
+          <h2 class="section-title" data-vi="Học Vấn" data-en="Education">Học Vấn</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">2020 — 2023</span>
+              <h3 class="timeline__role" data-vi="Chuyên ngành Thiết kế Đa phương tiện" data-en="Multimedia Design Major">Chuyên ngành Thiết kế Đa phương tiện</h3>
+              <p class="timeline__org">Arena Multimedia</p>
+              <p class="timeline__desc" data-vi="Thiết kế đồ họa" data-en="Graphic Design">Graphic Design</p>
+              <p class="timeline__desc" data-vi="Thiết kế sản phẩm kỹ thuật số" data-en="Digital Product Design">Digital Product Design</p>
+              <p class="timeline__desc" data-vi="Làm phim kỹ thuật số" data-en="Digital Filmaking">Digital Filmaking</p>
+              <p class="timeline__desc" data-vi="Thiết kế game 3D" data-en="3D Game Design ">3D Game Design </p>
+              <p class="timeline__desc" data-vi="Hoạt hình 3D" data-en="3D Animation">3D Animation</p>
+            </li>
+          </ol>
+        </div>
+        
+        <!-- ========== b. Giải thưởng & Thành tích/ Award & Achievement -->
+        <div class="education__timeline reveal reveal--right">
+          <p class="kicker" style="margin-top: 48px;" data-vi="Sự công nhận" data-en="Recognition"><span class="kicker__dot"></span> Sự công nhận</p>
+          <h2 class="section-title" data-vi="Giải thưởng & Thành tích" data-en="Award & Achievement">Giải thưởng & Thành tích</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">04/2023</span>
+              <h3 class="timeline__role" data-vi-html="Đồ án xuất sắc: 3D Game Design ‘<a href=&quot;https://example.com/crusader&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>Crusader</a>’" data-en-html="Excellent project in 3D Game Design ‘<a href=&quot;https://example.com/crusader&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>CRUSADER</a>’">Đồ án xuất sắc: 3D Game Design ‘<a href="https://example.com/crusader" target="_blank" rel="noopener">Crusader</a>’</h3>
+              <p class="timeline__org"></p>
+              <p class="timeline__desc"
+                data-vi="Phát triển các ý tưởng hình ảnh thông qua phác thảo và thiết kế nhân vật 3D, đảm bảo sự nhất quán về phong cách trong định hướng hình ảnh tổng thể."
+                data-en="Developed visual concepts through sketching and 3D character design, ensuring stylistic consistency within the overall visual direction.">
+                Developed visual concepts through sketching and 3D character design, ensuring stylistic consistency within the overall visual direction.
+              </p>
+            </li>
+
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">10/2023</span>
+              <h3 class="timeline__role" data-vi-html="Đồ án xuất sắc: Phim ngắn 3D ‘<a href=&quot;https://example.com/fight-for-life&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>FIGHT FOR LIFE</a>’" data-en-html="Excellent project in 3D Short Film ‘<a href=&quot;https://example.com/fight-for-life&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>FIGHT FOR LIFE</a>’">Đồ án xuất sắc: Phim ngắn 3D ‘<a href="https://example.com/fight-for-life" target="_blank" rel="noopener">FIGHT FOR LIFE</a>’</h3>
+              <p class="timeline__org"></p>
+              <p class="timeline__desc"
+                data-vi="Xây dựng bảng phân cảnh, đóng góp ý tưởng cốt truyện và tham gia vào quá trình sản xuất hoạt ảnh nhằm đảm bảo tính liền mạch cho câu chuyện."
+                data-en="Created storyboards, contributed narrative ideas, and participated in animation production to support cohesive storytelling.">
+                Xây dựng bảng phân cảnh, đóng góp ý tưởng cốt truyện và tham gia vào quá trình sản xuất hoạt ảnh nhằm đảm bảo tính liền mạch cho câu chuyện.
+              </p>
+            </li>
+          </ol>
+        </div>
+
+        <!-- ========== c. Kinh nghiệm/ Experience ========== -->
+        <div class="experience__timeline reveal reveal--left">
+          <p class="kicker" data-vi="Kinh nghiệm" data-en="Experience"><span class="kicker__dot"></span> Experience</p>
+          <h2 class="section-title" data-vi="Quá Trình Làm Việc" data-en="Work Experience">Quá Trình Làm Việc</h2>
+
+          <ol class="timeline">
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">11/2023 — 03/2026</span>
+              <h3 class="timeline__role" data-vi="3D Artist / Layout Artist" data-en="3D Artist / Layout Artist">3D Artist / Layout Artist</h3>
+              <p class="timeline__org" data-vi="Hibari Vietnam" data-en="Hibari Vietnam">Hibari Vietnam</p>
+              <p class="timeline__desc"
+                data-vi="Sản xuất nội dung 3D phong cách Cel-look Anime — modeling, layout bố cục khung hình và dàn dựng storyboard cho các dự án phim &amp; game."
+                data-en="Produced Cel-look Anime style 3D content — modeling, frame-layout composition and storyboarding for film and game projects.">
+                Sản xuất nội dung 3D phong cách Cel-look Anime — modeling, layout bố cục khung hình
+                và dàn dựng storyboard cho các dự án phim &amp; game.
+              </p>
+            </li>
+            <li class="timeline__item">
+              <span class="timeline__dot"></span>
+              <span class="timeline__date">2023 — 2024</span>
+              <h3 class="timeline__role" data-vi="Freelance 2D/3D Designer" data-en="Freelance 2D/3D Designer">Freelance 2D/3D Designer</h3>
+              <p class="timeline__org" data-vi="Độc lập" data-en="Independent">Độc lập</p>
+              <p class="timeline__desc"
+                data-vi="Nhận dự án thiết kế 2D &amp; 3D tự do song song, mở rộng kỹ năng editorial layout và dựng hình 3D ngoài phạm vi công việc chính thức."
+                data-en="Took on freelance 2D &amp; 3D design projects in parallel, expanding editorial layout and 3D modeling skills beyond full-time work.">
+                Nhận dự án thiết kế 2D &amp; 3D tự do song song, mở rộng kỹ năng editorial layout
+                và dựng hình 3D ngoài phạm vi công việc chính thức.
+              </p>
+            </li>
+            
+          </ol>
+
+          
+        </div>
+
+        <!-- ========== d. Skill/ Kỹ năng ========== -->
+        <div class="experience__skills reveal reveal--right">
+          <p class="kicker" data-vi="Bộ công cụ" data-en="Toolkit"><span class="kicker__dot"></span> Toolkit</p>
+          <h2 class="section-title" data-vi="Kỹ Năng" data-en="Skills">Kỹ Năng</h2>
+
+          <!-- Mỗi .tag bên trong chỉ tự sáng khi CHÍNH nó được hover
+               (xem style.css: ".skill-group .tag:hover" — không còn kiểu
+               hover cả nhóm .skill-group rồi sáng hết toàn bộ tag bên trong). -->
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="Thiết kế Đồ họa" data-en="Graphic Design">Thiết kế Đồ họa</h3>
+            <div class="card__tags">
+              <span class="tag">Photoshop</span>
+              <span class="tag">Illustrator</span>
+              <span class="tag">InDesign</span>
+              <span class="tag">Figma</span>
+              <span class="tag">After Effects</span>
+              <span class="tag">Premiere Pro</span> 
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="Hoạt hình 3D &amp; Game 3D" data-en="3D Animation &amp; 3D Game">Hoạt hình 3D &amp; Game 3D</h3>
+            <div class="card__tags">
+              <span class="tag">Maya</span>
+              <span class="tag">3ds Max</span>
+              <span class="tag">ZBrush</span>
+              <span class="tag">Subtance Painter</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group__title" data-vi="Truyền thông Tương tác" data-en="Interactive Media">Truyền thông Tương tác</h3>
+            <div class="card__tags">
+              <span class="tag">Dreamweaver</span>
+              <span class="tag">VS Code</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ============ 5. EXPLORE: SPLIT-SELECTOR 2D / 3D ============ -->
+    <section class="featured" id="explore">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-vi="Bạn muốn khám phá điều gì?" data-en="What would you like to explore?">
+            <span class="kicker__dot"></span> Bạn muốn khám phá điều gì?
+          </p>
+          <h2 class="section-title" data-vi="Hồ sơ năng lực" data-en="Portfolio">Hồ sơ năng lực</h2>
+          <p class="section-desc" 
+          data-vi="Tập hợp các sản phẩm, dự án và thành tích thực tế được sắp xếp hệ thống nhằm chứng minh kỹ năng, kinh nghiệm và phong cách làm việc của một cá nhân hoặc tổ chức." 
+          data-en="Curated collection of real projects, products, and achievements organized to showcase an individual's or organization's skills, experience, and work style.">
+           Tập hợp các sản phẩm, dự án và thành tích thực tế được sắp xếp hệ thống nhằm chứng minh kỹ năng, kinh nghiệm và phong cách làm việc của một cá nhân hoặc tổ chức.
+          </p>
+        </div>
+
+        <!-- Nhóm 2D — dải cuộn ngang FULL-BLEED, tự chạy vòng lặp vô hạn (xem
+             .showcase-viewport / .showcase trong style.css). Card bên trong
+             là card THẬT (copy từ index-2d.html, bỏ tiền tố "../../" vì
+             index.html nằm ở gốc) được LẶP LẠI nhiều lần cho đầy dải — bạn
+             tự thay bằng card thật khác sau, chỉ cần giữ đúng cấu trúc
+             <article class="card">...</article>. Nửa sau của .showcase
+             (đánh dấu aria-hidden="true") là bản sao y hệt nửa đầu, PHỤC VỤ
+             kỹ thuật loop liền mạch — luôn giữ 2 nửa giống hệt nhau khi sửa. -->
+        <div class="featured__group featured__group--2d">
+          <div class="featured__group-head">
+            <h3 class="featured__group-title" data-vi="Thiết kế Đồ họa" data-en="Graphic Design">Truyền thông Thị giác</h3>
+            <a href="project/2d/index-2d.html" class="featured__more">
+              <span data-vi="Xem thêm" data-en="View more">Xem thêm</span>
+              <span class="featured__more-icon" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="showcase-viewport">
+          <div class="showcase">
+            <!--  ============ 1. Ghibli -->
+            <article class="card card--2d" data-category="illustration">
+              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link">
+                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
+                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+              </a>
+            </article>
+
+            <!-- ============ 2. Collage Art -->
+            <article class="card card--2d" data-category="poster">
+              <a href="project/2d/2d-CA.html" class="card__media card__media--link">
+                <img src="assets/2d/CA/00.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
+                <span class="card__overlay card__overlay--center">Collage Art</span>
+              </a>
+            </article>
+
+            <!-- ============ 3. Elle -->
+            <article class="card card--2d" data-category="editorial">
+              <a href="project/2d/2d-elle.html" class="card__media card__media--link">
+                <img src="assets/2d/elle/000.webp" alt="Elle - Magazine Cover" loading="lazy" decoding="async">
+                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Elle" data-en="Elle">Elle</span>
+              </a>
+            </article>
+
+            <!-- ============ 4. TirTir -->
+            <article class="card card--2d" data-category="e-com">
+              <a href="project/2d/2d-TT.html" class="card__media card__media--link">
+                <img src="assets/2d/TT/01.webp" alt="TirTir - E-commerce Graphic Design" loading="lazy" decoding="async">
+                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="TirTir" data-en="TirTir">TirTir</span>
+              </a>
+            </article>
+
+            <!-- ============ 5. ShaiShaiShai -->
+            <article class="card card--2d" data-category="e-com">
+              <a href="project/2d/2d-SSS.html" class="card__media card__media--link">
+                <img src="assets/2d/SSS/000.webp" alt="ShaiShaiShai - E-commerce Graphic Design" loading="lazy" decoding="async">
+                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="ShaiShaiShai" data-en="ShaiShaiShai">ShaiShaiShai</span>
+              </a>
+            </article>
+
+            <!-- ============ 6. The Yin-Yang Master -->
+            <article class="card card--2d" data-category="poster">
+              <a href="project/2d/2d-TYYM.html" class="card__media card__media--link">
+                <img src="assets/2d/TYYM/00.webp" alt="The Yin-Yang Master — Movie Poster" loading="lazy" decoding="async">
+                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Âm Dương Sư" data-en="The Yin-Yang Master">Âm Dương Sư</span>
+              </a>
+            </article>
+
+            <!-- ============ 7. (lặp — vòng loop, xem style.css mục Showcase) -->
+            <article class="card card--2d" data-category="illustration" aria-hidden="true">
+              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+              </a>
+            </article>
+            <!-- ============ 8. -->
+            <article class="card card--2d" data-category="poster" aria-hidden="true">
+              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+              </a>
+            </article>
+            <!-- ============ 9. -->
+            <article class="card card--2d" data-category="illustration" aria-hidden="true">
+              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+              </a>
+            </article>
+            <!-- ============ 10. -->
+            <article class="card card--2d" data-category="poster" aria-hidden="true">
+              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+              </a>
+            </article>
+            <!-- ============ 11. -->
+            <article class="card card--2d" data-category="illustration" aria-hidden="true">
+              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+              </a>
+            </article>
+            <!-- ============ 12. -->
+            <article class="card card--2d" data-category="poster" aria-hidden="true">
+              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
+                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+              </a>
+            </article>
+          </div>
+        </div>
+
+        <!-- Nhóm 3D — cùng kỹ thuật marquee như nhóm 2D ở trên. -->
+        <div class="featured__group featured__group--3d">
+          <div class="featured__group-head">
+            <h3 class="featured__group-title" data-vi="Hoạt hình 3D &amp; Game 3D" data-en="3D Animation &amp; 3D Game">Hoạt hình 3D &amp; Game 3D</h3>
+            <a href="project/3d/index-3d.html" class="featured__more">
+              <span data-vi="Xem thêm" data-en="View more">Xem thêm</span>
+              <span class="featured__more-icon" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="showcase-viewport">
+          <div class="showcase">
+            <!-- ============ 1. CRUSADER — dùng poster tĩnh thay model-viewer:
+                 dải cuộn chạy vô hạn không cần dựng WebGL 3D real-time cho
+                 từng thumbnail, model thật vẫn xem/xoay được ở trang chi tiết. -->
+            <article class="card" data-category="model">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 2. FIGHT FOR LIFE — chưa có trang chi tiết riêng
+                 nên để <a> không có href (không phải link, giữ đúng cấu trúc
+                 nhưng không click được), giống hành vi cũ. -->
+            <article class="card" data-category="anim">
+              <a class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 3. CRUSADER -->
+            <article class="card" data-category="model">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 4. FIGHT FOR LIFE -->
+            <article class="card" data-category="anim">
+              <a class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 5. CRUSADER -->
+            <article class="card" data-category="model">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 6. FIGHT FOR LIFE -->
+            <article class="card" data-category="anim">
+              <a class="card__media card__media--link">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 7. (lặp — vòng loop) -->
+            <article class="card" data-category="model" aria-hidden="true">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 8. -->
+            <article class="card" data-category="anim" aria-hidden="true">
+              <a class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 9. -->
+            <article class="card" data-category="model" aria-hidden="true">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 10. -->
+            <article class="card" data-category="anim" aria-hidden="true">
+              <a class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 11. -->
+            <article class="card" data-category="model" aria-hidden="true">
+              <a href="project/3d/3d-crusader.html" class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+            <!-- ============ 12. -->
+            <article class="card" data-category="anim" aria-hidden="true">
+              <a class="card__media card__media--link" tabindex="-1">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+              </a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  <!-- ============ FOOTER ============
+       Thanh dưới cùng: TRÁI là icon mạng xã hội, PHẢI là copyright — không
+       có phần "ở giữa" kiểu Trusted-by/status như bản tham khảo. Icon dùng
+       tạm bộ path đơn giản (phong cách Feather Icons); Facebook/Instagram/
+       LinkedIn/Github là icon thật của platform, Vimeo/ArtStation tạm dùng
+       icon chung (video/layers) — bạn có thể thay bằng icon chính xác hơn
+       sau, chỉ cần đổi nội dung <svg> bên trong .footer__social-link. -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <!-- ============ CTA ========== -->
+      <div class="footer__cta">
+        <p class="kicker" data-vi="Bạn nghĩ gì về tôi?" data-en="What do you think about me?"><span class="kicker__dot"></span> Bạn nghĩ gì về tôi?</p>
+        <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
+      </div>
+
+      <!-- ============ Running Text ========== -->
+      <div class="footer__running-text">
+
+      </div>
+
+
+      <!-- ============ Thanks for watching ========== -->
+      <div class="footer__tks">
+        <h1 class="footer__title"
+            data-vi-html="Cảm ơn vì <em>đã xem!!!</em> "
+            data-en-html="Thanks for <em>watching!!!</em> ">
+            Cảm ơn vì <em>đã xem!!!</em>  
+          </h1>
+      </div>
+
+      <!-- ============ Back To Top ========== -->
+      <div class="footer__btt">
+        <p class="footer__bottom">
+          <a href="#home" data-vi="Trở lại đầu trang" data-en="Back to top">Back to top</a>
+        </p>
+      </div>
+
+      <div class="footer__bar">
+        <!-- ============ INFO ========== -->
+        <div class="footer__social">
+          <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Github">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </a>
+          <a href="https://vimeo.com/user261213079?fl=pp&fe=sh" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Vimeo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </a>
+          <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="ArtStation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </a>
+        </div>
+
+        <!-- ============ CopyRight ========== -->
+        <p class="footer__bottom">
+          © <span id="year"></span>
+          <span data-vi="Trúc Linh - Multimedia Designer." data-en="linn. - Multimedia Designer.">Trúc Linh - Multimedia Designer.</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
