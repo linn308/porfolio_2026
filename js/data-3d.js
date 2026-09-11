@@ -36,6 +36,26 @@
                   { type: 'model', src: '....glb', poster: '...' }
                 'src' của video/model nên dùng đường dẫn tương đối kiểu
                 '../../assets/...' (tính từ project/<slug>/index.html).
+
+                Riêng type: 'model' còn có thể khai NHIỀU BIẾN THỂ (variants)
+                cho cùng 1 model — VD bản có texture / bản wireframe / bản
+                clay — để hiện nút bấm đổi qua lại ngay trên khung model:
+                  {
+                    type: 'model',
+                    variants: [
+                      { label: { vi: 'Có texture', en: 'Textured' }, src: '....glb' },
+                      { label: { vi: 'Wireframe',  en: 'Wireframe' }, src: '....glb' },
+                      { label: { vi: 'Không texture', en: 'Clay' },  src: '....glb' },
+                    ],
+                    poster: '...', // tuỳ chọn, dùng chung cho mọi biến thể
+                  }
+                LƯU Ý: đây PHẢI là các FILE .glb RIÊNG BIỆT tự export sẵn từ
+                Maya/Blender/ZBrush (mỗi file gán material khác nhau) — 1
+                file .glb duy nhất KHÔNG thể tự bật/tắt wireframe hay
+                texture được. Không khai "variants" thì dùng "src" như cũ,
+                2 kiểu khai báo dùng chung được, không xung đột.
+                Dùng y hệt cú pháp trên cho project.cover khi cover cũng là
+                model muốn có nhiều biến thể.
    relatedLoop/ 
    relatedCards
               — items : :[
@@ -48,7 +68,7 @@ const PROJECTS_3D = {
     test: {
     title: 'Local Brands - Magazine Layout',
     year: '2021',
-    cover: { type: 'model', src: '../../source-files/3d/glb/hi_01.glb' },
+    cover: { type: 'model', src: '../../source-files/3d/glb/Kord_lo_01.glb' },
     category: { vi: 'Editorial', en: 'Editorial' },
     subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
     desc: {

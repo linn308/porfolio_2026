@@ -36,6 +36,25 @@
   --radius-md: 8px;
   --transition-fast: 0.2s ease;
   --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Nền "mặt thẻ" của card__media ở trang chủ trước khi hover (xem mục
+     "CHỈ RIÊNG TRANG CHỦ" bên dưới) — CHỈ áp dụng cho chế độ tối, giảm độ
+     đậm so với --bg-elevated đặc (trong mờ nhẹ hơn, đỡ tối so với tổng
+     thể trang). Chế độ sáng override lại = var(--bg-elevated) y hệt hành
+     vi cũ, xem override trong khối 1b. CHẾ ĐỘ SÁNG. */
+  --card-media-home-bg: #1d1d2273;
+
+  /* Nền "mặt thẻ" của card__media ở CÁC TRANG KHÁC trang chủ: listing 2D/3D
+     (index-2d.html/index-3d.html) và trang chi tiết dự án (2d-LB.html...,
+     bao gồm cả related loop/cards) — xem rule "body:not(.page-home)
+     .card__media" ở mục 6. CARD COMPONENT. Cố tình TRONG SUỐT HƠN
+     --card-media-home-bg ở trên (alpha 73 ≈ 45%) — theo yêu cầu, hạ alpha
+     xuống 40 (≈25%) để nền càng mờ, che càng ít vùng trong suốt của PNG,
+     dễ thấy ảnh đã tách nền hơn (thấy được PNG hoà vào nền trang nhiều
+     hơn thay vì bị 1 khối màu đặc che khuất). Chế độ sáng override sang
+     hex tương ứng của --bg-elevated sáng (#e7e3d8) + cùng alpha 40, xem
+     override trong khối 1b. CHẾ ĐỘ SÁNG. */
+  --card-media-listing-bg: #1d1d2240;
 }
 
 /* ==========================================================================
@@ -64,6 +83,16 @@ html[data-theme="light"] {
   --accent-warm-soft: rgba(138, 92, 18, 0.14);
  
   --overlay-rgb: 238, 236, 229;
+
+  /* Giữ nguyên hành vi cũ ở chế độ sáng: nền "mặt thẻ" đặc, theo đúng
+     --bg-elevated của theme sáng — chỉ chế độ tối mới dùng bản trong mờ
+     giảm độ đậm ở :root. */
+  --card-media-home-bg: var(--bg-elevated);
+
+  /* Bản trong suốt (alpha 40 ≈ 25%) của --bg-elevated chế độ sáng
+     (#e7e3d8), cùng mức alpha với bản chế độ tối ở :root — xem giải
+     thích đầy đủ ở khai báo gốc trong mục "1. CSS VARIABLES". */
+  --card-media-listing-bg: #e7e3d840;
 }
  
 /* Nền động (bg-blob) đậm hơn cần giảm opacity ở nền sáng, không thì các
@@ -90,6 +119,15 @@ html[data-theme="light"] .bg-blob--3 { opacity: 0.1; }
 html[data-theme="light"] .hero__decor-text,
 html[data-theme="light"] .hero__decor-arrow,
 html[data-theme="light"] .hero__decor-sparkle {
+  color: var(--accent);
+}
+
+/* Chữ "Xem chi tiết" trên card (listing 2D/3D + trang chi tiết dự án) —
+   đổi sang xanh (--accent) ở chế độ sáng, khác với vàng ấm (--accent-warm)
+   ở chế độ tối khai báo tại .card__overlay gốc. Không ảnh hưởng trang chủ:
+   body.page-home .card__overlay khai báo SAU trong file, luôn thắng dù
+   cùng độ đặc thù selector (xem giải thích ở comment .card__overlay gốc). */
+html[data-theme="light"] .card__overlay {
   color: var(--accent);
 }
 
@@ -566,6 +604,16 @@ body.no-scroll { overflow: hidden; }
 }
 
 .nav__tab:hover { color: var(--text-primary); }
+
+/* Nút "Who am I / Tôi là ai" — hover thì giãn letter-spacing để nhấn nhá.
+   Width cố định + text-align: center để chữ giãn ĐỀU về 2 bên tính từ
+   giữa (không bị lệch/đẩy qua 1 bên hay xô lệch các nút cạnh nó). */
+.nav__tab--whoami {
+  width: 122px;
+  text-align: center;
+  transition: color var(--transition-fast), background-color var(--transition-fast), letter-spacing var(--transition-fast);
+}
+.nav__tab--whoami:hover { letter-spacing: 0.16em; }
 
 .nav__tab.is-active--2d { background: var(--accent-warm-soft); color: var(--accent-warm); font-weight: 600; }
 .nav__tab.is-active--3d { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
@@ -1204,7 +1252,11 @@ body.content-revealed .hero__portfolio-letter {
 }
 
 html[data-theme="light"] .hero__portfolio-letter {
-  color: #1c1c1c;
+  /* Light theme: "Port.."/"folio" đổi sang vàng ấm (dùng chung biến
+     --accent-warm của theme, xem :root / html[data-theme="light"] ở đầu
+     file) thay vì đen như trước. Dark theme giữ nguyên màu xanh (--accent
+     ở rule .hero__portfolio-letter phía trên, không đổi). */
+  color: var(--accent-warm);
   filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.12));
 }
 
@@ -1292,7 +1344,13 @@ body.content-revealed .hero__welcome-text {
   font-style: italic;
   font-weight: lighter;
   letter-spacing: 0.25em;
-  fill: #fdfcf9;
+  fill: #fdfcf9; /* Dark theme: giữ nguyên màu trắng như hiện tại */
+}
+
+html[data-theme="light"] .hero__welcome-text text {
+  /* Light theme: "Welcome to my..." đổi sang đen (khớp với chữ decor/nội
+     dung khác của light theme, xem .hero__portfolio-letter ở trên) */
+  fill: #1c1c1c;
 }
 
 @keyframes hero-welcome-slide-in {
@@ -1609,8 +1667,12 @@ body.content-revealed .hero__welcome-text {
 
 /* Card ẩn khi bị lọc: fade + scale nhẹ thay vì display:none đột ngột,
    nhờ vậy chuyển đổi bộ lọc trông "mượt" hơn hẳn */
+/* KHÔNG set background chung ở đây nữa — trước đây .card phủ 1 màu nền
+   (var(--bg-surface)) lên TOÀN BỘ khung, kể cả vùng ảnh, nên ảnh PNG tách
+   nền (trong suốt) vẫn bị lộ ra màu xám này phía sau thay vì xuyên thấu
+   xuống nền trang. Giờ .card chỉ còn border + bo góc (khung), nền chữ ở
+   dưới (.card__body) được set nền riêng — xem rule .card__body phía dưới. */
 .card {
-  background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -1633,17 +1695,40 @@ body.content-revealed .hero__welcome-text {
 
 .card--2d:hover { border-color: rgba(231, 184, 105, 0.45); }
 
-.showcase .card__media {
-  cursor: zoom-in;
-}
-
+/* Card__media MẶC ĐỊNH là pointer — đúng cho mọi nơi card còn điều hướng
+   sang trang khác: .showcase ở trang chủ (thẻ <a>) và .gallery ở
+   index-2d.html/index-3d.html (thẻ <button data-detail>). Trước đây có
+   1 rule ".showcase .card__media { cursor: zoom-in }" khiến dải showcase
+   ở TRANG CHỦ cũng bị đổi thành zoom-in dù vẫn điều hướng bình thường —
+   đã bỏ. Cursor zoom-in giờ CHỈ set riêng cho card trong trang chi tiết
+   dự án, xem ".project-related-blocks .card__media" phía dưới. */
+/* KHÔNG set background CHUNG (không scope) ở đây nữa — chỉ set riêng theo
+   2 khối bên dưới, mỗi khối 1 màu khác nhau tuỳ trang:
+   - Trang chủ (body.page-home): dùng --card-media-home-bg (bán trong suốt,
+     alpha ≈45%), xem khối "CHỈ RIÊNG TRANG CHỦ" phía dưới.
+   - MỌI trang còn lại — listing 2D/3D (index-2d.html/index-3d.html) và
+     trang chi tiết dự án (2d-LB.html..., cả related loop/cards) — dùng
+     --card-media-listing-bg (trong suốt HƠN bản trang chủ, alpha ≈25%)
+     ngay dưới đây, để nền "mặt thẻ" mờ nhạt hơn, che ít vùng trong suốt
+     của PNG hơn, dễ thấy ảnh đã tách nền. */
 .card__media {
   position: relative;
   display: block;
   width: 100%;
   overflow: hidden;
-  /* cursor: pointer; */
-  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+/* Nền "mặt thẻ" cho card__media ở TẤT CẢ trang không phải trang chủ — xem
+   giải thích đầy đủ ở khai báo --card-media-listing-bg trong mục
+   "1. CSS VARIABLES" đầu file. Dùng :not(body.page-home) để loại trừ trang
+   chủ, tránh đè lên rule "body.page-home .card__media" riêng của trang chủ
+   (2 rule cùng độ đặc thù 0,0,2,0 nhưng không bao giờ cùng khớp 1 trang, vì
+   1 trang chỉ có HOẶC có class page-home HOẶC không). Không đụng gì đến
+   hành vi hiện/ẩn ảnh hay hiệu ứng hover gốc (ảnh vẫn hiện sẵn mặc định,
+   tối màu khi hover) — chỉ thêm đúng 1 lớp màu nền phía sau. */
+body:not(.page-home) .card__media {
+  background: var(--card-media-listing-bg);
 }
 
 .card__media img {
@@ -1698,7 +1783,12 @@ body.content-revealed .hero__welcome-text {
    ĐÂY LÀ HÀNH VI GỐC — áp dụng cho listing 2D/3D (index-2d.html/index-3d.html)
    và related loop/cards trong trang chi tiết dự án (2d-LB.html, v.v.).
    Trang chủ (index.html) có hành vi NGƯỢC LẠI — xem khối
-   "CHỈ RIÊNG TRANG CHỦ" scope theo body.page-home ngay dưới đây. */
+   "CHỈ RIÊNG TRANG CHỦ" scope theo body.page-home ngay dưới đây.
+   Màu chữ: mặc định (chế độ tối) dùng --accent-warm (vàng ấm); chế độ
+   sáng override sang --accent (xanh) ở khối "1b. CHẾ ĐỘ SÁNG" đầu file —
+   theo yêu cầu, KHÔNG áp dụng cho trang chủ vì body.page-home
+   .card__overlay phía dưới set lại màu riêng (var(--text-primary)), khai
+   báo SAU trong file nên luôn thắng dù cùng độ đặc thù selector. */
 .card__overlay {
   position: absolute;
   inset: 14px;
@@ -1709,7 +1799,7 @@ body.content-revealed .hero__welcome-text {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
-  color: #f5f4f2;
+  color: var(--accent-warm);
   opacity: 0;
   transition: opacity var(--transition-base);
   pointer-events: none;
@@ -1725,14 +1815,24 @@ body.content-revealed .hero__welcome-text {
    án cũng dùng class .showcase — nên bắt buộc phải scope qua body.page-home,
    không thể chỉ dùng .showcase). Các trang khác vẫn giữ Y NGUYÊN hành vi gốc
    ở khối phía trên: mặc định thấy ảnh, hover mới tối ảnh + hiện chữ.
-   Ở trang chủ: mặc định card__media hiện NỀN TỐI/SÁNG THEO ĐÚNG THEME đang
-   chọn (kế thừa background: var(--bg-elevated) từ rule .card__media gốc ở
-   trên — KHÔNG override cứng thành 1 màu đen cố định nữa, để khi bật theme
-   sáng thì nền card cũng sáng theo, không bị lệch tông với cả trang) + chữ
-   overlay hiện sẵn (màu cũng theo theme qua var(--text-primary)); ảnh/
-   video/model-viewer ẩn (opacity: 0). Khi hover: ảnh thật hiện dần lên,
-   overlay mờ đi để nhường chỗ. Badge số lượng ảnh/team-badge và icon "⤢"
-   zoom không bị ảnh hưởng vì là element riêng. */
+   Ở trang chủ: mặc định card__media hiện NỀN "mặt thẻ" trước khi hover —
+   dùng var(--card-media-home-bg): chế độ tối là màu trong mờ nhẹ (đỡ tối
+   hơn so với tổng thể trang), chế độ sáng giữ nguyên đặc như cũ (= chính
+   var(--bg-elevated)) — khai báo 2 biến này ở mục "1. CSS VARIABLES" và
+   "1b. CHẾ ĐỘ SÁNG" đầu file. Chữ overlay hiện sẵn (màu theo theme qua
+   var(--text-primary)); ảnh/video/model-viewer ẩn (opacity: 0). Khi
+   hover: ảnh thật hiện dần lên, overlay mờ đi để nhường chỗ. Badge số
+   lượng ảnh/team-badge và icon "⤢" zoom không bị ảnh hưởng vì là element
+   riêng. */
+/* Set lại riêng background cho trang chủ — ĐÂY là nơi DUY NHẤT còn cần
+   màu nền phía sau .card__media (làm "mặt thẻ" hiện trước khi hover, xem
+   giải thích ở comment ngay phía trên). index-2d.html/index-3d.html và
+   trang chi tiết dự án KHÔNG có body.page-home nên không bị ảnh hưởng —
+   ảnh PNG tách nền ở những trang đó vẫn trong suốt thật, không lộ màu. */
+body.page-home .card__media {
+  background: var(--card-media-home-bg);
+}
+
 body.page-home .card__media img {
   opacity: 0;
   transform: scale(1.06);
@@ -1772,13 +1872,29 @@ body.page-home .card:hover .card__media model-viewer {
 body.page-home .card__overlay {
   opacity: 1;
   color: var(--text-primary); /* chữ cũng đổi theo theme (sáng/tối) cùng với nền, thay vì cố định trắng */
+  /* Đồng bộ font-size/text-transform giữa 2 nhóm card 2D và 3D ở trang
+     chủ — trước đây nhóm 2D (Ghibli, Elle, TirTir, ShaiShaiShai, Yin-Yang
+     Master) có inline style riêng (font-size: 1.5rem; text-transform:
+     uppercase) ngay trên từng span trong index.html, còn nhóm 3D ("Xem
+     chi tiết") dùng mặc định của .card__overlay gốc (0.8rem, không
+     transform) — 2 nhóm lệch nhau. Đã bỏ hết inline style đó trong HTML,
+     chuyển về đúng 1 chỗ set duy nhất ở đây: size = giá trị giữa
+     1.5rem/0.8rem (~1.15rem), transform = none (lấy theo nhóm 3D, không
+     viết hoa). */
+  font-size: 1.15rem;
+  text-transform: none;
 }
 
 body.page-home .card:hover .card__overlay {
   opacity: 0;
 }
 
-.card__body { padding: 22px; }
+/* Nền riêng cho phần chữ (category/tên dự án...) — TÁCH khỏi .card vì
+   .card giờ không còn nền chung nữa (xem comment ở rule .card phía trên).
+   Card nào không có .card__body (ví dụ card trong related-blocks ở trang
+   chi tiết dự án, chỉ có mỗi .card__media) thì đơn giản không có phần tử
+   này, không bị ảnh hưởng gì. */
+.card__body { padding: 22px; background: var(--bg-surface); }
 
 /* Hàng chứa category (trái) + năm thực hiện dự án (phải) — dùng chung cho
    cả card ngoài listing (index-2d.html/3d.html) lẫn panel thông tin trong
@@ -1875,7 +1991,9 @@ body.page-home .card:hover .card__overlay {
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   /* opacity: 0.5; */
-  min-height: calc(100svh - 88px);
+  /* Đã bỏ min-height: calc(100svh - 88px) — ép section cao bằng cả
+     viewport khiến phần nội dung ít lại (chỉ còn Điện thoại, Email,
+     Behance, LinkedIn) bị hở một khoảng trống lớn phía dưới. */
 }
 
 .contact__inner {
@@ -2468,6 +2586,50 @@ a.footer__item:hover .footer__item-value {
   backdrop-filter: blur(4px);
 }
 
+/* Nút đổi biến thể model (texture/wireframe/clay...) — thay cho badge
+   "Model 3D" khi slide/cover khai project.variants (xem
+   buildModelVariantToggle() trong js/script.js). Cùng vị trí/kích thước
+   với .project-gallery__tile-badge để không lệch layout giữa 2 kiểu
+   project (có variants / không có variants), chỉ khác là 1 nhóm nhiều
+   nút bấm được thay vì 1 nhãn tĩnh. */
+.model-variant-toggle {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 24px);
+}
+
+.model-variant-toggle__btn {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background: rgba(var(--overlay-rgb), 0.7);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.model-variant-toggle__btn:hover {
+  border-color: var(--text-primary);
+}
+
+/* Nút đang được chọn — đảo màu (nền tối/chữ sáng hoặc ngược lại tuỳ theme)
+   để phân biệt rõ đang xem biến thể nào, không cần đọc kỹ mới biết. */
+.model-variant-toggle__btn.is-active {
+  background: var(--text-primary);
+  color: var(--bg-surface);
+  border-color: var(--text-primary);
+}
+
 /* Ảnh "gọi tên" (slide.large = true trong data-2d.js/data-3d.js) — to hẳn
    hơn các ảnh còn lại. LƯU Ý KỸ THUẬT: gallery dùng CSS multi-column
    (columns) để tự xếp masonry theo tỉ lệ ảnh thật — kiểu layout này chỉ
@@ -3005,16 +3167,22 @@ a.footer__item:hover .footer__item-value {
 /* Gợi ý "bấm để phóng to" y hệt badge ở trên, dùng lại CHO card trong
    relatedLoop/relatedCards (trang chi tiết dự án) — 2 khối này KHÔNG còn
    điều hướng sang trang dự án khác nữa, bấm vào là mở lightbox tại chỗ
-   (xem bindZoomableTiles() trong js/script.js). Cố tình scope riêng theo
-   #id của 2 khối này, KHÔNG áp dụng cho .card ở trang listing 2D/3D —
-   card ngoài đó vẫn điều hướng bình thường, không cần badge này. */
-#projectRelatedLoopTrack .card__media,
-#projectRelatedCardsGrid .card__media {
+   (xem bindZoomableTiles() trong js/script.js). Scope theo class
+   .project-related-blocks — chính là wrapper #projectRelatedBlocks trong
+   2d-LB.html (và mọi trang chi tiết dự án khác), nơi initProjectDetail()
+   tự dựng 2 khối loop/cards vào — KHÔNG áp dụng cho .card ở trang listing
+   2D/3D (index-2d.html/index-3d.html) hay dải showcase trang chủ, card ở
+   những nơi đó vẫn điều hướng bình thường (cursor: pointer), không cần
+   badge này.
+   (Trước đây rule này scope theo #projectRelatedLoopTrack/
+   #projectRelatedCardsGrid — 2 ID chưa từng được gán trong
+   buildRelatedLoopBlock()/buildRelatedCardsBlock(), nên chưa từng chạy.
+   Đổi sang class .project-related-blocks để khớp đúng DOM thật.) */
+.project-related-blocks .card__media {
   cursor: zoom-in;
 }
 
-#projectRelatedLoopTrack .card__media::after,
-#projectRelatedCardsGrid .card__media::after {
+.project-related-blocks .card__media::after {
   content: '⤢';
   position: absolute;
   top: 10px;
@@ -3035,8 +3203,7 @@ a.footer__item:hover .footer__item-value {
   pointer-events: none;
 }
 
-#projectRelatedLoopTrack .card:hover .card__media::after,
-#projectRelatedCardsGrid .card:hover .card__media::after {
+.project-related-blocks .card:hover .card__media::after {
   opacity: 1;
 }
 

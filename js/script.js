@@ -1036,6 +1036,109 @@ function initLightbox() {
    ?id=... trên URL làm phương án dự phòng (ví dụ khi mở project-template
    trực tiếp mà chưa set PROJECT_ID).
    -------------------------------------------------------------------------- */
+// --------------------------------------------------------------------------
+// MODEL-VIEWER VỚI NHIỀU BIẾN THỂ (variants) — cho phép 1 project khai báo
+// NHIỀU file .glb khác nhau cho CÙNG 1 model (bản có texture, bản wireframe,
+// bản chỉ có màu/clay...) và cho người xem bấm nút đổi qua lại ngay tại chỗ.
+//
+// LƯU Ý QUAN TRỌNG: model-viewer KHÔNG thể tự "tắt texture" hay "hiện
+// wireframe" từ 1 file .glb duy nhất — không có thuộc tính nào làm được
+// việc này. Đây PHẢI là 3 FILE .glb RIÊNG BIỆT, tự export từ Maya/Blender/
+// ZBrush, mỗi file gắn material khác nhau (1 bản giữ nguyên texture, 1 bản
+// gán shader wireframe, 1 bản gán shader trơn/clay/normal...). Code ở đây
+// chỉ đổi thuộc tính "src" của model-viewer qua lại giữa các file đó —
+// không tự "tạo ra" wireframe hay bỏ texture được.
+//
+// Khai báo trong data-2d.js/data-3d.js, ở project.cover HOẶC 1 slide loại
+// 'model' — thay 'src' bằng 'variants':
+//   {
+//     type: 'model',
+//     variants: [
+//       { label: { vi: 'Có texture', en: 'Textured' }, src: '....glb' },
+//       { label: { vi: 'Wireframe',  en: 'Wireframe' }, src: '....glb' },
+//       { label: { vi: 'Không texture', en: 'Clay' },  src: '....glb' },
+//     ],
+//     poster: '...', // (tuỳ chọn) vẫn dùng chung 1 poster cho mọi biến thể
+//   }
+// label cũng có thể là 1 string thường (VD: 'Wireframe') nếu không cần
+// dịch riêng theo ngôn ngữ. Không khai "variants" thì dùng "src"/"poster"
+// như cũ, không đổi gì so với trước — 2 kiểu khai báo dùng chung được.
+// --------------------------------------------------------------------------
+
+// Lấy đúng src "đại diện" của 1 slide model để so sánh trùng với cover —
+// ưu tiên biến thể đầu tiên nếu slide khai theo kiểu variants.
+function getSlideSrc(slide) {
+  if (!slide) return null;
+  if (Array.isArray(slide.variants) && slide.variants.length) {
+    return slide.variants[0].src;
+  }
+  return slide.src;
+}
+
+function buildModelViewer(modelData, altText) {
+  const mv = document.createElement('model-viewer');
+  const initialSrc = getSlideSrc(modelData);
+  mv.setAttribute('src', initialSrc);
+  if (modelData.poster) mv.setAttribute('poster', modelData.poster);
+  mv.setAttribute('camera-controls', '');
+  // --- Chỉnh sáng cho model 3D đỡ bị "trắng bệt" trên nền tối ---
+  // shadow-intensity/softness: đổ bóng rõ hơn, model có chiều sâu, không
+  // bị "phẳng" 1 màu trắng. exposure giảm nhẹ (mặc định 1) vì model
+  // trắng/sáng dễ bị cháy sáng (overexpose) dưới ánh sáng mặc định của
+  // model-viewer. tone-mapping="neutral" giữ đúng màu thật của model,
+  // không đẩy thêm độ sáng/độ bão hoà kiểu ACES filmic (mặc định) khiến
+  // vùng trắng dễ bị "bệt". environment-image "neutral" thay ánh sáng
+  // studio mặc định (khá dẹt) bằng ánh sáng môi trường có phản chiếu nhẹ,
+  // giúp thấy rõ khối/chi tiết bề mặt hơn — xem thêm ở style.css (nền
+  // sáng riêng cho khung chứa model, để model KHÔNG bị chìm vào nền tối
+  // chung của trang).
+  mv.setAttribute('shadow-intensity', '1.2');
+  mv.setAttribute('shadow-softness', '0.75');
+  mv.setAttribute('exposure', '0.85');
+  mv.setAttribute('tone-mapping', 'neutral');
+  mv.setAttribute('environment-image', 'neutral');
+  mv.setAttribute('alt', altText || '');
+  return mv;
+}
+
+// Trả về null nếu modelData không khai "variants" (hoặc chỉ có 1 biến thể)
+// — khi đó nơi gọi hàm này tự hiện lại badge "Model 3D" như cũ.
+function buildModelVariantToggle(modelData, mv) {
+  if (!Array.isArray(modelData.variants) || modelData.variants.length < 2) return null;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'model-variant-toggle';
+
+  modelData.variants.forEach((variant, index) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'model-variant-toggle__btn';
+    btn.classList.toggle('is-active', index === 0);
+
+    const label = variant.label;
+    if (label && typeof label === 'object') {
+      // Gắn data-vi/data-en để applyLanguage() (đã tự quét toàn trang mỗi
+      // lần đổi ngôn ngữ) tự cập nhật chữ trên nút, không cần code riêng.
+      btn.dataset.vi = label.vi || '';
+      btn.dataset.en = label.en || '';
+      btn.textContent = getStoredLang() === 'en' ? (label.en || label.vi) : (label.vi || label.en);
+    } else {
+      btn.textContent = label || `#${index + 1}`;
+    }
+
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('is-active')) return;
+      mv.setAttribute('src', variant.src);
+      wrap.querySelectorAll('.model-variant-toggle__btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+
+    wrap.appendChild(btn);
+  });
+
+  return wrap;
+}
+
 function initProjectDetail() {
   const root = document.getElementById('projectDetail');
   if (!root || !Object.keys(PROJECTS).length) return;
@@ -1096,19 +1199,10 @@ function initProjectDetail() {
     if (cover) {
       if (cover.type === 'model') {
         coverEl.classList.add('project-cover--model');
-        const mv = document.createElement('model-viewer');
-        mv.setAttribute('src', cover.src);
-        if (cover.poster) mv.setAttribute('poster', cover.poster);
-        mv.setAttribute('camera-controls', '');
-        // Chỉnh sáng/tương phản cho model đỡ bị "trắng bệt" trên nền tối —
-        // xem giải thích đầy đủ ở khối model-viewer trong gallery bên dưới.
-        mv.setAttribute('shadow-intensity', '1.2');
-        mv.setAttribute('shadow-softness', '0.75');
-        mv.setAttribute('exposure', '0.85');
-        mv.setAttribute('tone-mapping', 'neutral');
-        mv.setAttribute('environment-image', 'neutral');
-        mv.setAttribute('alt', project.title);
+        const mv = buildModelViewer(cover, project.title);
         coverEl.appendChild(mv);
+        const toggle = buildModelVariantToggle(cover, mv);
+        if (toggle) coverEl.appendChild(toggle);
       } else if (cover.type === 'video') {
         const video = document.createElement('video');
         video.src = cover.src;
@@ -1230,9 +1324,15 @@ function initProjectDetail() {
   if (galleryEl) {
     galleryEl.innerHTML = '';
     const zoomableSlides = []; // chỉ chứa slide ảnh, theo đúng thứ tự hiển thị
+    // (project.slides || []): project có cover nhưng chưa kịp khai slides (ví
+    // dụ đang làm dở) sẽ không còn làm crash initProjectDetail() nữa — gallery
+    // chỉ đơn giản coi như rỗng, trang vẫn hiện đầy đủ phần cover + info.
+    // getSlideSrc(): so sánh trùng cover cần lấy đúng src đang hiển thị của
+    // slide, dù slide đó khai kiểu cũ (slide.src) hay kiểu nhiều biến thể
+    // (slide.variants — xem buildModelViewer() để hiểu rõ 2 kiểu khai báo).
     const renderedSlides = cover
-      ? project.slides.filter((slide) => slide.src !== cover.src)
-      : project.slides;
+      ? (project.slides || []).filter((slide) => getSlideSrc(slide) !== cover.src)
+      : (project.slides || []);
 
     const galleryIsEmpty = renderedSlides.length === 0;
     if (galleryWrapperEl) galleryWrapperEl.hidden = galleryIsEmpty;
@@ -1252,32 +1352,20 @@ function initProjectDetail() {
 
       if (slide.type === 'model') {
         tile.classList.add('project-gallery__tile--model');
-        const mv = document.createElement('model-viewer');
-        mv.setAttribute('src', slide.src);
-        if (slide.poster) mv.setAttribute('poster', slide.poster);
-        mv.setAttribute('camera-controls', '');
-        // --- Chỉnh sáng cho model 3D đỡ bị "trắng bệt" trên nền tối ---
-        // shadow-intensity/softness: đổ bóng rõ hơn, model có chiều sâu,
-        // không bị "phẳng" 1 màu trắng. exposure giảm nhẹ (mặc định 1) vì
-        // model trắng/sáng dễ bị cháy sáng (overexpose) dưới ánh sáng mặc
-        // định của model-viewer. tone-mapping="neutral" giữ đúng màu thật
-        // của model, không đẩy thêm độ sáng/độ bão hoà kiểu ACES filmic
-        // (mặc định) khiến vùng trắng dễ bị "bệt". environment-image
-        // "neutral" thay ánh sáng studio mặc định (khá dẹt) bằng ánh sáng
-        // môi trường có phản chiếu nhẹ, giúp thấy rõ khối/chi tiết bề mặt
-        // hơn — xem thêm ở style.css (nền sáng riêng cho khung chứa model,
-        // để model KHÔNG bị chìm vào nền tối chung của trang).
-        mv.setAttribute('shadow-intensity', '1.2');
-        mv.setAttribute('shadow-softness', '0.75');
-        mv.setAttribute('exposure', '0.85');
-        mv.setAttribute('tone-mapping', 'neutral');
-        mv.setAttribute('environment-image', 'neutral');
-        mv.setAttribute('alt', project.title);
+        // buildModelViewer()/buildModelVariantToggle(): xem giải thích đầy
+        // đủ về chỉnh sáng + cơ chế nhiều biến thể (variants) ngay phía
+        // trên initProjectDetail().
+        const mv = buildModelViewer(slide, project.title);
         tile.appendChild(mv);
-        const badge = document.createElement('span');
-        badge.className = 'project-gallery__tile-badge';
-        badge.textContent = 'Model 3D';
-        tile.appendChild(badge);
+        const toggle = buildModelVariantToggle(slide, mv);
+        if (toggle) {
+          tile.appendChild(toggle);
+        } else {
+          const badge = document.createElement('span');
+          badge.className = 'project-gallery__tile-badge';
+          badge.textContent = 'Model 3D';
+          tile.appendChild(badge);
+        }
       } else if (slide.type === 'video') {
         const video = document.createElement('video');
         video.src = slide.src;

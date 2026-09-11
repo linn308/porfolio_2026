@@ -74,9 +74,10 @@
       </button>
 
       <nav class="nav" id="nav">
-        <a href="#contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
+        <a href="#heroContent" class="nav__tab nav__tab--whoami" data-vi="Tôi là ai" data-en="Who am I">Who am I</a>
         <a href="project/2d/index-2d.html" class="nav__tab">2D</a>
         <a href="project/3d/index-3d.html" class="nav__tab">3D</a>
+        <a href="#footer-contact" class="nav__tab nav__tab--about" data-vi="Liên hệ" data-en="Contact">Contact</a>
         
 
         <div class="lang-switch" role="group" aria-label="Chuyển ngôn ngữ / Language">
@@ -314,37 +315,16 @@
             </div>
 
             <div class="contact__field">
-              <span class="contact__title" data-vi="Facebook" data-en="Facebook">Facebook</span>
-              <a href="https://www.facebook.com/tr.c.lin.n/" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">facebook.com/Trúc Linh</a>
-            </div>
-
-            <div class="contact__field">
-              <span class="contact__title" data-vi="Instagram" data-en="Instagram">Instagram</span>
-              <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">instagram.com/tr__.lin._</a>
-            </div>
-
-            <div class="contact__field">
               <span class="contact__title" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
               <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">linkedin.com/Linh Nguyen</a>
             </div>
 
-            <!-- <div class="contact__field">
-              <span class="contact__title" data-vi="ArtStation" data-en="ArtStation">ArtStation</span>
-              <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">ArtStation</a>
-            </div> -->
+            <!-- Facebook, Instagram, ArtStation, Github, Vimeo đã chuyển
+                 xuống footer__social dạng icon (xem cuối trang), không
+                 lặp lại ở đây để tránh trùng thông tin liên hệ. -->
 
-            <div class="contact__field">
-              <span class="contact__title" data-vi="Github" data-en="Github">Github</span>
-              <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">github.com/linn308</a>
-            </div>
-
-            <div class="contact__field">
-              <span class="contact__title" data-vi="Vimeo" data-en="Vimeo">Vimeo</span>
-              <a href="https://vimeo.com/user261213079?fl=pp&fe=sh" target="_blank" rel="noopener noreferrer" class="contact__subtitle contact__link">vimeo.com/tlinh</a>
-            </div>
           </div>
         </div>
-
       </div>
      </section>
  
@@ -522,7 +502,7 @@
             <article class="card card--2d" data-category="illustration">
               <a href="project/2d/2d-ghibli.html" class="card__media card__media--link">
                 <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
-                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
               </a>
             </article>
 
@@ -538,7 +518,7 @@
             <article class="card card--2d" data-category="editorial">
               <a href="project/2d/2d-elle.html" class="card__media card__media--link">
                 <img src="assets/2d/elle/000.webp" alt="Elle - Magazine Cover" loading="lazy" decoding="async">
-                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Elle" data-en="Elle">Elle</span>
+                <span class="card__overlay" data-vi="Elle" data-en="Elle">Elle</span>
               </a>
             </article>
 
@@ -546,7 +526,7 @@
             <article class="card card--2d" data-category="e-com">
               <a href="project/2d/2d-TT.html" class="card__media card__media--link">
                 <img src="assets/2d/TT/01.webp" alt="TirTir - E-commerce Graphic Design" loading="lazy" decoding="async">
-                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="TirTir" data-en="TirTir">TirTir</span>
+                <span class="card__overlay" data-vi="TirTir" data-en="TirTir">TirTir</span>
               </a>
             </article>
 
@@ -554,7 +534,7 @@
             <article class="card card--2d" data-category="e-com">
               <a href="project/2d/2d-SSS.html" class="card__media card__media--link">
                 <img src="assets/2d/SSS/000.webp" alt="ShaiShaiShai - E-commerce Graphic Design" loading="lazy" decoding="async">
-                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="ShaiShaiShai" data-en="ShaiShaiShai">ShaiShaiShai</span>
+                <span class="card__overlay" data-vi="ShaiShaiShai" data-en="ShaiShaiShai">ShaiShaiShai</span>
               </a>
             </article>
 
@@ -562,50 +542,55 @@
             <article class="card card--2d" data-category="poster">
               <a href="project/2d/2d-TYYM.html" class="card__media card__media--link">
                 <img src="assets/2d/TYYM/00.webp" alt="The Yin-Yang Master — Movie Poster" loading="lazy" decoding="async">
-                <span class="card__overlay" style="font-size: 1.5rem; text-transform: uppercase;" data-vi="Âm Dương Sư" data-en="The Yin-Yang Master">Âm Dương Sư</span>
+                <span class="card__overlay" data-vi="Âm Dương Sư" data-en="The Yin-Yang Master">Âm Dương Sư</span>
               </a>
             </article>
 
-            <!-- ============ 7. (lặp — vòng loop, xem style.css mục Showcase) -->
-            <article class="card card--2d" data-category="illustration" aria-hidden="true">
-              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
+            <!--  ============ 1. Ghibli -->
+            <article class="card card--2d" data-category="illustration">
+              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link">
                 <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
               </a>
             </article>
-            <!-- ============ 8. -->
-            <article class="card card--2d" data-category="poster" aria-hidden="true">
-              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
-                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
-                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+
+            <!-- ============ 2. Collage Art -->
+            <article class="card card--2d" data-category="poster">
+              <a href="project/2d/2d-CA.html" class="card__media card__media--link">
+                <img src="assets/2d/CA/00.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
+                <span class="card__overlay card__overlay--center">Collage Art</span>
               </a>
             </article>
-            <!-- ============ 9. -->
-            <article class="card card--2d" data-category="illustration" aria-hidden="true">
-              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
-                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
-                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+
+            <!-- ============ 3. Elle -->
+            <article class="card card--2d" data-category="editorial">
+              <a href="project/2d/2d-elle.html" class="card__media card__media--link">
+                <img src="assets/2d/elle/000.webp" alt="Elle - Magazine Cover" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Elle" data-en="Elle">Elle</span>
               </a>
             </article>
-            <!-- ============ 10. -->
-            <article class="card card--2d" data-category="poster" aria-hidden="true">
-              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
-                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
-                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+
+            <!-- ============ 4. TirTir -->
+            <article class="card card--2d" data-category="e-com">
+              <a href="project/2d/2d-TT.html" class="card__media card__media--link">
+                <img src="assets/2d/TT/01.webp" alt="TirTir - E-commerce Graphic Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="TirTir" data-en="TirTir">TirTir</span>
               </a>
             </article>
-            <!-- ============ 11. -->
-            <article class="card card--2d" data-category="illustration" aria-hidden="true">
-              <a href="project/2d/2d-ghibli.html" class="card__media card__media--link" tabindex="-1">
-                <img src="assets/2d/ghibli/1.webp" alt="Ghibli - Custom Cards — Illustration" loading="lazy" decoding="async">
-                <span class="card__overlay" data-vi="Ghibli" data-en="Ghibli">Ghibli</span>
+
+            <!-- ============ 5. ShaiShaiShai -->
+            <article class="card card--2d" data-category="e-com">
+              <a href="project/2d/2d-SSS.html" class="card__media card__media--link">
+                <img src="assets/2d/SSS/000.webp" alt="ShaiShaiShai - E-commerce Graphic Design" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="ShaiShaiShai" data-en="ShaiShaiShai">ShaiShaiShai</span>
               </a>
             </article>
-            <!-- ============ 12. -->
-            <article class="card card--2d" data-category="poster" aria-hidden="true">
-              <a href="project/2d/2d-CA.html" class="card__media card__media--link" tabindex="-1">
-                <img src="assets/2d/CA/01.webp" alt="Collage Art - Poster" loading="lazy" decoding="async">
-                <span class="card__overlay" data-vi="Collage Art" data-en="Collage Art">Collage Art</span>
+
+            <!-- ============ 6. The Yin-Yang Master -->
+            <article class="card card--2d" data-category="poster">
+              <a href="project/2d/2d-TYYM.html" class="card__media card__media--link">
+                <img src="assets/2d/TYYM/00.webp" alt="The Yin-Yang Master — Movie Poster" loading="lazy" decoding="async">
+                <span class="card__overlay" data-vi="Âm Dương Sư" data-en="The Yin-Yang Master">Âm Dương Sư</span>
               </a>
             </article>
           </div>
@@ -624,47 +609,48 @@
 
         <div class="showcase-viewport">
           <div class="showcase">
-            <!-- ============ 1. CRUSADER — dùng poster tĩnh thay model-viewer:
-                 dải cuộn chạy vô hạn không cần dựng WebGL 3D real-time cho
-                 từng thumbnail, model thật vẫn xem/xoay được ở trang chi tiết. -->
+            <!-- ============ 1. CRUSADER  -->
             <article class="card" data-category="model">
               <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
               </a>
             </article>
-            <!-- ============ 2. FIGHT FOR LIFE — chưa có trang chi tiết riêng
-                 nên để <a> không có href (không phải link, giữ đúng cấu trúc
-                 nhưng không click được), giống hành vi cũ. -->
-            <article class="card" data-category="anim">
+
+            <!-- ============ 2. FIGHT FOR LIFE -->
+            <article href="project/3d/3d-crusader.html"  class="card" data-category="anim">
               <a class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
               </a>
             </article>
-            <!-- ============ 3. CRUSADER -->
-            <article class="card" data-category="model">
+
+            <!-- ============ 3. Pixivore -->
+            <article href="project/3d/3d-crusader.html" class="card" data-category="model">
               <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
               </a>
             </article>
+
             <!-- ============ 4. FIGHT FOR LIFE -->
-            <article class="card" data-category="anim">
+            <article href="project/3d/3d-crusader.html" class="card" data-category="anim">
               <a class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
               </a>
             </article>
+
             <!-- ============ 5. CRUSADER -->
-            <article class="card" data-category="model">
+            <article href="project/3d/3d-crusader.html" class="card" data-category="model">
               <a href="project/3d/3d-crusader.html" class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" alt="CRUSADER — 3D Game Design" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
               </a>
             </article>
+
             <!-- ============ 6. FIGHT FOR LIFE -->
-            <article class="card" data-category="anim">
+            <article href="project/3d/3d-crusader.html" class="card" data-category="anim">
               <a class="card__media card__media--link">
                 <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy" decoding="async">
                 <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
@@ -733,6 +719,28 @@
         <h2 class="section-title" data-vi="Cùng làm việc nhé!" data-en="Let's work together!">Cùng làm việc cùng nhau nhé!</h2>
       </div>
 
+      <!-- ============ Contact Box (đồng bộ với index-3d.html) ========== -->
+      <div class="footer__contact-block" id="footer-contact">
+        <div class="footer__contact-row">
+          <a href="mailto:linhh1188@gmail.com" class="footer__item">
+            <span class="footer__item-label" data-vi="Email" data-en="Email">Email</span>
+            <span class="footer__item-value">linhh1188@gmail.com</span>
+          </a>
+          <a href="tel:+84372746842" class="footer__item">
+            <span class="footer__item-label" data-vi="Điện thoại" data-en="Phone">Phone</span>
+            <span class="footer__item-value">0372 746 842</span>
+          </a>
+          <a href="https://www.behance.net/linlinhh" target="_blank" rel="noopener noreferrer" class="footer__item">
+            <span class="footer__item-label" data-vi="Behance" data-en="Behance">Behance</span>
+            <span class="footer__item-value">linlinhh</span>
+          </a>
+          <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="footer__item">
+            <span class="footer__item-label" data-vi="LinkedIn" data-en="LinkedIn">LinkedIn</span>
+            <span class="footer__item-value">Linh Nguyen</span>
+          </a>
+        </div>
+      </div>
+
       <!-- ============ Running Text ========== -->
       <div class="footer__running-text">
 
@@ -764,9 +772,8 @@
           <a href="https://www.instagram.com/tr__.lin._/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
           </a>
-          <a href="https://www.linkedin.com/in/linh-nguyen-4a13181b9" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
+          <!-- LinkedIn không lặp lại ở đây vì đã hiện trực tiếp trong
+               #contact (mục "Liên hệ"), tránh trùng thông tin. -->
           <a href="https://github.com/linn308" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Github">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           </a>
