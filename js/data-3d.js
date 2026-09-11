@@ -96,7 +96,6 @@ const PROJECTS_3D = {
       // ],
   },
 
-  // CRUSADER chưa có page, chưa content..
   crusader: {
     title: 'CRUSADER',
     year: '2023',
@@ -161,19 +160,19 @@ const PROJECTS_3D = {
   },
 
   waterhydrant: {
-    title: 'Water Hydrant — Modeling',
+    title: 'Water Hydrant',
     year: '2022',
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
-      vi: '3D Game Design — Đồ án xuất sắc',
-      en: '3D Game Design — Excellent Project',
+      vi: 'Model Prop — Hard Surface Modeling Study',
+      en: 'Model Prop — Hard Surface Modeling Study',
     },
     desc: {
-      vi: 'Đồ án 3D Game Design đạt loại xuất sắc. Modeling và texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop. Bộ ảnh dưới đây gồm góc quay turntable, chi tiết wireframe và bản render final.',
-      en: 'A 3D Game Design project graded excellent. Character/prop modeling and texturing done in Maya and ZBrush, with surface detail and preview renders finished in Photoshop. The set below includes turntable angles, wireframe close-ups and the final render.',
+      vi: 'Mô phỏng 3D hai biến thể trụ nước cứu hỏa dựa trên hình ảnh tham chiếu. Thực hiện quy trình dựng hình từ Lowpoly đến Highpoly, kiểm soát lưới chặt chẽ và tối ưu hóa file OBJ sạch.',
+      en: '3D model two variants of a fire hydrant based on a reference image. The process covers Lowpoly to Highpoly modeling, strict mesh control, and optimizing a clean OBJ file.',
     },
     tools: ['Maya'],
-    styleTags: ['Character Design', 'Hard-Surface', 'Sci-Fi'],
+    styleTags: ['Hard Surface', 'Prop Design', 'Game Asset'],
     slides: [
       {type: 'model',
         variants: [
@@ -185,20 +184,20 @@ const PROJECTS_3D = {
   },
 
   box: {
-    title: 'Water Hydrant — Modeling',
+    title: 'Sci-Fi Biohazard Storage',
     year: '2022',
     cover: { type: 'model', src: '../../assets/3d/box/00.glb'},
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
-      vi: '3D Game Design — Đồ án xuất sắc',
-      en: '3D Game Design — Excellent Project',
+      vi: 'Model Prop — Hard Surface Modeling Study',
+      en: 'Model Prop — Hard Surface Modeling Study',
     },
     desc: {
-      vi: 'Đồ án 3D Game Design đạt loại xuất sắc. Modeling và texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop. Bộ ảnh dưới đây gồm góc quay turntable, chi tiết wireframe và bản render final.',
-      en: 'A 3D Game Design project graded excellent. Character/prop modeling and texturing done in Maya and ZBrush, with surface detail and preview renders finished in Photoshop. The set below includes turntable angles, wireframe close-ups and the final render.',
+      vi: 'Mô phỏng 3D một thùng chứa vật liệu sinh học phong cách Sci-Fi dựa trên hình ảnh tham chiếu. Tập trung vào dựng hình, kiểm soát lưới chặt chẽ và tối ưu hóa, sẵn sàng cho các pipeline game hoặc render.',
+      en: 'A 3D simulation of a sci-fi-style bio-container based on reference imagery. The project focuses on modeling, precise mesh control, and optimization, making it ready for game pipelines or rendering.',
     },
     tools: ['Maya'],
-    styleTags: ['Character Design', 'Hard-Surface', 'Sci-Fi'],
+    styleTags: ['Industrial', 'Hard-Surface', 'Sci-Fi', '3DModeling'],
   },
 
   'fight-for-life': {
@@ -266,4 +265,35 @@ const PROJECTS_3D = {
       },
     ],
   },
+
+  spider: {
+    title: 'Spider',
+    year: '2023',
+    cover: { type: 'image', src: '../../assets/3d/spider/000.png'},
+    category: { vi: 'Scuplt', en: 'Scuplt' },
+    subtitle: {
+      vi: 'Sinh vật Giáp xác — Scuplting',
+      en: 'Abyssal Scavenge — Scuplting',
+    },
+    desc: {
+      vi: 'Dự án cá nhân thực hiện sculpting 3D một sinh vật giáp xác mang phong cách khoa học viễn tưởng bằng ZBrush, dựa trên hình ảnh tham chiếu tổng hợp từ internet. Tác phẩm tập trung vào việc tạo hình các khối cơ bắp, vỏ giáp phân đoạn, các chi tiết sinh học phức tạp và thần thái của một sinh vật biển sâu.',
+      en: 'A personal 3D sculpting project of a sci-fi crustacean creature created in ZBrush, based on online references. The piece focuses on exploring organic forms, segmented armor shells, intricate biological details, and the overall presence of a deep-sea creature.',
+    },
+    tools: ['ZBrush'],
+    styleTags: ['ZBrush', 'Sculpting', 'Character Design', 'Sci-Fi', 'Biomechanical'],
+    relatedBlocks:[
+      {type: 'cards', 
+        items: [{ media: {type: 'image', src: '../../assets/3d/spider/01.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/spider/02.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/spider/03.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/spider/04.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/spider/001.webp' }},]
+      },
+    ],
+
+  },
+
+
+
 };
+

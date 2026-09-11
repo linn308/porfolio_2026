@@ -84,7 +84,27 @@
         <p class="breadcrumb">
           <a href="../../index.html" data-vi="Home" data-en="Home">Home</a> <span>/</span> <span class="breadcrumb__current">2D</span>
         </p>
-        <p class="kicker kicker--warm" data-vi="Vũ trụ 2D" data-en="2D Universe"><span class="kicker__dot"></span> 2D Universe</p>
+        <div class="sub-hero__kicker-row">
+          <p class="kicker kicker--warm" data-vi="Vũ trụ 2D" data-en="2D Universe"><span class="kicker__dot"></span> 2D Universe</p>
+          <!-- Link ngoài trỏ tới file CV/Portfolio 2D trên OneDrive — dùng lại
+               style/màu/hover của nút "Xem thêm" khối Portfolio 2D ở trang chủ
+               (.featured__more), thêm modifier .featured__more--warm vì ở đây
+               không nằm trong .featured__group--2d nên không tự có màu ấm khi
+               hover (xem 2 rule đó trong style.css). Nhãn "Port 2D của tôi" do
+               Linh cung cấp, giữ nguyên 1 bản cho cả VI/EN (chưa có bản dịch
+               riêng) — không dùng data-vi/data-en. Mở tab mới vì là link ra
+               ngoài site + trỏ thẳng tới file (rel="noopener noreferrer" cho
+               an toàn khi target="_blank"). -->
+          <a
+            href="https://1drv.ms/b/c/bba07d6ff4fe5c97/IQDIYiw3rUWjQ6JubbOJQgioAaMfiBoqjxKd04eecv9XwRk?e=RB7ZaU"
+            class="featured__more featured__more--warm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>Port 2D của tôi</span>
+            <span class="featured__more-icon" aria-hidden="true">→</span>
+          </a>
+        </div>
         <h1 class="sub-hero__title"  data-vi="Thiết kế Đồ họa" data-en="Graphic Design">Truyền thông Thị giác</h1>
         <p class="sub-hero__desc"
           data-vi="Tập trung vào việc sáng tạo hình ảnh tĩnh, bố cục, màu sắc và typography trên bề mặt 2D nhằm truyền tải thông điệp truyền thông, quảng cáo hoặc nhận diện thương hiệu."

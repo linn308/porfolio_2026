@@ -422,6 +422,20 @@ body.no-scroll { overflow: hidden; }
 
 .kicker--warm { color: var(--accent-warm); }
 
+/* Hàng chứa kicker + link ngoài đặt cạnh nhau (VD: kicker "2D Universe" +
+   link CV/Portfolio OneDrive ở đầu index-2d.html) — wrap khi màn nhỏ để
+   link không bị tràn ra ngoài cùng hàng với kicker. */
+.sub-hero__kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 16px;
+}
+
+.sub-hero__kicker-row .kicker { margin-bottom: 0; }
+
 .kicker__dot {
   width: 6px; 
   height: 6px; 
@@ -1486,6 +1500,15 @@ html[data-theme="light"] .hero__welcome-text text {
 .featured__group--2d .featured__more:hover { color: var(--accent-warm); }
 .featured__group--3d .featured__more:hover { color: var(--accent); }
 
+/* Modifier để dùng lại style "→ Xem thêm" (.featured__more) ở những chỗ
+   KHÔNG nằm trong .featured__group--2d — ví dụ link CV/Portfolio OneDrive
+   cạnh kicker "2D Universe" ở đầu index-2d.html — nhưng vẫn muốn hover ra
+   đúng màu ấm --accent-warm giống hệt link "Xem thêm" của khối Portfolio
+   2D ở trang chủ. */
+.featured__more--warm:hover { color: var(--accent-warm); }
+.featured__more--accent:hover { color: var(--accent); }
+
+
 .featured__more-icon { transition: transform var(--transition-fast); }
 .featured__more:hover .featured__more-icon { transform: translateX(4px); }
 
@@ -1700,8 +1723,11 @@ html[data-theme="light"] .hero__welcome-text text {
    index-2d.html/index-3d.html (thẻ <button data-detail>). Trước đây có
    1 rule ".showcase .card__media { cursor: zoom-in }" khiến dải showcase
    ở TRANG CHỦ cũng bị đổi thành zoom-in dù vẫn điều hướng bình thường —
-   đã bỏ. Cursor zoom-in giờ CHỈ set riêng cho card trong trang chi tiết
-   dự án, xem ".project-related-blocks .card__media" phía dưới. */
+   đã bỏ. Card trong khối "dự án liên quan" ở trang chi tiết dự án
+   (".project-related-blocks .card__media" phía dưới) từng dùng riêng
+   cursor: zoom-in vì bấm vào mở lightbox tại chỗ thay vì điều hướng —
+   sau đó đổi lại thành pointer để đồng bộ cursor với mọi .card__media
+   khác trong site, xem rule đó phía dưới. */
 /* KHÔNG set background CHUNG (không scope) ở đây nữa — chỉ set riêng theo
    2 khối bên dưới, mỗi khối 1 màu khác nhau tuỳ trang:
    - Trang chủ (body.page-home): dùng --card-media-home-bg (bán trong suốt,
@@ -1776,7 +1802,12 @@ body:not(.page-home) .card__media {
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
-.card:hover .card__media model-viewer { transform: scale(1.08); filter: brightness(0.5); }
+/* Tắt phóng to (transform: scale) khi hover riêng cho model-viewer — model
+   3D tự có tương tác kéo để xoay/zoom ngay tại chỗ, card lại phóng to đồng
+   thời làm 2 hiệu ứng đè lên nhau, rối khi thao tác. Ảnh/video thường vẫn
+   giữ scale(1.08) như cũ ở 2 rule phía trên, chỉ model-viewer bỏ transform,
+   giữ lại filter tối/sáng màu khi hover (xem light/dark theme phía dưới). */
+.card:hover .card__media model-viewer { filter: brightness(0.5); }
 
 /* Overlay "Xem chi tiết" khi hover card — CHỈ còn chữ + nền ảnh tối lại,
    không còn viền/stroke bao quanh phần ảnh như trước (đã tắt theo yêu cầu).
@@ -1836,7 +1867,7 @@ body.page-home .card__media {
 body.page-home .card__media img {
   opacity: 0;
   transform: scale(1.06);
-  transition: opacity var(--transition-base), transform var(--transition-base);
+  transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
 body.page-home .card:hover .card__media img {
@@ -1848,7 +1879,7 @@ body.page-home .card:hover .card__media img {
 body.page-home .card__media video {
   opacity: 0;
   transform: scale(1.06);
-  transition: opacity var(--transition-base), transform var(--transition-base);
+  transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
 body.page-home .card:hover .card__media video {
@@ -1860,7 +1891,7 @@ body.page-home .card:hover .card__media video {
 body.page-home .card__media model-viewer {
   opacity: 0;
   transform: scale(1.06);
-  transition: opacity var(--transition-base), transform var(--transition-base);
+  transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
 body.page-home .card:hover .card__media model-viewer {
@@ -2671,6 +2702,16 @@ a.footer__item:hover .footer__item-value {
   object-fit: cover;
 }
 
+/* Cover dạng video (project.cover.type === 'video' — xem initProjectDetail()
+   trong js/script.js) có sẵn thẻ <video controls>, thêm cursor: pointer cho
+   cả vùng video (không chỉ riêng thanh controls) để gợi ý bấm-để-phát,
+   đồng bộ với cursor pointer các vùng bấm được khác trong trang. Không áp
+   dụng cho cover ảnh (giữ cursor mặc định) hay cover model 3D (model-viewer
+   tự có cursor riêng khi xoay/zoom). */
+.project-cover video {
+  cursor: pointer;
+}
+
 /* DÙNG "padding-top hack" thay vì aspect-ratio — aspect-ratio trên
    model-viewer không ổn định (từng bị dẹt cả ở gallery lẫn ở đây dù đã
    khai báo aspect-ratio: 1/1). Padding-top theo % luôn tính đúng theo
@@ -3143,8 +3184,11 @@ a.footer__item:hover .footer__item-value {
   border-radius: 100px;
 }
 
-/* Gợi ý "bấm để phóng to" ngay trên ô ảnh trong gallery zodiac */
-.project-gallery__tile--zoomable { cursor: zoom-in; }
+/* Gợi ý "bấm để phóng to" ngay trên ô ảnh trong gallery zodiac.
+   Cursor đổi từ zoom-in sang pointer theo yêu cầu — badge "⤢" bên dưới đã
+   đủ để gợi ý "bấm để xem to hơn", cursor pointer vẫn báo đúng "đây là 1
+   vùng bấm được" mà đồng bộ với cursor pointer dùng chung toàn site. */
+.project-gallery__tile--zoomable { cursor: pointer; }
 
 .project-gallery__tile--zoomable::after {
   content: '⤢';
@@ -3185,8 +3229,12 @@ a.footer__item:hover .footer__item-value {
    #projectRelatedCardsGrid — 2 ID chưa từng được gán trong
    buildRelatedLoopBlock()/buildRelatedCardsBlock(), nên chưa từng chạy.
    Đổi sang class .project-related-blocks để khớp đúng DOM thật.) */
+/* Cursor đổi từ zoom-in sang pointer theo yêu cầu — đồng bộ với cursor
+   pointer dùng chung cho .card__media ở mọi nơi khác trong site (xem
+   rule gốc ".card__media { cursor: pointer }" ở mục 8). Badge "⤢" phía
+   dưới vẫn giữ nguyên để gợi ý bấm-để-xem-to. */
 .project-related-blocks .card__media {
-  cursor: zoom-in;
+  cursor: pointer;
 }
 
 .project-related-blocks .card__media::after {
@@ -3212,6 +3260,31 @@ a.footer__item:hover .footer__item-value {
 
 .project-related-blocks .card:hover .card__media::after {
   opacity: 1;
+}
+
+/* Giảm độ tối khi hover CHỈ riêng card trong khối "dự án liên quan" ở
+   trang chi tiết dự án (relatedLoop/relatedCards) — hành vi gốc dùng
+   chung filter: brightness(0.5) (xem .card:hover .card__media ... ở mục
+   8) khá tối. Theo yêu cầu, tách riêng theo theme:
+   - CHẾ ĐỘ TỐI (mặc định, :root, không có data-theme="light"): đảo
+     ngược từ tối SANG SÁNG lên khi hover — brightness(1.15).
+   - CHẾ ĐỘ SÁNG (html[data-theme="light"]): vẫn tối màu khi hover (ảnh
+     nền sáng sẵn, sáng thêm dễ cháy sáng/mất chi tiết) nhưng nhạt thêm 1
+     nấc nữa so với 0.75 trước đó -> 0.85.
+   Không đổi gì ở listing 2D/3D (index-2d.html/index-3d.html) hay trang
+   chủ — 2 nơi đó vẫn giữ nguyên brightness(0.5) như cũ. */
+.project-related-blocks .card:hover .card__media img,
+.project-related-blocks .card:hover .card__media video,
+.project-related-blocks .card:hover .card__media model-viewer {
+  filter: brightness(1.15);
+}
+
+/* Selector thêm html[data-theme="light"] nên đặc thù cao hơn rule chế độ
+   tối ngay phía trên, không cần !important. */
+html[data-theme="light"] .project-related-blocks .card:hover .card__media img,
+html[data-theme="light"] .project-related-blocks .card:hover .card__media video,
+html[data-theme="light"] .project-related-blocks .card:hover .card__media model-viewer {
+  filter: brightness(0.85);
 }
 
 @media (max-width: 620px) {

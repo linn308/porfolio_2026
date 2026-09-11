@@ -87,7 +87,27 @@
         <p class="breadcrumb">
           <a href="../../index.html" data-vi="Home" data-en="Home">Home</a> <span>/</span> <span class="breadcrumb__current">3D</span>
         </p>
-        <p class="kicker" data-vi="Vũ trụ 3D" data-en="3D Universe"><span class="kicker__dot"></span> 3D Universe</p>
+        <div class="sub-hero__kicker-row">
+          <p class="kicker kicker--warm" data-vi="Vũ trụ 3D" data-en="3D Universe"><span class="kicker__dot"></span> 3D Universe</p>
+          <!-- Link ngoài trỏ tới file CV/Portfolio 2D trên OneDrive — dùng lại
+               style/màu/hover của nút "Xem thêm" khối Portfolio 2D ở trang chủ
+               (.featured__more), thêm modifier .featured__more--warm vì ở đây
+               không nằm trong .featured__group--2d nên không tự có màu ấm khi
+               hover (xem 2 rule đó trong style.css). Nhãn "Port 2D của tôi" do
+               Linh cung cấp, giữ nguyên 1 bản cho cả VI/EN (chưa có bản dịch
+               riêng) — không dùng data-vi/data-en. Mở tab mới vì là link ra
+               ngoài site + trỏ thẳng tới file (rel="noopener noreferrer" cho
+               an toàn khi target="_blank"). -->
+          <a
+            href="https://1drv.ms/b/c/bba07d6ff4fe5c97/IQAbCetRz39_TK8QJKIDkXaPATZ4aemSGiVdVfhHOzJSke8?e=C3G2fv"
+            class="featured__more featured__more--accent"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>Port 3D của tôi</span>
+            <span class="featured__more-icon" aria-hidden="true">→</span>
+          </a>
+        </div>
         <h1 class="sub-hero__title" data-vi="3D Game &amp; Phim 3D" data-en="3D Game &amp; 3D Film">3D Game &amp; Phim 3D</h1>
         <p class="sub-hero__desc"
           data-vi="Xử lý các sản phẩm có yếu tố chuyển động và không gian 3D. Bao gồm toàn bộ quy trình từ dựng hình 3D, diễn hoạt, làm phim hoạt hình cho đến hậu kỳ video và hiệu ứng hình ảnh."
@@ -175,12 +195,12 @@
               data-id="waterhydrant"
               data-detail="3d-WH.html"
               data-title="Water Hydrant"
-              data-subtitle="Water Hydrant — Modeling"
+              data-subtitle="Model Prop — Hard Surface Modeling Study"
               data-img="../../assets/3d/WH/00.png"
-              data-desc-vi="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
-              data-desc-en="A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film."
-              data-tools="Cel-look, Storyboard, Layout">
-              <img src="../../assets/3d/WH/00.png" alt="Water Hydrant — Modeling" loading="lazy">
+              data-desc-vi="Mô phỏng 3D hai biến thể trụ nước cứu hỏa dựa trên hình ảnh tham chiếu. Thực hiện quy trình dựng hình từ Lowpoly đến Highpoly, kiểm soát lưới chặt chẽ và tối ưu hóa file OBJ sạch."
+              data-desc-en="3D model two variants of a fire hydrant based on a reference image. The process covers Lowpoly to Highpoly modeling, strict mesh control, and optimizing a clean OBJ file."
+              data-tools="Maya">
+              <img src="../../assets/3d/WH/00.png" alt="Water Hydrant — Hard Surface Modeling Study" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -189,11 +209,11 @@
                 <span class="card__year">[2022]</span>
               </div>
               <h3 class="card__title">Water Hydrant</h3>
-              <p class="card__desc" data-vi="Water Hydrant — Modeling data-en="Water Hydrant — Modeling">Water Hydrant — Modeling</p>
+              <p class="card__desc" data-vi="Water Hydrant — Modeling" data-en="Water Hydrant — Hard Surface Modeling Study">Water Hydrant — Hard Surface Modeling Study</p>
               <div class="card__tags">
-                <span class="tag">Cel-look</span>
-                <span class="tag">Storyboard</span>
-                <span class="tag">Layout</span>
+                <span class="tag">Hard Surface</span>
+                <span class="tag">Prop Design</span>
+                <span class="tag">Game Asset</span>
               </div>
             </div>
           </article>
@@ -203,13 +223,13 @@
             <button class="card__media" type="button"
               data-id="box"
               data-detail="3d-box.html"
-              data-title="modeling prop"
-              data-subtitle="box — Modeling"
+              data-title="Sci-Fi Biohazard Storage — Hard Surface Modeling Study"
+              data-subtitle="Model Prop — Hard Surface Modeling Study"
               data-img="../../assets/3d/box/00.webp"
-              data-desc-vi="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
-              data-desc-en="A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film."
+              data-desc-vi="Mô phỏng 3D một thùng chứa vật liệu sinh học phong cách Sci-Fi dựa trên hình ảnh tham chiếu. Tập trung vào dựng hình, kiểm soát lưới chặt chẽ và tối ưu hóa, sẵn sàng cho các pipeline game hoặc render."
+              data-desc-en="A 3D simulation of a sci-fi-style bio-container based on reference imagery. The project focuses on modeling, precise mesh control, and optimization, making it ready for game pipelines or rendering."
               data-tools="Cel-look, Storyboard, Layout">
-              <img src="../../assets/3d/box/00.webp" alt="Water Hydrant — Modeling" loading="lazy">
+              <img src="../../assets/3d/box/00.webp" alt="Sci-Fi Biohazard Storage — Hard Surface Modeling Study" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -217,12 +237,13 @@
                 <p class="card__category">Modeling</p>
                 <span class="card__year">[2022]</span>
               </div>
-              <h3 class="card__title">box — Modeling</h3>
-              <p class="card__desc" data-vi="Water Hydrant — Modeling" data-en="Water Hydrant — Modeling">box — Modeling</p>
+              <h3 class="card__title">Sci-Fi Biohazard Storage</h3>
+              <p class="card__desc" data-vi="Sci-Fi Biohazard Storage — Hard Surface Modeling Study" data-en="Sci-Fi Biohazard Storage — Hard Surface Modeling Study">Sci-Fi Biohazard Storage — Hard Surface Modeling Study</p>
               <div class="card__tags">
-                <span class="tag">Cel-look</span>
-                <span class="tag">Storyboard</span>
-                <span class="tag">Layout</span>
+                <span class="tag">Industrial</span>
+                <span class="tag">Hard Surface</span>
+                <span class="tag">Sci-Fi</span>
+                <span class="tag">3DModeling</span>
               </div>
             </div>
           </article>
@@ -232,13 +253,12 @@
             <button class="card__media" type="button"
               data-id="pixivore"
               data-detail="3d-pixivore.html"  
-              data-title="Pixivore - 3D Character Modeling Study"
-              data-subtitle="Model Character"
-              data-img="../../assets/3d/pixivore/000.png"
+              data-title="Pixivorey"
+              data-subtitle="Model Character -—ore/000.png"
               data-desc-vi="Bài tập dựng nhân vật 3D cho game, thực hiện dựa trên hình ảnh reference có sẵn trên mạng. Tôi tự phát triển model từ đầu và hoàn thiện nhân vật qua các bước 3D Modeling và Texturing, tập trung tái hiện hình dáng, chi tiết và chất liệu của nhân vật từ reference."
               data-desc-en="A 3D game character study recreated from an online 2D reference, with no existing 3D model provided. I built the character from scratch and completed the 3D Modeling and Texturing process, focusing on translating the character’s form, details, and materials from the reference into 3D."
               data-tools="Maya, Substance, Marmoset">
-              <img src="../../assets/3d/pixivore/000.png" alt="Pixivore - 3D Character Modeling Study" loading="lazy">
+              <img src="../../assets/3d/pixivore/000.png" alt="Pixivore — 3D Character Modeling Study" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -246,7 +266,7 @@
                 <p class="card__category" data-vi="Modeling" data-en="Modeling">Modeling</p>
                 <span class="card__year">[2022]</span>
               </div>
-              <h3 class="card__title">Pixivore - 3D Character Modeling Study</h3>
+              <h3 class="card__title">Pixivore</h3>
               <p class="card__desc" data-vi="Mô hình hóa dựa trên hình ảnh tham chiếu" data-en="Reference-based Modeling">Reference-based Modeling</p>
               <div class="card__tags">
                 <span class="tag">Modeling</span>
@@ -266,13 +286,13 @@
             <button class="card__media" type="button"
               data-id="pixivore"
               data-detail="3d-crusader.html"  
-              data-title="Crusader - 3D Game Design"
+              data-title="CRUSADER — 3D Game Design"
               data-subtitle="3D Game Design — Đồ án xuất sắc"
               data-img="../../assets/3d/crusader/000.webp"
               data-desc-vi="Đồ án nhóm về thiết kế game 3D với bối cảnh fantasy, tập trung vào hành trình khám phá thế giới, chiến đấu và giải mã lời tiên tri."
               data-desc-en="A collaborative 3D game design project set in a fantasy world, centered around exploration, combat, and uncovering the truth behind an ancient prophecy."
               data-tools="Maya, Zbrush, Substance Painter, Unreal, Marmoset">
-              <img src="../../assets/3d/crusader/000.webp" alt="Crusader - 3D Game Design" loading="lazy">
+              <img src="../../assets/3d/crusader/000.webp" alt="Crusader — 3D Game Design" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -280,7 +300,7 @@
                 <p class="card__category" data-vi="Modeling" data-en="Modeling">Modeling</p>
                 <span class="card__year">[2023]</span>
               </div>
-              <h3 class="card__title">Crusader - 3D Game Design</h3>
+              <h3 class="card__title">CRUSADER - 3D Game Design</h3>
               <p class="card__desc" data-vi="3D Game Design — Đồ án xuất sắc" data-en="3D Game Design — Excellent Project">3D Game Design — Đồ án xuất sắc</p>
               <div class="card__tags">
                 <span class="tag">Modeling</span>
@@ -321,6 +341,42 @@
               </div>
             </div>
           </article>
+
+          <!-- Spider -->
+          <article class="card" data-category="scuplt">
+            <button class="card__media" type="button"
+              data-id="pixivore"
+              data-detail="3d-Spider.html"  
+              data-title="Spider"
+              data-subtitle="Sinh vật Giáp xác — Scuplting"
+              data-img="../../assets/3d/spider/000.png"
+              data-desc-vi="Dự án cá nhân thực hiện sculpting 3D một sinh vật giáp xác mang phong cách khoa học viễn tưởng bằng ZBrush, dựa trên hình ảnh tham chiếu tổng hợp từ internet. Tác phẩm tập trung vào việc tạo hình các khối cơ bắp, vỏ giáp phân đoạn, các chi tiết sinh học phức tạp và thần thái của một sinh vật biển sâu."
+              data-desc-en="A personal 3D sculpting project of a sci-fi crustacean creature created in ZBrush, based on online references. The piece focuses on exploring organic forms, segmented armor shells, intricate biological details, and the overall presence of a deep-sea creature."
+              data-tools="Zbrush">
+              <img src="../../assets/3d/spider/000.png" alt="Spider - 3D Game Design" loading="lazy">
+              <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
+            </button>
+            <div class="card__body">
+              <div class="card__category-row">
+                <p class="card__category" data-vi="Scuplting" data-en="Scuplting">Scuplting</p>
+                <span class="card__year">[2023]</span>
+              </div>
+              <h3 class="card__title">Spider - 3D Game Design</h3>
+              <p class="card__desc" data-vi="Sinh vật Giáp xác — Scuplting" data-en="Abyssal Scavenge — Scuplting">Sinh vật Giáp xác — Scuplting</p>
+              <div class="card__tags">
+                <span class="tag">Scuplting</span>
+              </div>
+              <div class="card__tags">
+                <span class="tag tag--style">ZBrush</span>
+                <span class="tag tag--style">Sculpting</span>
+                <span class="tag tag--style">Character Design</span>
+                <span class="tag tag--style">Sci-Fi</span>
+                <span class="tag tag--style">Biomechanical</span>
+              </div>
+            </div>
+          </article>
+
+
 
         </div>
 
