@@ -2812,6 +2812,13 @@ a.footer__item:hover .footer__item-value {
   margin-top: 2px;
 }
 
+/* Khi team.text là mảng nhiều dòng, mỗi dòng được dựng thành 1 <div> con
+   trong .project-team__desc (xem script.js) — thêm khoảng cách nhỏ giữa
+   các dòng cho dễ đọc, dòng đầu tiên không cần margin-top thừa. */
+.project-team__desc div + div {
+  margin-top: 4px;
+}
+
 .project-back {
   display: inline-flex;
   align-items: center;

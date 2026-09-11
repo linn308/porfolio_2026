@@ -1241,17 +1241,31 @@ function initProjectDetail() {
     if (subtitleEl) subtitleEl.textContent = project.subtitle[lang];
     if (descEl) descEl.textContent = project.desc[lang];
     if (project.team) {
-      // team[lang] giờ là { label, text } để hiện thành 2 dòng riêng biệt
-      // (VD: dòng 1 "Đóng góp", dòng 2 "Lên ý tưởng concept & Dàn trang
-      // chính."). Vẫn hỗ trợ project cũ chỉ khai báo team[lang] là string
-      // phẳng — khi đó dòng nhãn để trống, chỉ hiện 1 dòng như trước.
+      // team[lang] giờ là { label, text } để hiện thành nhiều dòng riêng
+      // biệt (VD: dòng 1 "Đóng góp", các dòng sau là nội dung). Vẫn hỗ trợ
+      // project cũ chỉ khai báo team[lang] là string phẳng — khi đó dòng
+      // nhãn để trống, chỉ hiện 1 dòng như trước.
+      // "text" giờ nhận CẢ 2 KIỂU:
+      //   text: 'Một dòng duy nhất'
+      //   text: ['Dòng 1', 'Dòng 2', 'Dòng 3', ...]  <- nhiều dòng, mỗi
+      //         phần tử mảng tự xuống dòng riêng, không cần <br>.
       const teamContent = project.team[lang];
       if (typeof teamContent === 'string') {
         if (teamLabelEl) teamLabelEl.textContent = '';
         if (teamDescEl) teamDescEl.textContent = teamContent;
       } else if (teamContent) {
         if (teamLabelEl) teamLabelEl.textContent = teamContent.label || '';
-        if (teamDescEl) teamDescEl.textContent = teamContent.text || '';
+        if (teamDescEl) {
+          teamDescEl.innerHTML = '';
+          const lines = Array.isArray(teamContent.text)
+            ? teamContent.text
+            : [teamContent.text || ''];
+          lines.forEach((line) => {
+            const p = document.createElement('div');
+            p.textContent = line;
+            teamDescEl.appendChild(p);
+          });
+        }
       }
     }
 

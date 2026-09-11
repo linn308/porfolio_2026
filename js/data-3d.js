@@ -99,10 +99,11 @@ const PROJECTS_3D = {
   // CRUSADER chưa có page, chưa content..
   crusader: {
     title: 'CRUSADER',
+    year: '2023',
     // Bắt buộc khai báo cover mới có thumbnail/video hiện ở trên cùng —
     // không còn tự lấy slides[0] như trước. src trùng với slide video bên
     // dưới nên slide đó tự bị bỏ khỏi gallery, không lặp lại.
-    cover: { type: 'video', src: '../../../assets/videos/showreel.mp4', poster: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop' },
+    cover: { type: 'video', src: '../../assets/3d/crusader/000.mp4', poster: '../../assets/3d/crusader/001.webp' },
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
       vi: '3D Game Design — Đồ án xuất sắc',
@@ -112,25 +113,56 @@ const PROJECTS_3D = {
       vi: 'Đồ án 3D Game Design đạt loại xuất sắc. Modeling và texturing nhân vật/prop trong Maya và ZBrush, hoàn thiện chi tiết bề mặt và render preview trong Photoshop. Bộ ảnh dưới đây gồm góc quay turntable, chi tiết wireframe và bản render final.',
       en: 'A 3D Game Design project graded excellent. Character/prop modeling and texturing done in Maya and ZBrush, with surface detail and preview renders finished in Photoshop. The set below includes turntable angles, wireframe close-ups and the final render.',
     },
-    tools: ['Maya', 'ZBrush', 'Photoshop'],
-    styleTags: ['Character Design', 'Hard-Surface', 'Sci-Fi'],
-    // team: { vi: 'Dự án nhóm — Đóng góp: modeling & texturing nhân vật chính.', en: 'Team project — Contribution: main character modeling & texturing.' },
-    slides: [
-      { type: 'video', src: '../../../assets/videos/showreel.mp4', poster: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'model', src: '../../../assets/models/crusader.glb', poster: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'model', src: '../../assets/3d/box/1.glb' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?q=80&w=1400&auto=format&fit=crop' },
+    tools: ['Maya', 'ZBrush', 'Substance Painter', 'Unreal', 'Marmoset'],
+    styleTags: ['3D Game Design', 'Fantasy', 'Character Design', 'Stylized 3D', 'Game Art'],
+    team: {
+      vi: { label: 'Đóng góp', 
+            text: ['Tham gia phát triển ý tưởng và visual direction, đồng thời phụ trách chính việc thiết kế và hoàn thiện nhân vật Kord từ sketch, modeling đến hoàn thiện màu sắc. ',
+                  'Hỗ trợ một số công đoạn modeling và coloring cho các asset khác của project.'] },
+      en: { label: 'Contribution', 
+            text: ['Participated in concept development and visual direction, while taking the lead on designing and finalizing the character "Kord"—handling everything from initial sketches and modeling to final coloring.',
+                  'Assisted with modeling and coloring tasks for other project assets.']},
+    },
+    //   slides: [
+    //   { type: 'image', src: '../../assets/3d/crusader/0100.png' },
+    // ],
+
+    relatedBlocks:[
+      { title: { vi: 'Kord — Character Design & 3D Modeling', en: 'Kord — Character Design & 3D Modeling' },
+        type: 'cards', 
+        items: [{ media: {type: 'model', src: '../../assets/3d/crusader/010.glb', poster:'../../assets/3d/crusader/0111.png'}, large: true },
+        ],
+      },
+      {type: 'cards', 
+        items: [{ media: {type: 'image', src: '../../assets/3d/crusader/0111.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0112.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0113.png' }},
+        ],
+      },
+      {type: 'cards', 
+        items: [{ media: {type: 'image', src: '../../assets/3d/crusader/0121.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0122.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0123.png' }},
+        ],
+      },
+      {title: { vi: 'Dây xích và hai cột trụ tạo thành hệ thống giam giữ Kord, cố định nhân vật tại vị trí trong scene.', 
+                en: 'The chains and two pillars form Kord’s restraint system, keeping the character bound in place within the scene.' },
+        type: 'loop', 
+        items: [{ title: 'image', img: '../../assets/3d/crusader/021.png' },
+                { title: 'image', img: '../../assets/3d/crusader/022.png' },
+                { title: 'image', img: '../../assets/3d/crusader/023.png' },
+                { title: 'image', img: '../../assets/3d/crusader/031.png' },
+                { title: 'image', img: '../../assets/3d/crusader/032.png' },
+                { title: 'image', img: '../../assets/3d/crusader/033.png' },
+        ],
+      },
     ],
+
   },
 
   waterhydrant: {
     title: 'Water Hydrant — Modeling',
-    // Bắt buộc khai báo cover mới có thumbnail/video hiện ở trên cùng —
-    // không còn tự lấy slides[0] như trước. src trùng với slide video bên
-    // dưới nên slide đó tự bị bỏ khỏi gallery, không lặp lại.
-    cover: { type: 'model', src: '../../assets/3d/WH/00.glb'},
+    year: '2022',
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
       vi: '3D Game Design — Đồ án xuất sắc',
@@ -142,14 +174,19 @@ const PROJECTS_3D = {
     },
     tools: ['Maya'],
     styleTags: ['Character Design', 'Hard-Surface', 'Sci-Fi'],
-    // team: { vi: 'Dự án nhóm — Đóng góp: modeling & texturing nhân vật chính.', en: 'Team project — Contribution: main character modeling & texturing.' },
     slides: [
-      { type: 'model', src: '../../assets/3d/WH/00.glb' },
+      {type: 'model',
+        variants: [
+          { label: { vi: 'Nhiều lưới', en: 'Highpoly' }, src: '../../assets/3d/WH/00.glb' },
+          { label: { vi: 'Ít lưới',  en: 'Lowpoly' }, src: '../../assets/3d/WH/01.glb' },
+        ],
+      }
     ],
   },
 
   box: {
     title: 'Water Hydrant — Modeling',
+    year: '2022',
     cover: { type: 'model', src: '../../assets/3d/box/00.glb'},
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
@@ -188,31 +225,45 @@ const PROJECTS_3D = {
 
   'pixivore': {
     title: 'Pixivore',
-    cover: {type: 'img', src:'../../assets/3d/pixivore/001.webp'},
+    cover: {type: 'image', src:'../../assets/3d/pixivore/001.webp'},
     year: '2022',
     category: { vi: 'Modeling', en: 'Modeling' },
     subtitle: {
-      vi: 'Pixivore - Modeling',
-      en: 'Pixivore - Modeling',
+      vi: 'Pixivore - 3D Character Modeling Study',
+      en: 'Pixivore - 3D Character Modeling Study',
     },
     desc: {
-      vi: 'Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film. Bộ ảnh gồm storyboard, frame layout và still cuối phim.',
-      en: 'A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film. The set includes storyboard frames, layout shots and final film stills.',
+      vi: 'Bài tập dựng nhân vật 3D cho game, thực hiện dựa trên hình ảnh reference có sẵn trên mạng. Tôi tự phát triển model từ đầu và hoàn thiện nhân vật qua các bước 3D Modeling và Texturing, tập trung tái hiện hình dáng, chi tiết và chất liệu của nhân vật từ reference.',
+      en: 'A 3D game character study recreated from an online 2D reference, with no existing 3D model provided. I built the character from scratch and completed the 3D Modeling and Texturing process, focusing on translating the character’s form, details, and materials from the reference into 3D.',
     },
     tools: ['Maya', 'Subtance Painter', 'Marmoset'],
-    styleTags: ['Cel-look Anime', 'Short Film', 'Action'],
+    styleTags: ['Hard-surface', 'Semi-realistic', '3D Game Art', 'Texturing', 'Mechanical'],
     relatedCards: {
       items: [
         { title: 'video', media: { type: 'video', src : '../../assets/3d/pixivore/00.mp4'}, large: true},
-        { title: 'image', img: '../../assets/3d/pixivore/01.webp' },
-        { title: 'image', img: '../../assets/3d/pixivore/02.webp' },
-        { title: 'image', img: '../../assets/3d/pixivore/03.webp' },
-        { title: 'image', img: '../../assets/3d/pixivore/04.webp' },
+       
       ],
     },  
     slides: [
-      { type: 'model', src: '../../assets/3d/pixivore/00.glb', large: 'true' },
+      {type: 'model',
+        variants: [
+          { label: { vi: 'Nhiều lưới', en: 'Highpoly' }, src: '../../assets/3d/pixivore/00.glb' },
+          { label: { vi: 'Ít lưới',  en: 'Lowpoly' }, src: '../../assets/3d/pixivore/01.glb' },
+        ],
+      }
     ],
-
+    relatedBlocks:[
+      {type: 'loop', 
+        items: [{ title: 'image', img: '../../assets/3d/pixivore/01.webp' },
+                { title: 'image', img: '../../assets/3d/pixivore/02.webp' },
+                { title: 'image', img: '../../assets/3d/pixivore/03.webp' },
+                { title: 'image', img: '../../assets/3d/pixivore/04.webp' },
+        ],
+      },
+      {type: 'cards', 
+        items: [  { title: 'video', media: { type: 'video', src: '../../assets/3d/pixivore/00.mp4' }, large: true },
+        ],
+      },
+    ],
   },
 };

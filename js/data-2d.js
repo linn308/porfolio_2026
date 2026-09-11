@@ -274,15 +274,16 @@ const PROJECTS_2D = {
     },
     tools: ['Illustrator', 'Photoshop', 'After Effects', 'Capcut'],
         styleTags: ['Commercial E-Commerce Banners', 'Social Media Ads','Cosmetics Marketing' , 'Advertising Design', 'Product Manipulation'],
-    relatedCards: {
-      title: { vi: 'Dự án liên quan', en: 'Related Projects' },
+    relatedBlocks: [
+      {title:  'loop', 
       items: [
-        { title: 'video', mov: '../../assets/2d/SSS/01.mp4', poster: '../../assets/2d/SSS/001.webp' },
+        { title: 'video', media: '../../assets/2d/SSS/01.mp4', poster: '../../assets/2d/SSS/001.webp' },
         { title: 'image', img: '../../assets/2d/SSS/01.webp' },
         { title: 'image', img: '../../assets/2d/SSS/02.webp' },
-        { title: 'image', img: '../../assets/2d/SSS/02.mp4', poster: '../../assets/2d/SSS/002.webp' },
+        { title: 'image', media: '../../assets/2d/SSS/02.mp4', poster: '../../assets/2d/SSS/002.webp' },
       ],
-    },    
+      },     
+    ], 
     slides: [
       { type: 'video', src: '../../assets/2d/SSS/01.mp4', poster: '../../assets/2d/SSS/001.webp' },
       { type: 'image', src: '../../assets/2d/SSS/01.webp' },
