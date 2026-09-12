@@ -1920,6 +1920,38 @@ body.page-home .card:hover .card__overlay {
   opacity: 0;
 }
 
+/* ============ TRANG CHỦ: TẮT HIỆU ỨNG HOVER TRÊN MÀN NHỎ (tablet/mobile)
+   ============
+   Hành vi gốc phía trên (mặc định chỉ hiện chữ, hover mới hiện ảnh) dựa
+   vào :hover — trên thiết bị cảm ứng (tablet/mobile) không có hover thật
+   sự nên card sẽ bị kẹt mãi ở trạng thái chỉ thấy TÊN, không thấy ẢNH.
+   Dưới 1024px (đồng bộ breakpoint chung của site, xem .showcase-viewport
+   phía trên) — hiện SẴN cả ảnh lẫn tên dự án cùng lúc, không cần chạm/hover
+   nữa. Màn PC (trên 1024px) giữ NGUYÊN hành vi hover gốc, không đổi gì. */
+@media (max-width: 1024px) {
+  body.page-home .card__media img,
+  body.page-home .card__media video,
+  body.page-home .card__media model-viewer {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Tên dự án chuyển xuống đáy ảnh + nền gradient tối phía sau để luôn đọc
+     được chữ dù đè lên ảnh sáng màu — chữ cố định trắng (không theo
+     --text-primary của theme) vì luôn nằm trên nền tối của gradient. */
+  body.page-home .card__overlay {
+    opacity: 1;
+    inset: auto 0 0 0;
+    justify-content: flex-start;
+    padding: 10px 14px;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    border-radius: 0;
+  }
+}
+
 /* Nền riêng cho phần chữ (category/tên dự án...) — TÁCH khỏi .card vì
    .card giờ không còn nền chung nữa (xem comment ở rule .card phía trên).
    Card nào không có .card__body (ví dụ card trong related-blocks ở trang
@@ -2183,19 +2215,19 @@ body.page-home .card:hover .card__overlay {
     color: var(--accent-warm);
     -webkit-text-stroke: 0px transparent;
     text-shadow: none;
-    transform: scale(1);
+    /* transform: scale(1); */
   }
   50%, 95% {
     color: transparent;
     -webkit-text-stroke: 1.5px var(--accent);
     text-shadow: 0 0 14px var(--accent-soft);
-    transform: scale(1.08);
+    /* transform: scale(1.08); */
   }
   100% {
     color: var(--accent-warm);
     -webkit-text-stroke: 0px transparent;
     text-shadow: none;
-    transform: scale(1);
+    /* transform: scale(1); */
   }
 }
 
@@ -2626,12 +2658,13 @@ a.footer__item:hover .footer__item-value {
 .model-variant-toggle {
   position: absolute;
   top: 12px;
-  left: 12px;
+  right: 12px;
   z-index: 2;
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
   max-width: calc(100% - 24px);
+  justify-content: flex-end;
 }
 
 .model-variant-toggle__btn {
@@ -2639,9 +2672,9 @@ a.footer__item:hover .footer__item-value {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-primary);
+  color: var(--accent);
   background: rgba(var(--overlay-rgb), 0.7);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--accent);
   padding: 4px 10px;
   border-radius: 100px;
   backdrop-filter: blur(4px);
@@ -2650,15 +2683,17 @@ a.footer__item:hover .footer__item-value {
 }
 
 .model-variant-toggle__btn:hover {
-  border-color: var(--text-primary);
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
 }
 
-/* Nút đang được chọn — đảo màu (nền tối/chữ sáng hoặc ngược lại tuỳ theme)
-   để phân biệt rõ đang xem biến thể nào, không cần đọc kỹ mới biết. */
+/* Nút đang được chọn — chuyển sang màu vàng ấm (--accent-warm) để tương
+   phản rõ với màu xanh (--accent) mặc định, theo đúng 2 màu chủ đạo của
+   web, giúp phân biệt biến thể đang xem mà không cần đọc kỹ. */
 .model-variant-toggle__btn.is-active {
-  background: var(--text-primary);
-  color: var(--bg-surface);
-  border-color: var(--text-primary);
+  background: var(--accent-warm);
+  color: #2b1c04;
+  border-color: var(--accent-warm);
 }
 
 /* Ảnh "gọi tên" (slide.large = true trong data-2d.js/data-3d.js) — to hẳn
@@ -2991,7 +3026,9 @@ a.footer__item:hover .footer__item-value {
      mép dưới màn hình → top(200) nằm DƯỚI bottom(88) → chiều cao âm →
      trình duyệt thu gọn/đẩy khuất nội dung bên trong, trong đó có "2D".
      Cách sửa: bỏ hẳn "bottom", dùng "max-height" (tính theo đơn vị svh,
-     không bị ảnh hưởng bởi containing block) để giới hạn chiều cao panel. */
+     không bị ảnh hưởng bởi containing block) để giới hạn chiều cao panel.
+     Thu hẹp width/padding/gap so với bản cũ (200px → 168px) để panel gọn
+     hơn, phù hợp màn nhỏ. */
   .nav {
     position: fixed;
     top: 100px;
@@ -2999,18 +3036,18 @@ a.footer__item:hover .footer__item-value {
     left: auto;
     bottom: auto;
     z-index: 105;
-    width: min(200px, 72vw);
+    width: min(168px, 62vw);
     max-height: calc(100svh - 132px);
     overflow-y: auto;
     background: var(--bg-surface-opa-8);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.65);
-    padding: 14px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
+    align-items: center;
+    gap: 3px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
@@ -3024,11 +3061,20 @@ a.footer__item:hover .footer__item-value {
   }
 
   .nav__tab {
+    width: 100%;
     text-align: center;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
+
+  /* Bỏ width cố định 122px của nút "Who am I" (khai ở mục 3. HEADER gốc,
+     dùng cho bản desktop nằm ngang) — width cố định đó khiến nút này KHÔNG
+     giãn hết chiều ngang panel như "2D"/"3D"/"Contact" (vốn không có width
+     riêng nên tự stretch), làm nó bị lệch trái, mất cân đối trong khi các
+     nút còn lại đã canh giữa. Đặt lại width: 100% để mọi nút trong panel
+     mobile đều rộng bằng nhau và canh giữa (text-align: center) đồng bộ. */
+  .nav__tab--whoami { width: 100%; }
 
   .nav__tab:hover,
   .nav__tab.is-active--2d,
@@ -3042,6 +3088,25 @@ a.footer__item:hover .footer__item-value {
   .nav-toggle.is-active span:nth-child(2) { opacity: 0; }
   .nav-toggle.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
+
+/* Màn CỰC NHỎ (điện thoại nhỏ) — thu hẹp/thấp thêm 1 nấc nữa so với mốc
+   900px phía trên, giữ nguyên cùng cách canh giữa (align-items: center). */
+@media (max-width: 480px) {
+  .nav {
+    width: min(148px, 56vw);
+    max-height: calc(100svh - 120px);
+    padding: 8px;
+    gap: 2px;
+    top: 88px;
+    right: 14px;
+  }
+
+  .nav__tab {
+    padding: 7px 10px;
+    font-size: 0.85rem;
+  }
+}
+
 
 @media (max-width: 620px) {
   /* Trước đây rule này thu .hero xuống còn 62svh trên màn hình nhỏ — làm
