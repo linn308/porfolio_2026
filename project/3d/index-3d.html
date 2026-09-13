@@ -6,22 +6,28 @@
   <title>3D &amp; Web3D — Truc Linh</title>
   <meta name="description" content="Gallery 3D &amp; Web3D của Truc Linh: Model, Layout, Animation, Web3D Interactive.">
   <script>
-  (function () {
-    try {
-      var saved = localStorage.getItem('linh-portfolio-theme');
-      if (saved === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        return;
-      }
-      if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
-      // Chua tung luu lua chon thu cong — theo theme cua may (OS).
-      var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (!osDark) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    } catch (e) {}
-  })();
-</script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('linh-portfolio-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          return;
+        }
+        if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
+        // Chua tung luu lua chon thu cong — theo theme cua may (OS).
+        var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (!osDark) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="../../assets/icon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16.png">
+  <link rel="shortcut icon" href="../../assets/icon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-touch-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -331,11 +337,11 @@
               data-detail="3d-FFL.html"
               data-title="FIGHT FOR LIFE"
               data-subtitle="3D Short Film — Excellent Project"
-              data-img="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop"
+              data-img="../../assets/3d/FFL/000.webp"
               data-desc-vi="Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film."
               data-desc-en="A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film."
               data-tools="Cel-look, Storyboard, Layout">
-              <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=800&auto=format&fit=crop" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy">
+              <img src=../../assets/3d/FFL/000.webp" alt="FIGHT FOR LIFE — 3D Short Film" loading="lazy">
               <span class="card__overlay" data-vi="Xem chi tiết" data-en="View details">Xem chi tiết</span>
             </button>
             <div class="card__body">
@@ -343,7 +349,7 @@
               <h3 class="card__title">FIGHT FOR LIFE</h3>
               <p class="card__desc" data-vi="3D Short Film · Cel-look Anime" data-en="3D Short Film · Cel-look Anime">3D Short Film · Cel-look Anime</p>
               <div class="card__tags">
-                <span class="tag">Cel-look</span>
+                <span class="tag">Animation</span>
                 <span class="tag">Storyboard</span>
                 <span class="tag">Layout</span>
               </div>

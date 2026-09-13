@@ -6,22 +6,29 @@
   <title>Project — Truc Linh</title>
   <meta name="description" content="Chi tiết dự án của Truc Linh.">
   <script>
-  (function () {
-    try {
-      var saved = localStorage.getItem('linh-portfolio-theme');
-      if (saved === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        return;
-      }
-      if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
-      // Chua tung luu lua chon thu cong — theo theme cua may (OS).
-      var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (!osDark) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    } catch (e) {}
-  })();
-</script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('linh-portfolio-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          return;
+        }
+        if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
+        // Chua tung luu lua chon thu cong — theo theme cua may (OS).
+        var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (!osDark) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  <link rel="icon" type="image/svg+xml" href="../../assets/icon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16.png">
+  <link rel="shortcut icon" href="../../assets/icon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-touch-icon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
