@@ -6,26 +6,36 @@
   <title>Truc Linh — Multimedia Designer</title>
   <meta name="description" content="Portfolio của Nguyễn Trần Trúc Bạch Linh — Multimedia Designer: 2D Design & 3D / Web3D.">
   <script>
-    // Doc truoc lua chon sang/toi da luu, gan ngay len <html> TRUOC khi CSS
-    // duoc ap dung — tranh hien tuong "chop toi" 1 nhip roi moi chuyen sang
-    // sang khi tai trang (initThemeToggle() trong js/script.js chi chay
-    // sau khi DOM dung xong). Xem them js/script.js muc "2b".
+    // Doc truoc lua chon sang/toi da luu (hoac theme may/OS neu chua tung
+    // luu gi), gan ngay len <html> TRUOC khi CSS duoc ap dung — tranh hien
+    // tuong "chop toi" 1 nhip roi moi chuyen sang sang khi tai trang
+    // (initThemeToggle() trong js/script.js chi chay sau khi DOM dung
+    // xong). Xem them js/script.js muc "2b" (getStoredTheme /
+    // getOSPreferredTheme).
     (function () {
       try {
-        if (localStorage.getItem('linh-portfolio-theme') === 'light') {
+        var saved = localStorage.getItem('linh-portfolio-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          return;
+        }
+        if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
+        // Chua tung luu lua chon thu cong — theo theme cua may (OS).
+        var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (!osDark) {
           document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (e) {}
     })();
   </script>
-
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Oooh+Baby&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
+ 
   <!-- model-viewer: cần cho khung 3D ở Hero -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.4.0/dist/model-viewer.min.js"></script>
-
+ 
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="page-home">

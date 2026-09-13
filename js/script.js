@@ -568,7 +568,10 @@ function initHeroPipParallax() {
    Cơ chế: gán data-theme="light" hoặc data-theme="dark" lên thẻ <html> —
    toàn bộ màu sắc trong style.css tham chiếu qua CSS variables nên tự đổi
    theo (xem mục "1b. CHẾ ĐỘ SÁNG" trong style.css), không cần style() tay
-   ở đây. Trang mặc định là tối (không cần khai báo gì thêm).
+   ở đây. Nếu người dùng CHƯA từng tự bấm nút sáng/tối (chưa lưu gì ở
+   localStorage), trang theo THEME CỦA MÁY (OS: sáng -> sáng, tối -> tối,
+   không xác định được -> sáng) — xem getOSPreferredTheme() ngay dưới. Một
+   khi đã bấm nút 1 lần, lựa chọn thủ công đó luôn được ưu tiên.
  
    Nút bấm KHÔNG được viết sẵn trong HTML của từng trang — hàm này tự tạo
    1 nút <button class="theme-toggle"> và chèn ngay sau MỖI khối
@@ -581,18 +584,37 @@ function initHeroPipParallax() {
    giữ nguyên khi chuyển qua lại giữa các trang.
    -------------------------------------------------------------------------- */
 const THEME_STORAGE_KEY = 'linh-portfolio-theme';
- 
+
+/* Theme máy (OS) qua prefers-color-scheme — chỉ dùng khi người dùng CHƯA
+   từng tự bấm nút sáng/tối trên site (chưa có gì lưu ở localStorage).
+   OS tối -> tối (khớp mặc định gốc), OS sáng hoặc trình duyệt không xác
+   định được -> sáng. */
+function getOSPreferredTheme() {
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+  } catch (error) {}
+  return 'light';
+}
+
 function getStoredTheme() {
   try {
-    return localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
   } catch (error) {
-    return 'dark'; // localStorage có thể bị chặn (chế độ ẩn danh...) — mặc định tối
+    // localStorage có thể bị chặn (chế độ ẩn danh...) — rơi xuống theme máy
   }
+  return getOSPreferredTheme();
 }
- 
-function applyTheme(theme) {
+
+/* Gán data-theme + đổi nhãn nút, KHÔNG lưu vào localStorage — dùng cho lần
+   áp theme đầu tiên khi tải trang (theo theme máy), để lần sau nếu người
+   dùng đổi theme máy mà vẫn chưa từng bấm nút thủ công, site vẫn tự theo
+   kịp OS thay vì bị "khoá cứng" vào giá trị đoán lần đầu. */
+function applyThemeVisualOnly(theme) {
   document.documentElement.setAttribute('data-theme', theme);
- 
+
   document.querySelectorAll('.theme-toggle').forEach((btn) => {
     const isLight = theme === 'light';
     btn.setAttribute(
@@ -600,7 +622,14 @@ function applyTheme(theme) {
       isLight ? 'Chuyển sang chế độ tối' : 'Chuyển sang chế độ sáng'
     );
   });
- 
+}
+
+/* Gán theme + LƯU vào localStorage — chỉ dùng khi người dùng chủ động bấm
+   nút chuyển sáng/tối (lựa chọn thủ công này sẽ ưu tiên hơn theme máy ở
+   mọi lần tải trang sau). */
+function applyTheme(theme) {
+  applyThemeVisualOnly(theme);
+
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch (error) {
@@ -642,7 +671,7 @@ function initThemeToggle() {
     langSwitch.insertAdjacentElement('afterend', createThemeToggleButton());
   });
  
-  applyTheme(getStoredTheme());
+  applyThemeVisualOnly(getStoredTheme());
 }
 
 /* --------------------------------------------------------------------------

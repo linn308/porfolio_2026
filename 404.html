@@ -6,6 +6,23 @@
   <title>404 — Không tìm thấy trang | Truc Linh</title>
   <meta name="description" content="Trang bạn tìm không tồn tại hoặc đã được di chuyển. Quay lại portfolio của Nguyễn Trần Trúc Bạch Linh.">
   <meta name="robots" content="noindex">
+  <script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('linh-portfolio-theme');
+      if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        return;
+      }
+      if (saved === 'dark') return; // mac dinh goc la toi, khong can gan gi them
+      // Chua tung luu lua chon thu cong — theo theme cua may (OS).
+      var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (!osDark) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (e) {}
+  })();
+</script>
 
   <!-- QUAN TRỌNG — chỉ cần cho riêng file 404.html này:
        GitHub Pages hiển thị NỘI DUNG của 404.html cho mọi link chết, nhưng

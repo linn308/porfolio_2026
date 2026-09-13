@@ -475,17 +475,25 @@ body.no-scroll { overflow: hidden; }
   white-space: nowrap;
 }
 
-.btn:hover { transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { transform: translateY(-2px); }
+}
 .btn:active { transform: translateY(0); }
 
 .btn--primary { background: var(--accent); color: #06222f; }
-.btn--primary:hover { box-shadow: 0 10px 28px -10px rgba(56, 189, 248, 0.55); }
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover { box-shadow: 0 10px 28px -10px rgba(56, 189, 248, 0.55); }
+}
 
 .btn--warm { background: var(--accent-warm); color: #2b1c04; }
-.btn--warm:hover { box-shadow: 0 10px 28px -10px rgba(231, 184, 105, 0.5); }
+@media (hover: hover) and (pointer: fine) {
+  .btn--warm:hover { box-shadow: 0 10px 28px -10px rgba(231, 184, 105, 0.5); }
+}
 
 .btn--outline { border-color: var(--border-color); color: var(--text-primary); }
-.btn--outline:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .btn--outline:hover { border-color: var(--accent); color: var(--accent); }
+}
 
 /* --- Tags --- */
 .card__tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -500,9 +508,11 @@ body.no-scroll { overflow: hidden; }
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.card:hover .tag {
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .tag {
   border-color: rgba(56, 189, 248, 0.4);
   color: var(--text-primary);
+}
 }
 
 /* Hover từng tag riêng lẻ — ÁP DỤNG MỌI NƠI có .tag (Toolkit ở index,
@@ -514,10 +524,12 @@ body.no-scroll { overflow: hidden; }
     background-color var(--transition-fast);
 }
 
-.tag:hover {
+@media (hover: hover) and (pointer: fine) {
+  .tag:hover {
   border-color: var(--accent);
   color: var(--text-primary);
   background: var(--accent-soft);
+}
 }
 
 /* Tag "phong cách / chủ đề" — viền màu nhạt sẵn để phân biệt trực quan
@@ -547,9 +559,11 @@ body.no-scroll { overflow: hidden; }
   transition: all var(--transition-fast);
 }
 
-.filter-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+  .filter-btn:hover {
   color: var(--text-primary);
   border-color: var(--text-secondary);
+}
 }
 
 .filter-btn.is-active {
@@ -617,7 +631,9 @@ body.no-scroll { overflow: hidden; }
   white-space: nowrap;
 }
 
-.nav__tab:hover { color: var(--text-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .nav__tab:hover { color: var(--text-primary); }
+}
 
 /* Nút "Who am I / Tôi là ai" — hover thì giãn letter-spacing để nhấn nhá.
    Width cố định + text-align: center để chữ giãn ĐỀU về 2 bên tính từ
@@ -627,13 +643,17 @@ body.no-scroll { overflow: hidden; }
   text-align: center;
   transition: color var(--transition-fast), background-color var(--transition-fast), letter-spacing var(--transition-fast);
 }
-.nav__tab--whoami:hover { letter-spacing: 0.16em; }
+@media (hover: hover) and (pointer: fine) {
+  .nav__tab--whoami:hover { letter-spacing: 0.16em; }
+}
 
 .nav__tab.is-active--2d { background: var(--accent-warm-soft); color: var(--accent-warm); font-weight: 600; }
 .nav__tab.is-active--3d { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 
 .nav__tab--about { margin-left: 8px; border: 1px solid var(--border-color); }
-.nav__tab--about:hover { border-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .nav__tab--about:hover { border-color: var(--accent); }
+}
 
 /* --- Bộ chuyển ngôn ngữ VI / EN --- */
 .lang-switch {
@@ -657,7 +677,9 @@ body.no-scroll { overflow: hidden; }
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.lang-switch__btn:hover { color: var(--text-secondary); }
+@media (hover: hover) and (pointer: fine) {
+  .lang-switch__btn:hover { color: var(--text-secondary); }
+}
 
 .lang-switch__btn.is-active { font-weight: 700; }
 
@@ -694,7 +716,9 @@ body.no-scroll { overflow: hidden; }
   transition: border-color var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast);
 }
 
-.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+}
 
 .theme-toggle__icon {
   width: 16px;
@@ -818,7 +842,9 @@ html[data-theme="light"] .theme-toggle__icon--moon { display: block; }
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.hero__sound-toggle:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .hero__sound-toggle:hover { border-color: var(--accent); color: var(--accent); }
+}
 .hero__sound-icon { font-size: 0.95rem; }
 
 /* Nút cuộn xuống — canh giữa đáy video, bấm vào cuộn mượt tới khối nội
@@ -845,7 +871,9 @@ html[data-theme="light"] .theme-toggle__icon--moon { display: block; }
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.hero__scroll:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .hero__scroll:hover { border-color: var(--accent); color: var(--accent); }
+}
 
 @keyframes heroScrollBounce {
   0%, 100% { transform: translate(-50%, 0); }
@@ -1496,21 +1524,33 @@ html[data-theme="light"] .hero__welcome-text text {
   transition: color var(--transition-fast);
 }
 
-.featured__more:hover { color: var(--text-primary); }
-.featured__group--2d .featured__more:hover { color: var(--accent-warm); }
-.featured__group--3d .featured__more:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .featured__more:hover { color: var(--text-primary); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .featured__group--2d .featured__more:hover { color: var(--accent-warm); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .featured__group--3d .featured__more:hover { color: var(--accent); }
+}
 
 /* Modifier để dùng lại style "→ Xem thêm" (.featured__more) ở những chỗ
    KHÔNG nằm trong .featured__group--2d — ví dụ link CV/Portfolio OneDrive
    cạnh kicker "2D Universe" ở đầu index-2d.html — nhưng vẫn muốn hover ra
    đúng màu ấm --accent-warm giống hệt link "Xem thêm" của khối Portfolio
    2D ở trang chủ. */
-.featured__more--warm:hover { color: var(--accent-warm); }
-.featured__more--accent:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .featured__more--warm:hover { color: var(--accent-warm); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .featured__more--accent:hover { color: var(--accent); }
+}
 
 
 .featured__more-icon { transition: transform var(--transition-fast); }
-.featured__more:hover .featured__more-icon { transform: translateX(4px); }
+@media (hover: hover) and (pointer: fine) {
+  .featured__more:hover .featured__more-icon { transform: translateX(4px); }
+}
 
 /* Showcase giờ là 1 dải cuộn ngang FULL-BLEED — tràn hết chiều rộng màn
    hình, không bị giới hạn bởi .container — và tự chạy vòng lặp vô hạn,
@@ -1615,7 +1655,9 @@ html[data-theme="light"] .hero__welcome-text text {
 }
 
 .breadcrumb a { transition: color var(--transition-fast); }
-.breadcrumb a:hover { color: var(--text-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover { color: var(--text-primary); }
+}
 .breadcrumb__current { color: var(--text-secondary); }
 
 .sub-hero__title {
@@ -1710,13 +1752,17 @@ html[data-theme="light"] .hero__welcome-text text {
   transform: scale(0.95);
 }
 
-.card:hover {
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
   transform: translateY(-6px);
   border-color: rgba(56, 189, 248, 0.4);
   box-shadow: 0 24px 44px -22px rgba(0, 0, 0, 0.6);
 }
+}
 
-.card--2d:hover { border-color: rgba(231, 184, 105, 0.45); }
+@media (hover: hover) and (pointer: fine) {
+  .card--2d:hover { border-color: rgba(231, 184, 105, 0.45); }
+}
 
 /* Card__media MẶC ĐỊNH là pointer — đúng cho mọi nơi card còn điều hướng
    sang trang khác: .showcase ở trang chủ (thẻ <a>) và .gallery ở
@@ -1764,7 +1810,9 @@ body:not(.page-home) .card__media {
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
-.card:hover .card__media img { transform: scale(1.08); filter: brightness(0.5); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__media img { transform: scale(1.08); filter: brightness(0.5); }
+}
 
 /* Video làm ảnh đại diện trong card (relatedLoop/relatedCards) — cùng kích
    thước/hiệu ứng hover với ảnh thường ở trên, chỉ hiện frame đầu (không
@@ -1777,7 +1825,9 @@ body:not(.page-home) .card__media {
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
-.card:hover .card__media video { transform: scale(1.08); filter: brightness(0.5); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__media video { transform: scale(1.08); filter: brightness(0.5); }
+}
 
 /* model-viewer bên trong card: xoay/zoom được ngay tại chỗ, không cần mở modal.
    Áp CÙNG hiệu ứng hover (zoom nhẹ + tối màu) như ảnh thường, để card dùng
@@ -1807,7 +1857,9 @@ body:not(.page-home) .card__media {
    thời làm 2 hiệu ứng đè lên nhau, rối khi thao tác. Ảnh/video thường vẫn
    giữ scale(1.08) như cũ ở 2 rule phía trên, chỉ model-viewer bỏ transform,
    giữ lại filter tối/sáng màu khi hover (xem light/dark theme phía dưới). */
-.card:hover .card__media model-viewer { filter: brightness(0.5); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__media model-viewer { filter: brightness(0.5); }
+}
 
 /* Overlay "Xem chi tiết" khi hover card — CHỈ còn chữ + nền ảnh tối lại,
    không còn viền/stroke bao quanh phần ảnh như trước (đã tắt theo yêu cầu).
@@ -1836,7 +1888,9 @@ body:not(.page-home) .card__media {
   pointer-events: none;
 }
 
-.card:hover .card__overlay { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__overlay { opacity: 1; }
+}
 
 /* ============ CHỈ RIÊNG TRANG CHỦ: ĐẢO NGƯỢC HIỆU ỨNG HOVER (2025-xx) ============
    Trang chủ (index.html) có <body class="page-home"> để scope riêng khối
@@ -1870,10 +1924,12 @@ body.page-home .card__media img {
   transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
-body.page-home .card:hover .card__media img {
+@media (hover: hover) and (pointer: fine) {
+  body.page-home .card:hover .card__media img {
   opacity: 1;
   transform: scale(1);
   filter: none; /* huỷ filter brightness(0.5) tối ảnh của hành vi gốc */
+}
 }
 
 body.page-home .card__media video {
@@ -1882,10 +1938,12 @@ body.page-home .card__media video {
   transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
-body.page-home .card:hover .card__media video {
+@media (hover: hover) and (pointer: fine) {
+  body.page-home .card:hover .card__media video {
   opacity: 1;
   transform: scale(1);
   filter: none;
+}
 }
 
 body.page-home .card__media model-viewer {
@@ -1894,10 +1952,12 @@ body.page-home .card__media model-viewer {
   transition: opacity 0.1s ease, transform var(--transition-base);
 }
 
-body.page-home .card:hover .card__media model-viewer {
+@media (hover: hover) and (pointer: fine) {
+  body.page-home .card:hover .card__media model-viewer {
   opacity: 1;
   transform: scale(1);
   filter: none;
+}
 }
 
 body.page-home .card__overlay {
@@ -1916,8 +1976,10 @@ body.page-home .card__overlay {
   text-transform: none;
 }
 
-body.page-home .card:hover .card__overlay {
+@media (hover: hover) and (pointer: fine) {
+  body.page-home .card:hover .card__overlay {
   opacity: 0;
+}
 }
 
 /* ============ TRANG CHỦ: TẮT HIỆU ỨNG HOVER TRÊN MÀN NHỎ (tablet/mobile)
@@ -2091,12 +2153,18 @@ body.page-home .card:hover .card__overlay {
   text-decoration: none;
 }
 
+/* 4 mục Điện thoại/Email/Behance/LinkedIn xếp dọc thành 1 cột duy nhất
+   (Phone → Email → Behance → LinkedIn, mỗi mục 1 hàng) — áp dụng luôn ở
+   mọi kích thước màn hình, không chỉ riêng màn nhỏ. */
 .contact__detail{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+  gap: 20px;
 }
 .contact__link { transition: opacity var(--transition-fast); }
-.contact__link:hover { opacity: 0.6; text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) {
+  .contact__link:hover { opacity: 0.6; text-decoration: underline; }
+}
 
 @media (max-width: 768px) {
   .contact { padding: 64px 0; }
@@ -2247,8 +2315,10 @@ body.page-home .card:hover .card__overlay {
   transition: var(--transition-fast);
 }
 
-.footer__btt a:hover {
+@media (hover: hover) and (pointer: fine) {
+  .footer__btt a:hover {
   letter-spacing: 0.25em;
+}
 }
 
 /* Thanh dưới cùng của footer (chỉ dùng ở index.html): TRÁI là icon mạng
@@ -2277,9 +2347,11 @@ body.page-home .card:hover .card__overlay {
   transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
-.footer__social-link:hover {
+@media (hover: hover) and (pointer: fine) {
+  .footer__social-link:hover {
   color: var(--text-primary);
   transform: translateY(-2px);
+}
 }
 
 .footer__social-link svg {
@@ -2319,7 +2391,9 @@ body.page-home .card:hover .card__overlay {
   transition: background-color var(--transition-fast);
 }
 
-a.footer__item:hover { background: var(--bg-elevated); }
+@media (hover: hover) and (pointer: fine) {
+  a.footer__item:hover { background: var(--bg-elevated); }
+}
 
 .footer__item-label {
   font-family: var(--font-mono);
@@ -2334,8 +2408,10 @@ a.footer__item:hover { background: var(--bg-elevated); }
   color: var(--text-primary); 
   word-break: break-word; 
 }
-a.footer__item:hover .footer__item-value { 
+@media (hover: hover) and (pointer: fine) {
+  a.footer__item:hover .footer__item-value { 
   color: var(--accent); 
+}
 }
 
 .footer__bottom { 
@@ -2449,7 +2525,9 @@ a.footer__item:hover .footer__item-value {
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.modal__close:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .modal__close:hover { border-color: var(--accent); color: var(--accent); }
+}
 
 /* Nút điều hướng Prev / Next: nút tròn nhỏ, canh giữa theo chiều dọc.
    CỐ Ý không dùng dải full-height sát cạnh phải như trước — dải đó chồng
@@ -2474,7 +2552,9 @@ a.footer__item:hover .footer__item-value {
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.modal__nav:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .modal__nav:hover { border-color: var(--accent); color: var(--accent); }
+}
 .modal__nav--prev { left: 16px; }
 .modal__nav--next { right: 16px; }
 
@@ -2496,9 +2576,11 @@ a.footer__item:hover .footer__item-value {
   transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.modal__full-link:hover {
+@media (hover: hover) and (pointer: fine) {
+  .modal__full-link:hover {
   color: var(--text-primary);
   border-color: var(--text-primary);
+}
 }
 
 .modal__media { position: relative; }
@@ -2682,9 +2764,11 @@ a.footer__item:hover .footer__item-value {
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.model-variant-toggle__btn:hover {
+@media (hover: hover) and (pointer: fine) {
+  .model-variant-toggle__btn:hover {
   border-color: var(--accent-warm);
   color: var(--accent-warm);
+}
 }
 
 /* Nút đang được chọn — chuyển sang màu vàng ấm (--accent-warm) để tương
@@ -2906,7 +2990,9 @@ a.footer__item:hover .footer__item-value {
   transition: color var(--transition-fast);
 }
 
-.project-back:hover { color: var(--text-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .project-back:hover { color: var(--text-primary); }
+}
 
 /* ==========================================================================
    12b. KHỐI TÙY CHỌN Ở TRANG CHI TIẾT DỰ ÁN
@@ -3026,9 +3112,7 @@ a.footer__item:hover .footer__item-value {
      mép dưới màn hình → top(200) nằm DƯỚI bottom(88) → chiều cao âm →
      trình duyệt thu gọn/đẩy khuất nội dung bên trong, trong đó có "2D".
      Cách sửa: bỏ hẳn "bottom", dùng "max-height" (tính theo đơn vị svh,
-     không bị ảnh hưởng bởi containing block) để giới hạn chiều cao panel.
-     Thu hẹp width/padding/gap so với bản cũ (200px → 168px) để panel gọn
-     hơn, phù hợp màn nhỏ. */
+     không bị ảnh hưởng bởi containing block) để giới hạn chiều cao panel. */
   .nav {
     position: fixed;
     top: 100px;
@@ -3068,17 +3152,9 @@ a.footer__item:hover .footer__item-value {
     font-size: 0.92rem;
   }
 
-  /* Bỏ width cố định 122px của nút "Who am I" (khai ở mục 3. HEADER gốc,
-     dùng cho bản desktop nằm ngang) — width cố định đó khiến nút này KHÔNG
-     giãn hết chiều ngang panel như "2D"/"3D"/"Contact" (vốn không có width
-     riêng nên tự stretch), làm nó bị lệch trái, mất cân đối trong khi các
-     nút còn lại đã canh giữa. Đặt lại width: 100% để mọi nút trong panel
-     mobile đều rộng bằng nhau và canh giữa (text-align: center) đồng bộ. */
   .nav__tab--whoami { width: 100%; }
 
-  .nav__tab:hover,
-  .nav__tab.is-active--2d,
-  .nav__tab.is-active--3d {
+  .nav__tab.is-active--2d, .nav__tab.is-active--3d {
     background: var(--bg-elevated);
   }
 
@@ -3106,7 +3182,6 @@ a.footer__item:hover .footer__item-value {
     font-size: 0.85rem;
   }
 }
-
 
 @media (max-width: 620px) {
   /* Trước đây rule này thu .hero xuống còn 62svh trên màn hình nhỏ — làm
@@ -3225,8 +3300,9 @@ a.footer__item:hover .footer__item-value {
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.lightbox__close:hover,
-.lightbox__nav:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .lightbox__close:hover, .lightbox__nav:hover { border-color: var(--accent); color: var(--accent); }
+}
 
 .lightbox__close { top: 22px; right: 26px; font-size: 1rem; }
 .lightbox__nav { top: 50%; transform: translateY(-50%); }
@@ -3276,9 +3352,13 @@ a.footer__item:hover .footer__item-value {
   pointer-events: none;
 }
 
-.project-gallery__tile--zoomable:hover::after { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .project-gallery__tile--zoomable:hover::after { opacity: 1; }
+}
 .project-gallery__tile--zoomable img { transition: transform var(--transition-base); }
-.project-gallery__tile--zoomable:hover img { transform: scale(1.04); }
+@media (hover: hover) and (pointer: fine) {
+  .project-gallery__tile--zoomable:hover img { transform: scale(1.04); }
+}
 
 /* Gợi ý "bấm để phóng to" y hệt badge ở trên, dùng lại CHO card trong
    relatedLoop/relatedCards (trang chi tiết dự án) — 2 khối này KHÔNG còn
@@ -3323,8 +3403,10 @@ a.footer__item:hover .footer__item-value {
   pointer-events: none;
 }
 
-.project-related-blocks .card:hover .card__media::after {
+@media (hover: hover) and (pointer: fine) {
+  .project-related-blocks .card:hover .card__media::after {
   opacity: 1;
+}
 }
 
 /* Giảm độ tối khi hover CHỈ riêng card trong khối "dự án liên quan" ở
@@ -3338,18 +3420,18 @@ a.footer__item:hover .footer__item-value {
      nấc nữa so với 0.75 trước đó -> 0.85.
    Không đổi gì ở listing 2D/3D (index-2d.html/index-3d.html) hay trang
    chủ — 2 nơi đó vẫn giữ nguyên brightness(0.5) như cũ. */
-.project-related-blocks .card:hover .card__media img,
-.project-related-blocks .card:hover .card__media video,
-.project-related-blocks .card:hover .card__media model-viewer {
+@media (hover: hover) and (pointer: fine) {
+  .project-related-blocks .card:hover .card__media img, .project-related-blocks .card:hover .card__media video, .project-related-blocks .card:hover .card__media model-viewer {
   filter: brightness(1.15);
+}
 }
 
 /* Selector thêm html[data-theme="light"] nên đặc thù cao hơn rule chế độ
    tối ngay phía trên, không cần !important. */
-html[data-theme="light"] .project-related-blocks .card:hover .card__media img,
-html[data-theme="light"] .project-related-blocks .card:hover .card__media video,
-html[data-theme="light"] .project-related-blocks .card:hover .card__media model-viewer {
+@media (hover: hover) and (pointer: fine) {
+  html[data-theme="light"] .project-related-blocks .card:hover .card__media img, html[data-theme="light"] .project-related-blocks .card:hover .card__media video, html[data-theme="light"] .project-related-blocks .card:hover .card__media model-viewer {
   filter: brightness(0.85);
+}
 }
 
 @media (max-width: 620px) {
@@ -3489,7 +3571,9 @@ html[data-theme="light"] .project-related-blocks .card:hover .card__media model-
   gap: 6px;
   transition: color var(--transition-fast), gap var(--transition-fast);
 }
-.not-found__back:hover { color: var(--accent); gap: 9px; }
+@media (hover: hover) and (pointer: fine) {
+  .not-found__back:hover { color: var(--accent); gap: 9px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .not-found__ring,
@@ -3510,7 +3594,11 @@ html[data-theme="light"] .project-related-blocks .card:hover .card__media model-
   text-underline-offset: 3px;
   transition: text-decoration-color var(--transition-fast, 0.2s);
 }
-.timeline__role a:hover,
 .timeline__role a:focus-visible {
   text-decoration-color: currentColor;
+}
+@media (hover: hover) and (pointer: fine) {
+  .timeline__role a:hover {
+  text-decoration-color: currentColor;
+}
 }
