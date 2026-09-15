@@ -687,9 +687,9 @@ const LANG_STORAGE_KEY = 'linh-portfolio-lang';
 
 function getStoredLang() {
   try {
-    return localStorage.getItem(LANG_STORAGE_KEY) || 'vi';
+    return localStorage.getItem(LANG_STORAGE_KEY) || 'en';
   } catch (error) {
-    return 'vi'; // localStorage có thể bị chặn (chế độ ẩn danh...) — mặc định tiếng Việt
+    return 'en'; // localStorage có thể bị chặn (chế độ ẩn danh...) — mặc định tiếng Anh
   }
 }
 

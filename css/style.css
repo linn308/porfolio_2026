@@ -631,9 +631,9 @@ body.no-scroll { overflow: hidden; }
   white-space: nowrap;
 }
 
-@media (hover: hover) and (pointer: fine) {
+/* @media (hover: hover) and (pointer: fine) {
   .nav__tab:hover { color: var(--text-primary); }
-}
+} */
 
 /* Nút "Who am I / Tôi là ai" — hover thì giãn letter-spacing để nhấn nhá.
    Width cố định + text-align: center để chữ giãn ĐỀU về 2 bên tính từ
@@ -642,10 +642,15 @@ body.no-scroll { overflow: hidden; }
   width: 122px;
   text-align: center;
   transition: color var(--transition-fast), background-color var(--transition-fast), letter-spacing var(--transition-fast);
+  letter-spacing: 0.1em;
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav__tab--whoami:hover { letter-spacing: 0.16em; }
+  .nav__tab--whoami:hover, .nav__tab:hover{ 
+    letter-spacing: 0.26em; 
+    color: var(--text-primary); }
 }
+
+
 
 .nav__tab.is-active--2d { background: var(--accent-warm-soft); color: var(--accent-warm); font-weight: 600; }
 .nav__tab.is-active--3d { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
