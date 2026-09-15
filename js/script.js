@@ -873,21 +873,87 @@ function initGalleryFilter() {
 }
 
 /* --------------------------------------------------------------------------
-   6. BADGE SỐ LƯỢNG ẢNH TRÊN CARD (2d.html, 3d.html)
-   Với card nào có data-id trùng khớp 1 project trong data.js (đọc từ
-   data.js) và project đó có nhiều hơn 1 slide, tự thêm 1 badge nhỏ báo
-   "còn nhiều ảnh hơn" để người xem biết có thể bấm vào xem đầy đủ.
+   6. BADGE SỐ LƯỢNG FILE TRÊN CARD (2d.html, 3d.html)
+   TRƯỚC ĐÂY badge chỉ đếm project.slides.length, nên hầu như chỉ hiện ở
+   2d.html — phần lớn project 3D không khai slides (chúng để hình/video/
+   model trong relatedBlocks/relatedCards/relatedLoop thay vì slides), nên
+   luôn bị coi là "chỉ có 1 ảnh" và badge bị ẩn.
+
+   GIỜ badge đếm TOÀN BỘ file thật sự thuộc 1 project — cover, slides (kể cả
+   từng biến thể model trong 1 slide kiểu variants) VÀ mọi ảnh/video/model
+   trong relatedBlocks (hoặc relatedCards/relatedLoop kiểu cũ) — dùng lại
+   đúng 2 hàm getSlideSrc()/getItemMedia() mà initProjectDetail() đã dùng để
+   dựng trang chi tiết, đảm bảo số đếm ở card LUÔN khớp với số file thật sự
+   xem được khi bấm vào trang chi tiết dự án.
+
+   Dùng Set để không đếm trùng khi 1 file xuất hiện ở nhiều chỗ (VD: cover
+   trùng src với 1 slide/video bên dưới — xem chú thích ở initProjectDetail()
+   về cơ chế "cover trùng slide thì tự bỏ slide đó khỏi gallery").
    -------------------------------------------------------------------------- */
+function countProjectFiles(project) {
+  const files = new Set();
+  const addSrc = (src) => { if (src) files.add(src); };
+
+  // cover — kể cả cover khai theo kiểu model nhiều biến thể (variants)
+  if (project.cover) {
+    if (Array.isArray(project.cover.variants) && project.cover.variants.length) {
+      project.cover.variants.forEach((variant) => addSrc(variant.src));
+    } else {
+      addSrc(project.cover.src);
+    }
+  }
+
+  // slides — kể cả slide model nhiều biến thể
+  (project.slides || []).forEach((slide) => {
+    if (Array.isArray(slide.variants) && slide.variants.length) {
+      slide.variants.forEach((variant) => addSrc(variant.src));
+    } else {
+      addSrc(getSlideSrc(slide));
+    }
+  });
+
+  // relatedBlocks, hoặc fallback relatedCards/relatedLoop kiểu cũ — đúng
+  // logic gộp mà initProjectDetail() đang dùng để dựng các khối liên quan.
+  const blocks = project.relatedBlocks || [
+    project.relatedCards ? { type: 'cards', ...project.relatedCards } : null,
+    project.relatedLoop ? { type: 'loop', ...project.relatedLoop } : null,
+  ].filter(Boolean);
+
+  blocks.forEach((block) => {
+    (block.items || []).forEach((item) => {
+      const media = getItemMedia(item);
+      if (media) addSrc(media.src);
+    });
+  });
+
+  return files.size;
+}
+
+// Icon hoa 5 cánh dạng LINE (chỉ 1 đường viền duy nhất, KHÔNG có chấm/vòng
+// tròn ở tâm) cho badge đếm file — vẽ bằng 1 path duy nhất nối 5 cung tròn
+// (mỗi cung là 1 cánh hoa), nên hoa hoàn toàn rỗng ở giữa, không có đường
+// nào cắt qua tâm như bản dùng 5 vòng tròn chồng nhau trước đó. Dùng
+// stroke="currentColor" nên tự ăn theo màu chữ của badge (--text-primary:
+// đen ở theme sáng, trắng ở theme tối, xem html[data-theme="light"] trong
+// style.css) — không cần code riêng theo theme, đổi theme là icon tự đổi
+// màu theo.
+const FLOWER_ICON_SVG = `<svg class="card__count-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="M 7.510 5.820 A 4.5 4.5 0 0 1 16.490 5.820 A 4.5 4.5 0 0 1 19.265 14.361 A 4.5 4.5 0 0 1 12.000 19.639 A 4.5 4.5 0 0 1 4.735 14.361 A 4.5 4.5 0 0 1 7.510 5.820 Z"/>
+</svg>`;
+
 function initGalleryBadges() {
   if (!Object.keys(PROJECTS).length) return; // trang không nhúng data-2d.js/data-3d.js thì bỏ qua
 
   document.querySelectorAll('.card__media[data-id]').forEach((trigger) => {
     const project = PROJECTS[trigger.dataset.id];
-    if (!project || !project.slides || project.slides.length <= 1) return;
+    if (!project) return;
+
+    const total = countProjectFiles(project);
+    if (total <= 1) return; // chỉ có 1 (hoặc 0) file thì không cần báo "xem thêm"
 
     const badge = document.createElement('span');
     badge.className = 'card__count-badge';
-    badge.textContent = `🖼 ${project.slides.length}`;
+    badge.innerHTML = `${FLOWER_ICON_SVG}<span>${total}</span>`;
     trigger.appendChild(badge);
   });
 }

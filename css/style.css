@@ -2059,13 +2059,20 @@ body.page-home .card__overlay {
 .card__title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
 .card__desc { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px; }
 
-/* Badge số lượng ảnh — JS tự thêm vào card có nhiều slide trong data.js,
-   báo cho người xem biết dự án này có thể "xem đầy đủ" nhiều hình hơn */
+/* Badge số lượng file — JS tự thêm vào card có nhiều hơn 1 file (cover +
+   slides + relatedBlocks, xem countProjectFiles() trong js/script.js), báo
+   cho người xem biết dự án này có thể "xem đầy đủ" nhiều ảnh/video/model
+   hơn. Icon hoa 5 cánh (FLOWER_ICON_SVG) dùng stroke="currentColor" nên tự
+   đổi màu theo color bên dưới — đen ở theme sáng, trắng ở theme tối, không
+   cần khai riêng cho từng theme. */
 .card__count-badge {
   position: absolute;
   bottom: 12px;
   left: 12px;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--text-primary);
@@ -2074,6 +2081,11 @@ body.page-home .card__overlay {
   padding: 5px 10px;
   border-radius: 100px;
   backdrop-filter: blur(4px);
+}
+
+.card__count-icon {
+  flex-shrink: 0;
+  display: block;
 }
 
 /* Badge "Dự án nhóm" — chỉ hiện trên card nào được đánh dấu team project
