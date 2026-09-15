@@ -645,9 +645,38 @@ body.no-scroll { overflow: hidden; }
   letter-spacing: 0.1em;
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav__tab--whoami:hover, .nav__tab:hover{ 
-    letter-spacing: 0.26em; 
-    color: var(--text-primary); }
+  .nav__tab:hover { color: var(--text-primary); }
+  .nav__tab--whoami:hover,
+  .nav__tab--2d:hover,
+  .nav__tab--3d:hover {
+    letter-spacing: 0.26em;
+  }
+}
+
+/* Nút "2D" / "3D" — cùng kiểu hover giãn letter-spacing như "Who am I".
+   Width cố định + text-align: center để ô chứa không bị rộng ra và không
+   đẩy các nút cạnh nó (Contact, lang-switch...).
+   Vì chỉ có 2 ký tự nên letter-spacing (vốn luôn cộng thêm 1 khoảng dư
+   sau ký tự cuối) sẽ làm chữ lệch hẳn sang trái nếu chỉ dùng text-align:
+   center — khác với "Who am I" có nhiều ký tự nên độ lệch không rõ.
+   Bọc chữ trong <span class="nav__tab-fx"> rồi bù lại đúng bằng
+   margin-right âm để phần giãn được chia đều 2 bên, giãn ra từ giữa. */
+.nav__tab--2d,
+.nav__tab--3d {
+  width: 64px;
+  text-align: center;
+}
+.nav__tab--2d .nav__tab-fx,
+.nav__tab--3d .nav__tab-fx {
+  display: inline-block;
+  transition: letter-spacing var(--transition-fast), margin-right var(--transition-fast);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav__tab--2d:hover .nav__tab-fx,
+  .nav__tab--3d:hover .nav__tab-fx {
+    letter-spacing: 0.26em;
+    margin-right: -0.26em;
+  }
 }
 
 
