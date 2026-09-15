@@ -2909,6 +2909,14 @@ body.page-home .card__overlay {
 .project-body__info .project-team { margin: 0 0 24px; }
 .project-body__info .project-info__style { margin-top: 24px; }
 
+/* Nút "Xem project khác" (liên kết ngoài) — chỉ hiện khi project có khai
+   báo externalLink (xem initProjectDetail trong js/script.js). .btn gốc
+   đã là inline-flex nên không tự kéo giãn hết cột info, chỉ cần thêm
+   khoảng cách dưới cho đồng bộ với các khối khác trong aside. */
+.project-body__info .project-external-link {
+  margin-bottom: 24px;
+}
+
 /* Biến thể full-width: gán tự động bằng JS (initProjectDetail trong
    script.js) khi project không còn slide nào để hiện trong gallery ngoài
    cover (renderedSlides rỗng) — lúc đó .project-body__gallery bị ẩn hẳn
