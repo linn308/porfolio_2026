@@ -2676,18 +2676,18 @@ body.page-home .card__overlay {
 .project-hero {
   /* Padding-top phải đủ chỗ cho nút Back đang neo cố định (position: fixed,
      xem .project-back) đè lên phía trên, KHÔNG được để cover ló lên đụng
-     nút: 104px (top của nút Back) + ~44px (chiều cao thật của nút, tính
+     nút: 116px (top của nút Back) + ~44px (chiều cao thật của nút, tính
      từ font-size + line-height + padding + border) + 48px khoảng thở
-     giữa nút và cover ≈ 196px. Khoảng 48px này CỐ TÌNH lấy bằng đúng
+     giữa nút và cover ≈ 208px. Khoảng 48px này CỐ TÌNH lấy bằng đúng
      padding-top của .project-gallery-section (khoảng cách gallery ↔
      đường border-top phía trên nó) để toàn bộ nhịp dọc của trang chi
      tiết dự án (back ↔ cover ↔ border ↔ gallery ↔ related ↔
-     external-link) đều nhau. Nếu sau này đổi padding/font-size của
-     .project-back thì nhớ tính lại số 196px này cho khớp; nếu đổi mốc
+     external-link) đều nhau. Nếu sau này đổi top/padding/font-size của
+     .project-back thì nhớ tính lại số 208px này cho khớp; nếu đổi mốc
      48px thì sửa luôn ở .project-gallery-section, .section-block
      (:first-child/:last-child) và .project-hero (padding-bottom) cho
      đồng bộ. */
-  padding: 196px 0 48px;
+  padding: 208px 0 48px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -3079,11 +3079,26 @@ body.page-home .card__overlay {
 
 /* Cột thông tin bên phải: dính theo khi cuộn trang, để luôn thấy tên/tag/
    tool dù đang cuộn xem ảnh dài ở cột trái. Giới hạn chiều cao + tự cuộn
-   riêng nếu nội dung (mô tả dài) vượt quá viewport. */
+   riêng nếu nội dung (mô tả dài) vượt quá viewport.
+   max-height CỐ TÌNH chặn ở 560px (thay vì gần full viewport như trước)
+   — vì đây là item trong 1 grid row cùng .project-body__gallery, chiều
+   cao THẬT SỰ của cột info (kể cả khi đã bị max-height chặn lại) vẫn
+   quyết định chiều cao cả hàng grid. Project nào gallery ít ảnh (cột
+   trái ngắn) mà info dài chạm gần tới trần cũ (~100svh) sẽ kéo cả hàng
+   cao gần bằng viewport, để lại khoảng trắng lớn dưới gallery trước khi
+   tới related-blocks/nút Behance (và trong lúc cuộn còn thấy info vẫn
+   "dính" trên đầu trong khi nút đã lộ ra ở dưới, nhìn như 2 phần rời
+   nhau — xem ảnh FFL). Hạ trần xuống 560px giúp chặn tình huống này ở
+   mọi kích thước màn hình, gallery ngắn hay dài cũng không kéo hàng
+   grid vọt lên gần full viewport nữa — khoảng trắng dưới gallery (nếu
+   có) chỉ còn ở mức vài trăm px, không còn cảm giác nút "lửng" giữa
+   trang. Nếu sau này nội dung info thường xuyên dài hơn 560px và muốn
+   dễ đọc hơn, có thể tăng số này lên, nhưng nhớ đây là đánh đổi trực
+   tiếp với độ chênh lệch 2 cột. */
 .project-body__info {
   position: sticky;
   top: 110px;
-  max-height: calc(100svh - 130px);
+  max-height: min(560px, calc(100svh - 130px));
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -3117,6 +3132,14 @@ body.page-home .card__overlay {
 
 .project-external-cta:has(.project-external-link[hidden]) {
   padding: 0;
+}
+
+/* .btn có display: inline-flex nên đè mất display:none mặc định của thuộc
+   tính [hidden] (CSS tác giả luôn thắng CSS mặc định trình duyệt, bất kể
+   specificity) → nút vẫn hiện dù JS đã set hidden = true khi project không
+   khai externalLink. Ép display: none ở đây để [hidden] hoạt động đúng. */
+.project-external-link[hidden] {
+  display: none !important;
 }
 
 /* Biến thể full-width: gán tự động bằng JS (initProjectDetail trong
@@ -3190,8 +3213,10 @@ body.page-home .card__overlay {
 }
 
 /* Neo nút Back cố định ở trên cùng màn hình khi cuộn (position: fixed),
-   không còn nằm trong luồng .project-hero nữa. top: 104px = 88px chiều
-   cao header (fixed) + 16px khoảng thở, để không bị header đè lên.
+   không còn nằm trong luồng .project-hero nữa. top: 116px = 88px chiều
+   cao header (fixed) + 28px khoảng thở (hạ thấp hơn 104px cũ 1 chút để
+   nút không dính sát mép dưới header), để không bị header đè lên. Đổi
+   số này thì nhớ tính lại padding-top của .project-hero (mục 12) cho khớp.
    left dùng calc(max(...)) để tự khớp đúng lề trái thật của .container
    (24px lúc container đã đụng max-width 1200px và được canh giữa, hoặc
    sát mép khi viewport hẹp hơn 1200px) — xem thêm override 1024px bên
@@ -3201,7 +3226,7 @@ body.page-home .card__overlay {
    luồng nữa. */
 .project-back {
   position: fixed;
-  top: 104px;
+  top: 116px;
   left: calc(max(0px, (100vw - var(--container-width)) / 2) + 24px);
   z-index: 90;
   display: inline-flex;
