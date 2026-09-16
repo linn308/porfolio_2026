@@ -68,7 +68,7 @@ const PROJECTS_3D = {
     test: {
     title: 'Local Brands - Magazine Layout',
     year: '2021',
-    cover: { type: 'model', src: '../../source-files/3d/glb/Kord_lo_01.glb' },
+    cover: { type: 'model', src: '../../source-files/3d/pixivore/02.glb' },
     category: { vi: 'Editorial', en: 'Editorial' },
     subtitle: { vi: 'Editorial Design', en: 'Editorial Design' },
     desc: {

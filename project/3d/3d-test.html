@@ -139,6 +139,22 @@
               <p class="project-hero__subtitle" id="projectSubtitle"></p>
 
               <p class="project-info__desc" id="projectDesc"></p>
+ 
+              <!-- Nút liên kết đến project ở web khác (Sketchfab, ArtStation,
+                   itch.io, demo online, v.v.) — CHỈ hiện khi project khai báo
+                   project.externalLink trong data-3d.js (xem initProjectDetail
+                   trong js/script.js). Không khai báo (hoặc bỏ hẳn field này)
+                   thì nút tự ẩn (hidden), không cần sửa gì ở HTML này. -->
+              <a
+                href="#"
+                id="projectExternalLink"
+                class="btn btn--outline project-external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                hidden
+                data-vi="Xem project khác →"
+                data-en="View external project →"
+              >Xem project khác →</a>
 
               <!-- Chỉ hiện nếu project.team có trong data-3d.js (đóng góp
                    của bạn trong dự án nhóm) -->
