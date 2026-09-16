@@ -1895,6 +1895,18 @@ body:not(.page-home) .card__media {
   .card:hover .card__media model-viewer { filter: brightness(0.5); }
 }
 
+/* model-viewer XEM TRƯỚC TĨNH (chưa zoom-in) — dùng ở mọi nơi model-viewer
+   nằm sẵn trong card/cover: gallery zodiac, cover dự án, card liên quan
+   (loop/cards). Gắn qua buildModelViewer(..., false) / appendMediaThumb()
+   trong js/script.js — element này KHÔNG có thuộc tính camera-controls nên
+   vốn đã không tự bắt được thao tác kéo-để-xoay, pointer-events: none ở
+   đây chỉ để chắc chắn mọi click/chạm xuyên thẳng xuống tile/cover bên
+   dưới (mở lightbox) thay vì bị model-viewer giữ lại. Xoay/zoom thật CHỈ
+   CÓ sau khi đã bấm mở lightbox — xem initMediaLightbox(). */
+.model-viewer--static {
+  pointer-events: none;
+}
+
 /* Overlay "Xem chi tiết" khi hover card — CHỈ còn chữ + nền ảnh tối lại,
    không còn viền/stroke bao quanh phần ảnh như trước (đã tắt theo yêu cầu).
    ĐÂY LÀ HÀNH VI GỐC — áp dụng cho listing 2D/3D (index-2d.html/index-3d.html)
@@ -2662,12 +2674,13 @@ body.page-home .card__overlay {
    Prev/Next để không phải viết lại CSS.
    ========================================================================== */
 .project-hero {
-  /* Padding-top giữ đủ để không bị header (position:fixed, cao ~88-96px)
-     đè lên nút Back — giảm vừa phải (156 → 110px) thay vì giảm đúng 1 nửa
-     xuống 78px, vì 78px sẽ THẤP HƠN chiều cao header, khiến nút Back bị
-     khuất phía sau. Padding-bottom giảm đúng 1 nửa (40 → 20px) vì phần
-     này không liên quan tới header, chỉ là khoảng thở thuần túy. */
-  padding: 110px 0 20px;
+  /* Padding-top phải đủ chỗ cho nút Back đang neo cố định (position: fixed,
+     xem .project-back) đè lên phía trên, KHÔNG được để cover ló lên đụng
+     nút: 104px (top của nút Back) + ~44px (chiều cao thật của nút, tính
+     từ font-size + line-height + padding + border) + ~6px khoảng thở
+     giữa nút và cover ≈ 154px. Nếu sau này đổi padding/font-size của
+     .project-back thì nhớ tính lại số này cho khớp. */
+  padding: 154px 0 20px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -2754,10 +2767,12 @@ body.page-home .card__overlay {
 /* Nền sáng riêng cho khung chứa model 3D (đánh dấu bằng class này trong
    js/script.js khi slide/cover là model) — model 3D màu trắng/sáng dễ
    "chìm" mất vào nền tối chung của trang, thấy y hệt màu nền nên không rõ
-   khối/chi tiết. Đổi qua backdrop sáng trung tính (gradient xám nhạt) để
-   model luôn có độ tương phản rõ ràng dù màu model sáng hay tối. */
+   khối/chi tiết. Đổi qua backdrop sáng trung tính (gradient xám) để model
+   luôn có độ tương phản rõ ràng dù màu model sáng hay tối — tông màu hạ
+   thấp hơn bản gốc (#e7e7ec/#b7b7c1) một chút cho đỡ chói/lạc tông so với
+   nền tối chung của trang, vẫn đủ sáng để làm nền tương phản. */
 .project-gallery__tile--model {
-  background: linear-gradient(160deg, #e7e7ec, #b7b7c1);
+  background: linear-gradient(160deg, #c7c7cf, #8f8f9a);
 }
 
 .project-gallery__tile-badge {
@@ -2777,12 +2792,13 @@ body.page-home .card__overlay {
   backdrop-filter: blur(4px);
 }
 
-/* Nút đổi biến thể model (texture/wireframe/clay...) — thay cho badge
-   "Model 3D" khi slide/cover khai project.variants (xem
-   buildModelVariantToggle() trong js/script.js). Cùng vị trí/kích thước
-   với .project-gallery__tile-badge để không lệch layout giữa 2 kiểu
-   project (có variants / không có variants), chỉ khác là 1 nhóm nhiều
-   nút bấm được thay vì 1 nhãn tĩnh. */
+/* Nút đổi biến thể model (Highpoly/Lowpoly...) — thay cho badge "Model 3D"
+   khi slide/cover khai project.variants (xem buildModelVariantToggle()
+   trong js/script.js). ĐẶT Ở GÓC PHẢI — nút "phóng to" ở CÙNG tile này tự
+   nhường sang góc trái (xem rule :has() ngay bên dưới) nên 2 cái không
+   đè lên nhau. Chỉ tile nào THẬT SỰ có toggle mới bị nhường như vậy —
+   tile khác (ảnh thường/model không có variants) không bị ảnh hưởng,
+   nút phóng to ở đó vẫn nằm bên phải như cũ. */
 .model-variant-toggle {
   position: absolute;
   top: 12px;
@@ -2826,6 +2842,60 @@ body.page-home .card__overlay {
   border-color: var(--accent-warm);
 }
 
+/* Công tắc gạt (switch) — dùng khi ĐÚNG 2 biến thể (VD Highpoly/Lowpoly),
+   thay cho dãy nút pill có chữ ở trên: gạt qua-lại chỉ hợp lý với đúng 2
+   lựa chọn nên buildModelVariantToggle() tự chọn kiểu này khi
+   modelData.variants.length === 2 (xem js/script.js) — từ 3 biến thể trở
+   lên vẫn dùng lại dãy nút pill .model-variant-toggle__btn phía trên.
+   Không hiện chữ (theo yêu cầu) nên gắn title/aria-pressed ở JS để trình
+   đọc màn hình vẫn hiểu được đang xem biến thể nào. */
+.model-variant-toggle__switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(var(--overlay-rgb), 0.75);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .model-variant-toggle__switch:hover { border-color: var(--accent); }
+}
+
+/* Chấm tròn trượt bên trong công tắc — kích thước 16px, cách viền trên/
+   dưới đúng 2px MỖI BÊN cho cân giữa: track cao 22px trừ viền 1px x2 =
+   20px lòng trong, 16px chấm + 2px đệm trên + 2px đệm dưới = khớp đủ 20px
+   (LƯU Ý: nếu để chấm 18px sẽ chỉ còn đúng 2px đệm TRÊN và 0px đệm DƯỚI —
+   chấm bị dồn sát đáy, nhìn lệch hẳn xuống dưới, đây chính là lỗi đã gặp
+   trước đó). Quãng trượt ngang = lòng trong ngang (40 - 2 = 38) - đệm
+   phải (2) - chấm (16) - vị trí đầu (2) = 18px. */
+.model-variant-toggle__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+/* aria-pressed="true" = đang xem biến thể thứ 2 (VD Lowpoly) — chấm trượt
+   sang phải và đổi màu ấm, đồng bộ đúng quy ước 2 màu accent/accent-warm
+   đã dùng cho dãy nút pill ở trên. */
+.model-variant-toggle__switch[aria-pressed="true"] {
+  border-color: var(--accent-warm);
+}
+
+.model-variant-toggle__switch[aria-pressed="true"] .model-variant-toggle__knob {
+  transform: translateX(18px);
+  background: var(--accent-warm);
+}
+
 /* Ảnh "gọi tên" (slide.large = true trong data-2d.js/data-3d.js) — to hẳn
    hơn các ảnh còn lại. LƯU Ý KỸ THUẬT: gallery dùng CSS multi-column
    (columns) để tự xếp masonry theo tỉ lệ ảnh thật — kiểu layout này chỉ
@@ -2850,9 +2920,12 @@ body.page-home .card__overlay {
 
 /* Thumbnail/video đại diện dự án — đặt to, trên cùng, trước cả tên dự án.
    Nội dung được initProjectDetail() đổ vào (#projectCover) dựa theo
-   project.cover hoặc slides[0] — xem js/script.js. */
+   project.cover hoặc slides[0] — xem js/script.js.
+   KHÔNG còn margin-top riêng ở đây nữa: từ lúc nút Back tách ra
+   position: fixed (xem .project-back), khoảng cách với nút đã do
+   padding-top của .project-hero lo trọn — thêm margin-top ở đây sẽ bị
+   CỘNG DỒN, ra khoảng cách to hơn hẳn so với tính toán. */
 .project-cover {
-  margin-top: 28px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
@@ -2870,9 +2943,10 @@ body.page-home .card__overlay {
 /* Cover dạng video (project.cover.type === 'video' — xem initProjectDetail()
    trong js/script.js) có sẵn thẻ <video controls>, thêm cursor: pointer cho
    cả vùng video (không chỉ riêng thanh controls) để gợi ý bấm-để-phát,
-   đồng bộ với cursor pointer các vùng bấm được khác trong trang. Không áp
-   dụng cho cover ảnh (giữ cursor mặc định) hay cover model 3D (model-viewer
-   tự có cursor riêng khi xoay/zoom). */
+   đồng bộ với cursor pointer các vùng bấm được khác trong trang. Cover
+   ảnh/model 3D có cursor + badge riêng ở rule .project-cover--zoomable bên
+   dưới (bấm để phóng to/tương tác) — chỉ video là ngoại lệ vì đã có
+   control gốc, không cần mở lightbox thêm. */
 .project-cover video {
   cursor: pointer;
 }
@@ -2887,7 +2961,9 @@ body.page-home .card__overlay {
    như trước nữa. */
 .project-cover--model {
   position: relative;
-  background: linear-gradient(160deg, #e7e7ec, #b7b7c1);
+  /* Cùng tông với .project-gallery__tile--model ở trên (đã hạ sáng bớt so
+     với bản gốc #e7e7ec/#b7b7c1) để đồng bộ giữa cover và gallery. */
+  background: linear-gradient(160deg, #c7c7cf, #8f8f9a);
 }
 
 .project-cover--model::before {
@@ -2901,6 +2977,56 @@ body.page-home .card__overlay {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Cover model giờ cũng "bấm để phóng to" (xem project-cover--zoomable gắn
+   trong initProjectDetail() ở js/script.js) — cùng kiểu gợi ý cursor +
+   badge "⤢" với .project-gallery__tile--zoomable phía dưới, chỉ scope
+   riêng cho cover vì đây không dùng chung class đó (chỉ 1 khung duy nhất,
+   không phải lưới nhiều ô). */
+.project-cover--zoomable {
+  cursor: pointer;
+  /* Trước đây chỉ cover MODEL mới cần position: relative (tự có sẵn ở
+     .project-cover--model) để định vị badge "⤢" bên dưới. Giờ cover ẢNH
+     cũng zoomable và dùng chung class này nhưng KHÔNG có .project-cover--
+     model đi kèm, nên phải khai báo relative ngay tại đây để badge không
+     bị trôi lên định vị nhầm theo 1 ancestor positioned nào đó ở xa hơn. */
+  position: relative;
+}
+
+.project-cover--zoomable::after {
+  content: '⤢';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: rgba(var(--overlay-rgb), 0.65);
+  border: 1px solid var(--border-color);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-cover--zoomable:hover::after { opacity: 1; }
+}
+
+/* Cover model có toggle biến thể (2 biến thể → công tắc gạt, xem
+   .model-variant-toggle) đang chiếm góc phải — nút phóng to ở cùng cover
+   này tự nhường sang góc trái để không đè lên nhau. CHỈ áp dụng đúng
+   trường hợp cover thật sự có toggle (dùng :has()) — cover không có
+   variants vẫn giữ nút phóng to ở phải như cũ. */
+.project-cover--zoomable:has(.model-variant-toggle)::after {
+  left: 14px;
+  right: auto;
 }
 
 /* Bố cục chính của trang chi tiết: TRÁI là gallery zodiac (ảnh/video/model
@@ -2955,12 +3081,20 @@ body.page-home .card__overlay {
 .project-body__info .project-team { margin: 0 0 24px; }
 .project-body__info .project-info__style { margin-top: 24px; }
 
-/* Nút "Xem project khác" (liên kết ngoài) — chỉ hiện khi project có khai
-   báo externalLink (xem initProjectDetail trong js/script.js). .btn gốc
-   đã là inline-flex nên không tự kéo giãn hết cột info, chỉ cần thêm
-   khoảng cách dưới cho đồng bộ với các khối khác trong aside. */
-.project-body__info .project-external-link {
-  margin-bottom: 24px;
+/* Nút "Xem project khác" (liên kết ngoài, VD Behance) — giờ nằm ở CUỐI BÀI,
+   thành 1 section riêng ngay trên footer (không còn trong aside info nữa).
+   Tự ẩn/hiện theo project.externalLink — xem initProjectDetail trong
+   js/script.js. Canh giữa, padding trên/dưới đồng bộ với các section khác
+   của trang chi tiết dự án (project-gallery-section). Section này KHÔNG
+   chiếm chỗ (margin/padding = 0) khi nút đang hidden, để không để lại
+   khoảng trắng thừa lúc project không khai báo externalLink. */
+.project-external-cta {
+  padding: 0 0 60px;
+  text-align: center;
+}
+
+.project-external-cta:has(.project-external-link[hidden]) {
+  padding: 0;
 }
 
 /* Biến thể full-width: gán tự động bằng JS (initProjectDetail trong
@@ -3033,19 +3167,39 @@ body.page-home .card__overlay {
   margin-top: 4px;
 }
 
+/* Neo nút Back cố định ở trên cùng màn hình khi cuộn (position: fixed),
+   không còn nằm trong luồng .project-hero nữa. top: 104px = 88px chiều
+   cao header (fixed) + 16px khoảng thở, để không bị header đè lên.
+   left dùng calc(max(...)) để tự khớp đúng lề trái thật của .container
+   (24px lúc container đã đụng max-width 1200px và được canh giữa, hoặc
+   sát mép khi viewport hẹp hơn 1200px) — xem thêm override 1024px bên
+   dưới vì lúc đó .container đổi padding-inline sang 50px.
+   Thêm nền mờ + blur (giống .site-header) vì giờ nút nổi tự do trên cover/
+   gallery, không có nền trang trắng/tối phía sau như lúc còn nằm trong
+   luồng nữa. */
 .project-back {
+  position: fixed;
+  top: 104px;
+  left: calc(max(0px, (100vw - var(--container-width)) / 2) + 24px);
+  z-index: 90;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(var(--overlay-rgb), 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--text-muted);
-  margin-bottom: 12px;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-back:hover { color: var(--text-primary); }
+  .project-back:hover { color: var(--text-primary); border-color: var(--accent); }
 }
 
 /* ==========================================================================
@@ -3143,6 +3297,9 @@ body.page-home .card__overlay {
    ========================================================================== */
 @media (max-width: 1024px) {
   .container { padding-inline: 50px; }
+  /* .project-back neo cố định (position: fixed) nên không tự khớp theo
+     .container nữa — khớp tay lại đúng 50px cho đồng bộ. */
+  .project-back { left: 50px; }
   .hero-content__inner { grid-template-columns: 1fr; gap: 40px; }
   .hero__pip-wrap { display: flex; justify-content: center; }
   .hero__pip { max-width: 360px; }
@@ -3408,6 +3565,14 @@ body.page-home .card__overlay {
 
 @media (hover: hover) and (pointer: fine) {
   .project-gallery__tile--zoomable:hover::after { opacity: 1; }
+}
+
+/* Y hệt lý do ở .project-cover--zoomable phía trên: tile nào có toggle
+   biến thể (công tắc gạt ở góc phải) thì nút phóng to của CHÍNH tile đó
+   tự nhường sang trái, tile khác không bị ảnh hưởng. */
+.project-gallery__tile--zoomable:has(.model-variant-toggle)::after {
+  left: 10px;
+  right: auto;
 }
 .project-gallery__tile--zoomable img { transition: transform var(--transition-base); }
 @media (hover: hover) and (pointer: fine) {

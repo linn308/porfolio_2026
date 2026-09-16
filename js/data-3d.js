@@ -114,6 +114,11 @@ const PROJECTS_3D = {
     },
     tools: ['Maya', 'ZBrush', 'Substance Painter', 'Unreal', 'Marmoset'],
     styleTags: ['3D Game Design', 'Fantasy', 'Character Design', 'Stylized 3D', 'Game Art'],
+    // Link đến đúng project này trên Behance (hoặc Sketchfab/ArtStation/demo
+    // online...) — có khai báo (chuỗi URL) thì nút "Xem project khác" ở cuối
+    // bài tự hiện, xoá dòng này (hoặc để '') thì nút tự ẩn. Thay URL bên
+    // dưới bằng link Behance thật của project CRUSADER.
+    externalLink: 'https://www.behance.net/gallery/181567735/3D-Game-Design-CRUSADER',
     team: {
       vi: { label: 'Đóng góp', 
             text: ['Tham gia phát triển ý tưởng và visual direction, đồng thời phụ trách chính việc thiết kế và hoàn thiện nhân vật Kord từ sketch, modeling đến hoàn thiện màu sắc. ',
@@ -130,16 +135,10 @@ const PROJECTS_3D = {
       { title: { vi: 'Kord — Character Design & 3D Modeling', en: 'Kord — Character Design & 3D Modeling' },
         type: 'cards', 
         items: [{ media: {type: 'model', src: '../../assets/3d/crusader/010.glb', poster:'../../assets/3d/crusader/0111.png'}, large: true },
-        ],
-      },
-      {type: 'cards', 
-        items: [{ media: {type: 'image', src: '../../assets/3d/crusader/0111.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0111.png' }},
                 { media: {type: 'image', src: '../../assets/3d/crusader/0112.png' }},
                 { media: {type: 'image', src: '../../assets/3d/crusader/0113.png' }},
-        ],
-      },
-      {type: 'cards', 
-        items: [{ media: {type: 'image', src: '../../assets/3d/crusader/0121.png' }},
+                { media: {type: 'image', src: '../../assets/3d/crusader/0121.png' }},
                 { media: {type: 'image', src: '../../assets/3d/crusader/0122.png' }},
                 { media: {type: 'image', src: '../../assets/3d/crusader/0123.png' }},
         ],
@@ -197,7 +196,7 @@ const PROJECTS_3D = {
       en: 'A 3D simulation of a sci-fi-style bio-container based on reference imagery. The project focuses on modeling, precise mesh control, and optimization, making it ready for game pipelines or rendering.',
     },
     tools: ['Maya'],
-    styleTags: ['Industrial', 'Hard-Surface', 'Sci-Fi', '3DModeling'],
+    styleTags: ['Industrial', 'Hard-Surface', 'Sci-Fi', '3D Modeling'],
   },
 
   'fight-for-life': {
@@ -246,19 +245,12 @@ const PROJECTS_3D = {
     slides: [
       {type: 'model',
         variants: [
-          { label: { vi: 'Nhiều lưới', en: 'Highpoly' }, src: '../../assets/3d/pixivore/00.glb' },
-          { label: { vi: 'Ít lưới',  en: 'Lowpoly' }, src: '../../assets/3d/pixivore/01.glb' },
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/pixivore/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/pixivore/01.glb' },
         ],
       }
     ],
     relatedBlocks:[
-      {type: 'loop', 
-        items: [{ title: 'image', img: '../../assets/3d/pixivore/01.webp' },
-                { title: 'image', img: '../../assets/3d/pixivore/02.webp' },
-                { title: 'image', img: '../../assets/3d/pixivore/03.webp' },
-                { title: 'image', img: '../../assets/3d/pixivore/04.webp' },
-        ],
-      },
       {type: 'cards', 
         items: [  { title: 'video', media: { type: 'video', src: '../../assets/3d/pixivore/00.mp4' }, large: true },
         ],
@@ -296,4 +288,3 @@ const PROJECTS_3D = {
 
 
 };
-

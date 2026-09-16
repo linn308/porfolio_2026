@@ -983,6 +983,8 @@ function initLightbox() {
   const modalCounter = document.getElementById('modalCounter');
   const modalFullLink = document.getElementById('modalFullLink');
   const closeBtn = document.getElementById('modalClose');
+  const modalPrevBtn = document.getElementById('modalPrev');
+  const modalNextBtn = document.getElementById('modalNext');
 
   let currentTriggers = []; // danh sách .card__media đang hiển thị, theo thứ tự DOM
   let currentIndex = -1;
@@ -1060,6 +1062,13 @@ function initLightbox() {
     currentTriggers = getVisibleTriggers();
     currentIndex = currentTriggers.indexOf(trigger);
     renderTrigger(trigger);
+
+    // Chỉ 1 card đang hiển thị (hoặc do bộ lọc chỉ còn lại đúng 1) thì
+    // Prev/Next chẳng đi đâu được — ẩn hẳn 2 nút này thay vì để chúng
+    // đứng đó vô dụng (bấm không xảy ra gì).
+    const hasMultiple = currentTriggers.length > 1;
+    if (modalPrevBtn) modalPrevBtn.hidden = !hasMultiple;
+    if (modalNextBtn) modalNextBtn.hidden = !hasMultiple;
 
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
@@ -1170,12 +1179,30 @@ function getSlideSrc(slide) {
   return slide.src;
 }
 
-function buildModelViewer(modelData, altText) {
+// interactive = true  → gắn camera-controls, model xoay/zoom kéo được ngay
+//                        (dùng cho model-viewer THẬT trong lightbox, tức
+//                        là sau khi người dùng đã bấm zoom-in).
+// interactive = false → KHÔNG gắn camera-controls, model chỉ hiện xem
+//                        trước, hoàn toàn tĩnh, không bắt sự kiện kéo/chạm
+//                        nào (dùng cho model-viewer nằm sẵn trong card/cover
+//                        — trước khi zoom-in). Tách biệt hẳn 2 hành vi
+//                        "phóng to" (bấm mở lightbox) và "tương tác" (chỉ có
+//                        sau khi đã ở trong lightbox) theo đúng yêu cầu,
+//                        tránh việc kéo để xoay model bị đè lên thao tác
+//                        bấm-để-zoom hoặc cuộn ngang (dải loop liên quan).
+function buildModelViewer(modelData, altText, interactive = true) {
   const mv = document.createElement('model-viewer');
   const initialSrc = getSlideSrc(modelData);
   mv.setAttribute('src', initialSrc);
   if (modelData.poster) mv.setAttribute('poster', modelData.poster);
-  mv.setAttribute('camera-controls', '');
+  if (interactive) {
+    mv.setAttribute('camera-controls', '');
+  } else {
+    // .model-viewer--static (style.css): pointer-events: none — để mọi
+    // click/chạm xuyên thẳng xuống tile/cover bên dưới, mở lightbox thay vì
+    // bị model-viewer "nuốt" mất thao tác.
+    mv.classList.add('model-viewer--static');
+  }
   // --- Chỉnh sáng cho model 3D đỡ bị "trắng bệt" trên nền tối ---
   // shadow-intensity/softness: đổ bóng rõ hơn, model có chiều sâu, không
   // bị "phẳng" 1 màu trắng. exposure giảm nhẹ (mặc định 1) vì model
@@ -1198,8 +1225,17 @@ function buildModelViewer(modelData, altText) {
 
 // Trả về null nếu modelData không khai "variants" (hoặc chỉ có 1 biến thể)
 // — khi đó nơi gọi hàm này tự hiện lại badge "Model 3D" như cũ.
+// ĐÚNG 2 biến thể (trường hợp hiện tại, VD Highpoly/Lowpoly) → dựng thành
+// 1 công tắc gạt (switch) tròn, KHÔNG hiện chữ, bấm để gạt qua-lại — xem
+// buildModelVariantSwitch() bên dưới. Từ 3 biến thể trở lên (nếu sau này
+// có thêm) → giữ nguyên kiểu cũ: nhiều nút pill có chữ, vì gạt qua-lại chỉ
+// hợp lý cho đúng 2 lựa chọn.
 function buildModelVariantToggle(modelData, mv) {
   if (!Array.isArray(modelData.variants) || modelData.variants.length < 2) return null;
+
+  if (modelData.variants.length === 2) {
+    return buildModelVariantSwitch(modelData, mv);
+  }
 
   const wrap = document.createElement('div');
   wrap.className = 'model-variant-toggle';
@@ -1231,6 +1267,47 @@ function buildModelVariantToggle(modelData, mv) {
     wrap.appendChild(btn);
   });
 
+  return wrap;
+}
+
+// Công tắc gạt 2 biến thể — thay hẳn chữ trên nút bằng 1 chấm tròn trượt
+// qua-lại (xem .model-variant-toggle__switch/.__knob trong style.css).
+// KHÔNG có chữ hiển thị nên gắn title (tooltip hover) + aria-pressed để
+// vẫn có cách biết đang xem biến thể nào — title lấy nhãn theo ngôn ngữ
+// đang chọn tại thời điểm dựng, không tự đổi lại nếu người dùng bấm nút
+// đổi ngôn ngữ sau đó (hạn chế nhỏ, chấp nhận được vì chỉ là tooltip phụ).
+function buildModelVariantSwitch(modelData, mv) {
+  const [first, second] = modelData.variants;
+  const labelText = (variant) => {
+    const label = variant.label;
+    if (label && typeof label === 'object') {
+      return getStoredLang() === 'en' ? (label.en || label.vi) : (label.vi || label.en);
+    }
+    return label || '';
+  };
+
+  const wrap = document.createElement('div');
+  wrap.className = 'model-variant-toggle model-variant-toggle--switch';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'model-variant-toggle__switch';
+  btn.setAttribute('role', 'switch');
+  btn.setAttribute('aria-pressed', 'false');
+  btn.title = `${labelText(first)} / ${labelText(second)}`;
+
+  const knob = document.createElement('span');
+  knob.className = 'model-variant-toggle__knob';
+  btn.appendChild(knob);
+
+  btn.addEventListener('click', () => {
+    const isSecond = btn.getAttribute('aria-pressed') === 'true';
+    const next = isSecond ? first : second;
+    mv.setAttribute('src', next.src);
+    btn.setAttribute('aria-pressed', String(!isSecond));
+  });
+
+  wrap.appendChild(btn);
   return wrap;
 }
 
@@ -1266,6 +1343,7 @@ function initProjectDetail() {
   const galleryEl = document.getElementById('projectGallery');
   const coverEl = document.getElementById('projectCover');
   const relatedBlocksRoot = document.getElementById('projectRelatedBlocks');
+  const externalLinkEl = document.getElementById('projectExternalLink');
 
   if (titleEl) titleEl.textContent = project.title;
 
@@ -1287,17 +1365,79 @@ function initProjectDetail() {
   // 1 bản crop riêng cho cover).
   const cover = project.cover || null;
 
+  // zoomableSlides GIỜ LÀ DANH SÁCH DÙNG CHUNG CHO TOÀN TRANG CHI TIẾT —
+  // cover, gallery chính, VÀ mọi khối "dự án liên quan" (loop cuộn ngang /
+  // lưới card) bên dưới đều nối tiếp media của mình vào CHUNG 1 mảng này,
+  // đúng theo thứ tự xuất hiện trên trang (cover → gallery → khối liên
+  // quan 1 → khối liên quan 2 → ...). Ảnh, model 3D VÀ video đều được tính
+  // vào đây như nhau (video giờ cũng chỉ preview tĩnh, bấm vào mới phát
+  // được — xem đoạn xử lý slide.type === 'video' trong gallery bên dưới).
+  // Nhờ dùng CHUNG 1 mảng (truyền thẳng reference, không copy), bấm vào
+  // BẤT KỲ đâu trên trang — cover, 1 ảnh gallery, hay 1 card trong khối
+  // liên quan — đều mở ra CÙNG 1 lightbox với Prev/Next đi xuyên suốt hết
+  // toàn bộ media của trang, không còn phân biệt "mở từ đâu" nữa.
+  const zoomableSlides = [];
+  let coverZoomIndex = null;
+
   if (coverEl) {
     coverEl.innerHTML = '';
     coverEl.hidden = !cover;
-    coverEl.classList.remove('project-cover--model');
+    coverEl.classList.remove('project-cover--model', 'project-cover--zoomable');
     if (cover) {
-      if (cover.type === 'model') {
-        coverEl.classList.add('project-cover--model');
-        const mv = buildModelViewer(cover, project.title);
-        coverEl.appendChild(mv);
-        const toggle = buildModelVariantToggle(cover, mv);
-        if (toggle) coverEl.appendChild(toggle);
+      if (cover.type === 'model' || cover.type === 'image') {
+        // Cả cover kiểu model lẫn kiểu ảnh đều phóng to được — gộp chung 1
+        // nhánh để cùng đăng ký vào zoomableSlides/click handler bên dưới.
+        coverZoomIndex = zoomableSlides.length;
+        zoomableSlides.push(
+          cover.type === 'model'
+            ? { type: 'model', src: getSlideSrc(cover), poster: cover.poster, alt: project.title }
+            : { src: cover.src, alt: project.title }
+        );
+
+        if (cover.type === 'model') {
+          coverEl.classList.add('project-cover--model');
+          // interactive=false: cover model cũng chỉ xem trước tĩnh, giống
+          // hệt model trong gallery/related — bấm vào mới mở lightbox và
+          // mới xoay/zoom được.
+          const mv = buildModelViewer(cover, project.title, false);
+          coverEl.appendChild(mv);
+          const toggle = buildModelVariantToggle(cover, mv);
+          if (toggle) coverEl.appendChild(toggle);
+        } else {
+          const img = document.createElement('img');
+          img.src = cover.src;
+          img.alt = project.title;
+          coverEl.appendChild(img);
+        }
+
+        // Cover chỉ có ĐÚNG 1 ô (không phải lưới nhiều ô như gallery/
+        // related) nên gắn thẳng click/keydown lên coverEl luôn, không cần
+        // qua bindZoomableTiles. Guard bằng dataset flag phòng khi hàm này
+        // lỡ được gọi lại nhiều lần (hiện tại initProjectDetail() chỉ chạy
+        // 1 lần lúc tải trang, nhưng gắn guard cho chắc).
+        if (!coverEl.dataset.zoomBound) {
+          coverEl.dataset.zoomBound = 'true';
+          coverEl.classList.add('project-cover--zoomable');
+          coverEl.setAttribute('role', 'button');
+          coverEl.tabIndex = 0;
+          // Dùng closure đọc zoomableSlides tại THỜI ĐIỂM BẤM (không phải
+          // lúc khai báo) — nên dù gallery bên dưới nối thêm slide vào
+          // mảng này SAU đoạn code này, lightbox mở ra từ cover vẫn thấy
+          // đầy đủ toàn bộ danh sách.
+          const openCoverLightbox = () => {
+            openMediaLightbox(zoomableSlides, coverZoomIndex);
+          };
+          coverEl.addEventListener('click', (event) => {
+            if (event.target.closest('.model-variant-toggle')) return;
+            openCoverLightbox();
+          });
+          coverEl.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            if (event.target.closest('.model-variant-toggle')) return;
+            event.preventDefault();
+            openCoverLightbox();
+          });
+        }
       } else if (cover.type === 'video') {
         const video = document.createElement('video');
         video.src = cover.src;
@@ -1306,11 +1446,6 @@ function initProjectDetail() {
         video.preload = 'metadata';
         if (cover.poster) video.poster = cover.poster;
         coverEl.appendChild(video);
-      } else {
-        const img = document.createElement('img');
-        img.src = cover.src;
-        img.alt = project.title;
-        coverEl.appendChild(img);
       }
     }
   }
@@ -1410,16 +1545,34 @@ function initProjectDetail() {
     teamEl.hidden = !project.team;
   }
 
+  // Nút "Xem project khác" (link ngoài, ví dụ Behance) — tự bật/tắt theo
+  // project.externalLink trong data-2d.js/data-3d.js:
+  //   - Có khai báo (chuỗi URL, VD: 'https://www.behance.net/gallery/xxx')
+  //     → gán href rồi hiện nút.
+  //   - Không khai báo (bỏ hẳn field, hoặc = '' / false) → nút tự ẩn
+  //     (hidden), không cần đụng gì tới HTML/CSS.
+  // Text nút (data-vi/data-en) đã được applyLanguage() xử lý chung, không
+  // cần set lại textContent ở đây.
+  if (externalLinkEl) {
+    if (project.externalLink) {
+      externalLinkEl.href = project.externalLink;
+      externalLinkEl.hidden = false;
+    } else {
+      externalLinkEl.hidden = true;
+      externalLinkEl.removeAttribute('href');
+    }
+  }
+
   // --- Gallery kiểu "zodiac"/Pinterest: hiện ảnh/video/model trong
   // project.slides. Nếu project.cover trùng src với 1 slide nào đó, slide
   // đó tự bị bỏ khỏi đây để không lặp lại ảnh (xem so khớp cover ở trên).
   // Số cột được TỰ CHỌN theo số lượng ảnh hiển thị — càng nhiều ảnh, chia
   // càng nhiều cột; chỉ 1-2 ảnh thì hiện full khung cho dễ nhìn. Muốn đổi
   // ngưỡng/số cột, sửa trong pickGalleryColumnClass() ở mục 8c bên dưới.
-  // Riêng slide ẢNH có thêm khả năng bấm để phóng to (xem bindZoomableTiles/
-  // initMediaLightbox bên dưới) — video/model đã có tương tác riêng (play,
-  // xoay 360°) ngay trong ô nên không cần phóng to thêm, bấm vào đó vẫn
-  // dùng đúng công cụ gốc của nó. ---
+  // Slide ẢNH, MODEL và VIDEO đều bấm để phóng to được (xem bindZoomableTiles/
+  // initMediaLightbox bên dưới) — model/video trong ô chỉ là xem trước tĩnh
+  // (không controls/không xoay được), tương tác thật (play, xoay 360°) CHỈ
+  // có SAU KHI đã mở lightbox. ---
   // Bố cục 5:2 (gallery trái / info phải) CHỈ áp dụng khi gallery thực sự có
   // ảnh/video/model để hiện. Nếu renderedSlides rỗng (VD: project chỉ khai
   // báo 1 slide và slide đó trùng src với cover nên bị lọc bỏ, hoặc project
@@ -1432,7 +1585,10 @@ function initProjectDetail() {
 
   if (galleryEl) {
     galleryEl.innerHTML = '';
-    const zoomableSlides = []; // chỉ chứa slide ảnh, theo đúng thứ tự hiển thị
+    // zoomableSlides đã khai báo dùng chung với cover ở trên — nếu cover
+    // zoomable thì nó đã chiếm index 0, các slide dưới đây tự nối tiếp
+    // đúng theo giá trị zoomableSlides.length hiện tại (không cần đổi gì
+    // thêm ở vòng lặp bên dưới).
     // (project.slides || []): project có cover nhưng chưa kịp khai slides (ví
     // dụ đang làm dở) sẽ không còn làm crash initProjectDetail() nữa — gallery
     // chỉ đơn giản coi như rỗng, trang vẫn hiện đầy đủ phần cover + info.
@@ -1463,8 +1619,11 @@ function initProjectDetail() {
         tile.classList.add('project-gallery__tile--model');
         // buildModelViewer()/buildModelVariantToggle(): xem giải thích đầy
         // đủ về chỉnh sáng + cơ chế nhiều biến thể (variants) ngay phía
-        // trên initProjectDetail().
-        const mv = buildModelViewer(slide, project.title);
+        // trên initProjectDetail(). interactive=false: model trong ô chỉ
+        // là xem trước tĩnh — bấm vào tile mới mở lightbox và MỚI có
+        // model-viewer thật sự xoay/zoom được, y hệt cách ảnh zoomable
+        // hoạt động (xem bindZoomableTiles/initMediaLightbox bên dưới).
+        const mv = buildModelViewer(slide, project.title, false);
         tile.appendChild(mv);
         const toggle = buildModelVariantToggle(slide, mv);
         if (toggle) {
@@ -1475,14 +1634,36 @@ function initProjectDetail() {
           badge.textContent = 'Model 3D';
           tile.appendChild(badge);
         }
+
+        tile.classList.add('project-gallery__tile--zoomable');
+        tile.dataset.zoomIndex = String(zoomableSlides.length);
+        zoomableSlides.push({
+          type: 'model',
+          src: getSlideSrc(slide),
+          poster: slide.poster,
+          alt: project.title,
+        });
       } else if (slide.type === 'video') {
+        // Video giờ cũng chỉ là preview TĨNH trong ô (bỏ hẳn `controls`),
+        // y hệt cách ảnh/model hoạt động — bấm vào tile mới mở lightbox,
+        // và CHỈ trong lightbox video mới thật sự phát được (tự có
+        // controls + autoplay, xem renderMedia() trong initMediaLightbox()).
+        // Nhờ vậy video cũng nằm chung 1 chuỗi Prev/Next với cover/ảnh/
+        // model/card liên quan, thay vì là vùng bấm-để-phát tách biệt như
+        // trước (lúc đó bấm vào nút play gốc của trình duyệt hay bị lẫn
+        // với việc mở lightbox, hành vi không nhất quán).
+        tile.classList.add('project-gallery__tile--zoomable');
         const video = document.createElement('video');
         video.src = slide.src;
-        video.controls = true;
+        video.muted = true;
         video.playsInline = true;
         video.preload = 'metadata';
         if (slide.poster) video.poster = slide.poster;
         tile.appendChild(video);
+
+        const videoIdx = zoomableSlides.length;
+        tile.dataset.zoomIndex = String(videoIdx);
+        zoomableSlides.push({ type: 'video', src: slide.src, poster: slide.poster, alt: project.title });
       } else {
         const img = document.createElement('img');
         img.src = slide.src;
@@ -1522,13 +1703,20 @@ function initProjectDetail() {
   // bấm vào chỉ mở lightbox phóng to media tại chỗ (ảnh/video/model đều
   // được, xem getItemMedia) — y hệt cách gallery chính (#projectGallery)
   // hoạt động, xem initMediaLightbox()/bindZoomableTiles() ở mục 8c.
+  //
+  // zoomableSlides (khai báo ở đầu hàm, dùng chung với cover + gallery)
+  // được truyền thẳng vào 2 hàm dựng khối bên dưới — item của TỪNG khối
+  // liên quan được nối tiếp vào CUỐI danh sách này theo đúng thứ tự xuất
+  // hiện trên trang. Kết quả: dù bấm vào cover, 1 ảnh trong gallery, hay
+  // 1 card trong bất kỳ khối liên quan nào, Prev/Next trong lightbox đều
+  // đi xuyên suốt TOÀN BỘ media của trang, theo đúng thứ tự từ trên xuống.
   if (relatedBlocksRoot) {
     relatedBlocksRoot.innerHTML = '';
     const lang0 = document.documentElement.lang === 'en' ? 'en' : 'vi';
     relatedBlocksList.forEach((block) => {
       const section = block.type === 'loop'
-        ? buildRelatedLoopBlock(block, lang0)
-        : buildRelatedCardsBlock(block, lang0);
+        ? buildRelatedLoopBlock(block, lang0, zoomableSlides)
+        : buildRelatedCardsBlock(block, lang0, zoomableSlides);
       relatedBlocksRoot.appendChild(section);
     });
   }
@@ -1556,9 +1744,10 @@ function pickGalleryColumnClass(count) {
    8c. LIGHTBOX PHÓNG TO MEDIA (trang chi tiết dự án)
    1 lightbox DUY NHẤT (#galleryLightbox) dùng chung cho MỌI nơi cần "bấm để
    phóng to" trong trang chi tiết dự án:
-     - #projectGallery: chỉ slide ẢNH mới zoomable (video/model đã có tương
-       tác riêng ngay trong ô — play, xoay 360° — nên không cần phóng to
-       thêm).
+     - #projectGallery: slide ẢNH và MODEL đều zoomable (model trong ô chỉ
+       là xem trước tĩnh, xoay/zoom thật CHỈ CÓ trong lightbox — xem
+       buildModelViewer()); riêng VIDEO vẫn giữ control gốc ngay trong ô,
+       không cần phóng to thêm.
      - #projectRelatedLoopTrack / #projectRelatedCardsGrid: card liên quan
        KHÔNG còn điều hướng sang trang dự án khác nữa — bấm vào chỉ phóng
        to ảnh/video/model ngay tại chỗ, y hệt cách gallery hoạt động (xem
@@ -1584,6 +1773,8 @@ function initMediaLightbox() {
 
   const counterEl = document.getElementById('lightboxCounter');
   const closeBtn = document.getElementById('lightboxClose');
+  const prevBtn = document.getElementById('lightboxPrev');
+  const nextBtn = document.getElementById('lightboxNext');
   let slides = [];
   let currentIndex = 0;
 
@@ -1634,6 +1825,14 @@ function initMediaLightbox() {
     slides = newSlides;
     currentIndex = index || 0;
     renderMedia();
+
+    // Chỉ 1 slide thì Prev/Next vô nghĩa (bấm cũng chỉ quay lại đúng ảnh
+    // đó) — ẩn hẳn 2 nút này đi, y hệt cách xử lý ở modal quickview trang
+    // danh sách (#projectModal) phía trên.
+    const hasMultiple = slides.length > 1;
+    if (prevBtn) prevBtn.hidden = !hasMultiple;
+    if (nextBtn) nextBtn.hidden = !hasMultiple;
+
     lightbox.classList.add('is-open');
     lightbox.setAttribute('aria-hidden', 'false');
     document.body.classList.add('no-scroll');
@@ -1687,6 +1886,11 @@ function bindZoomableTiles(containerEl, tileSelector, slides) {
   containerEl.dataset.zoomBound = 'true';
 
   containerEl.addEventListener('click', (event) => {
+    // Nút đổi biến thể model (texture/wireframe/clay...) nằm lồng bên
+    // trong tile — bấm nút đó chỉ để đổi variant xem trước, KHÔNG mở
+    // lightbox (nếu không chặn ở đây, mọi click trong tile — kể cả trúng
+    // nút — đều bị closest(tileSelector) bắt và mở lightbox luôn).
+    if (event.target.closest('.model-variant-toggle')) return;
     const tile = event.target.closest(tileSelector);
     if (!tile || !containerEl.contains(tile)) return;
     const idx = Number(tile.dataset.zoomIndex);
@@ -1698,6 +1902,7 @@ function bindZoomableTiles(containerEl, tileSelector, slides) {
   // — <a>/<button> vốn đã tự bắt Enter/Space nên không ảnh hưởng gì thêm.
   containerEl.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.target.closest('.model-variant-toggle')) return;
     const tile = event.target.closest(tileSelector);
     if (!tile || !containerEl.contains(tile)) return;
     event.preventDefault();
@@ -1728,7 +1933,12 @@ function appendMediaThumb(container, media, altText) {
     const mv = document.createElement('model-viewer');
     mv.setAttribute('src', media.src);
     if (media.poster) mv.setAttribute('poster', media.poster);
-    mv.setAttribute('camera-controls', '');
+    // KHÔNG gắn camera-controls ở đây — đây chỉ là ảnh đại diện tĩnh cho
+    // card liên quan (loop/cards), bấm vào card mới mở lightbox và MỚI có
+    // model-viewer thật sự xoay/zoom được (xem initMediaLightbox renderMedia
+    // ở dưới). Trước đây gắn camera-controls ngay tại đây khiến việc kéo để
+    // xoay model bị đè lên thao tác bấm-để-zoom và cuộn ngang của dải loop.
+    mv.classList.add('model-viewer--static');
     mv.setAttribute('shadow-intensity', '1.2');
     mv.setAttribute('shadow-softness', '0.75');
     mv.setAttribute('exposure', '0.85');
@@ -1769,7 +1979,12 @@ function buildRelatedBlockTitle(block, lang) {
 // dùng cho item type: 'loop' trong project.relatedBlocks (hoặc field cũ
 // project.relatedLoop). Card ở đây CÓ hiện chú thích (item.title) nếu có
 // khai báo, khác với khối 'cards' bên dưới (luôn bỏ hết chữ).
-function buildRelatedLoopBlock(block, lang) {
+// sharedSlides: mảng zoomableSlides DÙNG CHUNG với cover/gallery/các khối
+// liên quan khác trên trang (xem initProjectDetail()) — item của khối này
+// được nối tiếp vào CUỐI mảng đó theo đúng thứ tự hiển thị, để Prev/Next
+// trong lightbox đi xuyên suốt toàn trang thay vì chỉ quanh quẩn trong
+// đúng khối vừa bấm.
+function buildRelatedLoopBlock(block, lang, sharedSlides) {
   const items = block.items || [];
   const section = document.createElement('section');
   section.className = 'section-block';
@@ -1786,14 +2001,24 @@ function buildRelatedLoopBlock(block, lang) {
   viewport.appendChild(track);
   section.appendChild(viewport);
 
-  const buildLoopTile = (item, index, isDuplicate) => {
+  // Đẩy media của TỪNG item vào sharedSlides NGAY TỪ ĐẦU (trước khi build
+  // tile), ghi nhớ lại đúng index của nó trong danh sách dùng chung — tile
+  // gốc lẫn tile lặp (loop liền mạch) bên dưới đều tra lại đúng index này.
+  const itemZoomIndexes = items.map((item) => {
+    const media = getItemMedia(item) || {};
+    const idx = sharedSlides.length;
+    sharedSlides.push({ type: media.type || 'image', src: media.src, poster: media.poster, alt: item.title || '' });
+    return idx;
+  });
+
+  const buildLoopTile = (item, i, isDuplicate) => {
     const tile = document.createElement('div');
     tile.className = 'card';
     // Cả tile gốc lẫn tile lặp (isDuplicate) đều cần zoomIndex vì
     // người dùng hoàn toàn có thể bấm vào tile lặp khi nó đang cuộn
     // vào khung nhìn (kỹ thuật loop liền mạch) — chỉ khác nhau ở khả
     // năng focus bằng bàn phím/đọc màn hình bên dưới.
-    tile.dataset.zoomIndex = String(index);
+    tile.dataset.zoomIndex = String(itemZoomIndexes[i]);
     if (isDuplicate) {
       tile.setAttribute('aria-hidden', 'true');
       tile.tabIndex = -1;
@@ -1826,11 +2051,7 @@ function buildRelatedLoopBlock(block, lang) {
   items.forEach((item, i) => track.appendChild(buildLoopTile(item, i, false)));
   items.forEach((item, i) => track.appendChild(buildLoopTile(item, i, true)));
 
-  const loopMediaSlides = items.map((item) => {
-    const media = getItemMedia(item) || {};
-    return { type: media.type || 'image', src: media.src, poster: media.poster, alt: item.title || '' };
-  });
-  bindZoomableTiles(track, '.card', loopMediaSlides);
+  bindZoomableTiles(track, '.card', sharedSlides);
 
   return section;
 }
@@ -1841,7 +2062,9 @@ function buildRelatedLoopBlock(block, lang) {
 // ở đây KHÔNG hiện category/năm/title, chỉ đúng phần ảnh — item.large =
 // true thì card tràn hết chiều rộng khối (xem .gallery .card--large
 // trong style.css).
-function buildRelatedCardsBlock(block, lang) {
+// sharedSlides: xem chú thích ở buildRelatedLoopBlock() phía trên — cùng
+// cơ chế nối tiếp vào 1 danh sách dùng chung cho toàn trang.
+function buildRelatedCardsBlock(block, lang, sharedSlides) {
   const items = block.items || [];
   const section = document.createElement('section');
   section.className = 'section-block';
@@ -1855,7 +2078,7 @@ function buildRelatedCardsBlock(block, lang) {
   containerDiv.appendChild(grid);
   section.appendChild(containerDiv);
 
-  items.forEach((item, i) => {
+  items.forEach((item) => {
     const article = document.createElement('article');
     article.className = 'card';
     if (item.large) {
@@ -1864,21 +2087,21 @@ function buildRelatedCardsBlock(block, lang) {
     article.setAttribute('role', 'button');
     article.tabIndex = 0;
     if (item.title) article.setAttribute('aria-label', item.title);
-    article.dataset.zoomIndex = String(i);
 
-    const media = document.createElement('span');
-    media.className = 'card__media';
-    appendMediaThumb(media, getItemMedia(item), item.title);
-    article.appendChild(media);
+    const media = getItemMedia(item) || {};
+    const idx = sharedSlides.length;
+    sharedSlides.push({ type: media.type || 'image', src: media.src, poster: media.poster, alt: item.title || '' });
+    article.dataset.zoomIndex = String(idx);
+
+    const mediaEl = document.createElement('span');
+    mediaEl.className = 'card__media';
+    appendMediaThumb(mediaEl, media, item.title);
+    article.appendChild(mediaEl);
 
     grid.appendChild(article);
   });
 
-  const relatedMediaSlides = items.map((item) => {
-    const media = getItemMedia(item) || {};
-    return { type: media.type || 'image', src: media.src, poster: media.poster, alt: item.title || '' };
-  });
-  bindZoomableTiles(grid, '.card', relatedMediaSlides);
+  bindZoomableTiles(grid, '.card', sharedSlides);
 
   return section;
 }

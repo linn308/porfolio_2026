@@ -141,23 +141,7 @@
               <p class="project-hero__subtitle" id="projectSubtitle"></p>
 
               <p class="project-info__desc" id="projectDesc"></p>
- 
-              <!-- Nút liên kết đến project ở web khác (Sketchfab, ArtStation,
-                   itch.io, demo online, v.v.) — CHỈ hiện khi project khai báo
-                   project.externalLink trong data-3d.js (xem initProjectDetail
-                   trong js/script.js). Không khai báo (hoặc bỏ hẳn field này)
-                   thì nút tự ẩn (hidden), không cần sửa gì ở HTML này. -->
-              <a
-                href="#"
-                id="projectExternalLink"
-                class="btn btn--outline project-external-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                hidden
-                data-vi="Xem project khác →"
-                data-en="View external project →"
-              >Xem project khác →</a>
-              
+
               <!-- Chỉ hiện nếu project.team có trong data-3d.js (đóng góp
                    của bạn trong dự án nhóm) -->
               <div class="project-team" id="projectTeam" hidden>
@@ -189,6 +173,28 @@
            data-3d.js, KHÔNG cần sửa file HTML này nữa. Xem initProjectDetail()
            trong js/script.js. -->
       <div class="project-related-blocks" id="projectRelatedBlocks"></div>
+
+      <!-- Nút liên kết đến project ở web khác (Behance, Sketchfab,
+           ArtStation, demo online, v.v.) — ĐẶT Ở CUỐI BÀI, ngay trên footer,
+           không còn nằm trong aside info nữa. CHỈ hiện khi project khai báo
+           project.externalLink trong data-3d.js (xem initProjectDetail
+           trong js/script.js) — có khai báo thì JS tự gán href và hiện nút,
+           không khai báo (hoặc bỏ hẳn field) thì nút tự ẩn (hidden), không
+           cần sửa gì ở HTML này. -->
+      <section class="project-external-cta">
+        <div class="container">
+          <a
+            href="#"
+            id="projectExternalLink"
+            class="btn btn--outline project-external-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+            data-vi="Xem thêm trên Behance →"
+            data-en="View more on Behance →"
+          >Xem thêm trên Behance →</a>
+        </div>
+      </section>
     </div>
   </main>
 
