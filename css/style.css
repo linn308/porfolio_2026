@@ -2677,10 +2677,17 @@ body.page-home .card__overlay {
   /* Padding-top phải đủ chỗ cho nút Back đang neo cố định (position: fixed,
      xem .project-back) đè lên phía trên, KHÔNG được để cover ló lên đụng
      nút: 104px (top của nút Back) + ~44px (chiều cao thật của nút, tính
-     từ font-size + line-height + padding + border) + ~6px khoảng thở
-     giữa nút và cover ≈ 154px. Nếu sau này đổi padding/font-size của
-     .project-back thì nhớ tính lại số này cho khớp. */
-  padding: 154px 0 20px;
+     từ font-size + line-height + padding + border) + 48px khoảng thở
+     giữa nút và cover ≈ 196px. Khoảng 48px này CỐ TÌNH lấy bằng đúng
+     padding-top của .project-gallery-section (khoảng cách gallery ↔
+     đường border-top phía trên nó) để toàn bộ nhịp dọc của trang chi
+     tiết dự án (back ↔ cover ↔ border ↔ gallery ↔ related ↔
+     external-link) đều nhau. Nếu sau này đổi padding/font-size của
+     .project-back thì nhớ tính lại số 196px này cho khớp; nếu đổi mốc
+     48px thì sửa luôn ở .project-gallery-section, .section-block
+     (:first-child/:last-child) và .project-hero (padding-bottom) cho
+     đồng bộ. */
+  padding: 196px 0 48px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -2713,7 +2720,11 @@ body.page-home .card__overlay {
   font-family: var(--font-mono);
 }
 
-.project-gallery-section { padding: 48px 0 60px; }
+/* padding-bottom = 0: khoảng cách gallery-section ↔ related-blocks giờ do
+   .section-block:first-child (padding-top: 48px, xem mục 12b) đảm nhiệm
+   trọn vẹn, để không bị cộng dồn 2 lớp padding thành khoảng cách to hơn
+   mốc 48px chung của cả trang. */
+.project-gallery-section { padding: 48px 0 0; }
 
 /* Masonry "zodiac" cho trang chi tiết dự án: KHÔNG còn kiểu "1 khung lớn +
    dải thumbnail nhỏ chọn từng cái" nữa — giờ hiện TẤT CẢ ảnh/video/model
@@ -3212,6 +3223,19 @@ body.page-home .card__overlay {
    ========================================================================== */
 .section-block { padding: 70px 0; }
 .section-block + .section-block { padding-top: 0; }
+
+/* Khớp mốc 48px chung của trang chi tiết dự án (xem .project-hero /
+   .project-gallery-section): khối related ĐẦU TIÊN lấy đúng 48px làm
+   khoảng cách với gallery-section phía trên (thay vì 70px mặc định), còn
+   khối related CUỐI CÙNG lấy đúng 48px làm khoảng cách với
+   .project-external-cta phía dưới. Nếu chỉ có 1 khối related (trường hợp
+   phổ biến nhất) thì nó vừa là :first-child vừa là :last-child nên cả 2
+   phía trên/dưới đều tự động thành 48px. Khoảng cách 70px mặc định vẫn
+   giữ nguyên cho khoảng GIỮA 2 khối related liên tiếp (loop + cards) —
+   phần này không nằm trong nhịp back/cover/gallery/related/external-link
+   cần đồng bộ. */
+.project-related-blocks .section-block:first-child { padding-top: 48px; }
+.project-related-blocks .section-block:last-child { padding-bottom: 48px; }
 
 /* Thanh tiêu đề "text" trong sườn — 1 dải nền tối kéo full width, tách
    biệt rõ với khối phía trên/dưới, đúng tinh thần "chỉ khi được gọi ra". */

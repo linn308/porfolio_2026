@@ -130,7 +130,6 @@ const PROJECTS_3D = {
     //   slides: [
     //   { type: 'image', src: '../../assets/3d/crusader/0100.png' },
     // ],
-
     relatedBlocks:[
       { title: { vi: 'Kord — Character Design & 3D Modeling', en: 'Kord — Character Design & 3D Modeling' },
         type: 'cards', 
@@ -163,8 +162,8 @@ const PROJECTS_3D = {
     year: '2022',
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
-      vi: 'Model Prop — Hard Surface Modeling Study',
-      en: 'Model Prop — Hard Surface Modeling Study',
+      vi: '3D Prop — Hard Surface Modeling Study',
+      en: '3D Prop — Hard Surface Modeling Study',
     },
     desc: {
       vi: 'Mô phỏng 3D hai biến thể trụ nước cứu hỏa dựa trên hình ảnh tham chiếu. Thực hiện quy trình dựng hình từ Lowpoly đến Highpoly, kiểm soát lưới chặt chẽ và tối ưu hóa file OBJ sạch.',
@@ -175,8 +174,8 @@ const PROJECTS_3D = {
     slides: [
       {type: 'model',
         variants: [
-          { label: { vi: 'Nhiều lưới', en: 'Highpoly' }, src: '../../assets/3d/WH/00.glb' },
-          { label: { vi: 'Ít lưới',  en: 'Lowpoly' }, src: '../../assets/3d/WH/01.glb' },
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/WH/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/WH/01.glb' },
         ],
       }
     ],
@@ -185,11 +184,15 @@ const PROJECTS_3D = {
   box: {
     title: 'Sci-Fi Biohazard Storage',
     year: '2022',
-    cover: { type: 'model', src: '../../assets/3d/box/00.glb'},
+    cover: { type: 'Model', 
+      variants: [
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/box/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/box/01.glb' },
+        ],},
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
-      vi: 'Model Prop — Hard Surface Modeling Study',
-      en: 'Model Prop — Hard Surface Modeling Study',
+      vi: '3D Prop — Hard Surface Modeling Study',
+      en: '3D Prop — Hard Surface Modeling Study',
     },
     desc: {
       vi: 'Mô phỏng 3D một thùng chứa vật liệu sinh học phong cách Sci-Fi dựa trên hình ảnh tham chiếu. Tập trung vào dựng hình, kiểm soát lưới chặt chẽ và tối ưu hóa, sẵn sàng cho các pipeline game hoặc render.',
@@ -199,20 +202,30 @@ const PROJECTS_3D = {
     styleTags: ['Industrial', 'Hard-Surface', 'Sci-Fi', '3D Modeling'],
   },
 
-  'fight-for-life': {
+  FFL: {
     title: 'FIGHT FOR LIFE',
+    year: '2023',
+    cover: { type: 'video', src: '../../assets/3d/FFL/000.mp4', poster: '../../assets/3d/FFL/001.webp' },
     category: { vi: 'Animation', en: 'Animation' },
     subtitle: {
       vi: '3D Short Film — Đồ án xuất sắc',
       en: '3D Short Film — Excellent Project',
     },
     desc: {
-      vi: 'Phim ngắn 3D phong cách Cel-look Anime, đạt loại xuất sắc. Đảm nhận Storyboard và Layout Artist, dàn dựng bố cục khung hình và nhịp kể chuyện cho toàn bộ short film. Bộ ảnh gồm storyboard, frame layout và still cuối phim.',
-      en: 'A Cel-look Anime style 3D short film, graded excellent. Worked as Storyboard and Layout Artist, shaping the frame composition and pacing across the whole short film. The set includes storyboard frames, layout shots and final film stills.',
+      vi: 'Là một phim ngắn 3D kể về hành trình sinh tồn của một chú cua cố gắng thoát khỏi bồn rửa để trở về biển. Câu chuyện khai thác chủ đề sinh tồn, hy vọng và sự bất định của số phận. Project lấy cảm hứng từ Oktapodi.',
+      en: 'A 3D short film following a crab’s desperate attempt to escape a kitchen sink and return to the sea. The story explores survival, hope, and the unpredictability of fate, inspired by Oktapodi.',
     },
-    tools: ['Cel-look', 'Storyboard', 'Layout'],
-    styleTags: ['Cel-look Anime', 'Short Film', 'Action'],
-    // team: { vi: 'Dự án nhóm — Đóng góp: Storyboard & Layout Artist.', en: 'Team project — Contribution: Storyboard & Layout Artist.' }, // bỏ comment nếu đây là đồ án nhóm
+    tools: ['Maya', 'Substance Painter', 'Unreal', 'After Effects', 'Premiere Pro', 'Photoshop'],
+    styleTags: ['3D Short Film', 'Animation', 'Storyboard', 'Stylized 3D', 'Comedic'],
+    externalLink: 'https://www.behance.net/gallery/182115825/Fight-For-Life-3D-Short-Film',
+    team: {
+      vi: { label: 'Đóng góp', 
+            text: ['Tôi giữ vai trò lead về Story & Animation, chịu trách nhiệm phát triển concept và định hướng chính cho project, xây dựng script, storyboard, layout và triển khai animation cho phim.',
+                  ' Bên cạnh đó, tôi tham gia hỗ trợ 3D modeling trong quá trình sản xuất.'] },
+      en: { label: 'Contribution', 
+            text: ['I took the lead in Story & Animation, driving the project’s main concept and direction while developing the script, storyboard, layout, and animation for the film.',
+                  'I also supported the team with 3D modeling throughout production.']},
+    },
     slides: [
       { type: 'image', src: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop' },
       { type: 'image', src: 'https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=1400&auto=format&fit=crop' },
@@ -221,14 +234,14 @@ const PROJECTS_3D = {
   },
 
 
-  'pixivore': {
+  pixivore: {
     title: 'Pixivore',
     cover: {type: 'image', src:'../../assets/3d/pixivore/001.webp'},
     year: '2022',
     category: { vi: 'Modeling', en: 'Modeling' },
     subtitle: {
-      vi: 'Pixivore - 3D Character Modeling Study',
-      en: 'Pixivore - 3D Character Modeling Study',
+      vi: '3D Character - Modeling Study',
+      en: '3D Character - Modeling Study',
     },
     desc: {
       vi: 'Bài tập dựng nhân vật 3D cho game, thực hiện dựa trên hình ảnh reference có sẵn trên mạng. Tôi tự phát triển model từ đầu và hoàn thiện nhân vật qua các bước 3D Modeling và Texturing, tập trung tái hiện hình dáng, chi tiết và chất liệu của nhân vật từ reference.',
@@ -264,8 +277,8 @@ const PROJECTS_3D = {
     cover: { type: 'image', src: '../../assets/3d/spider/000.png'},
     category: { vi: 'Scuplt', en: 'Scuplt' },
     subtitle: {
-      vi: 'Sinh vật Giáp xác — Scuplting',
-      en: 'Abyssal Scavenge — Scuplting',
+      vi: '3D Scuplting — Dự án cá nhân',
+      en: '3D Scuplting — Personal Project',
     },
     desc: {
       vi: 'Dự án cá nhân thực hiện sculpting 3D một sinh vật giáp xác mang phong cách khoa học viễn tưởng bằng ZBrush, dựa trên hình ảnh tham chiếu tổng hợp từ internet. Tác phẩm tập trung vào việc tạo hình các khối cơ bắp, vỏ giáp phân đoạn, các chi tiết sinh học phức tạp và thần thái của một sinh vật biển sâu.',
@@ -279,12 +292,106 @@ const PROJECTS_3D = {
                 { media: {type: 'image', src: '../../assets/3d/spider/02.webp' }},
                 { media: {type: 'image', src: '../../assets/3d/spider/03.webp' }},
                 { media: {type: 'image', src: '../../assets/3d/spider/04.webp' }},
-                { media: {type: 'image', src: '../../assets/3d/spider/001.webp' }},]
+                { media: {type: 'image', src: '../../assets/3d/spider/001.webp', large: true }},]
       },
     ],
-
   },
 
+  mosquito: {
+    title: 'Mosquito',
+    year: '2023',
+    cover: { type: 'image', src: '../../assets/3d/mosquito/000.png'},
+    category: { vi: 'Scuplt', en: 'Scuplt' },
+    subtitle: {
+      vi: '3D Scuplting — Dự án cá nhân',
+      en: '3D Scuplting — Personal Project',
+    },
+    desc: {
+      vi: 'Dự án cá nhân thực hiện sculpting highpoly một sinh vật côn trùng khổng lồ (tựa muỗi) bằng ZBrush, dựa trên hình ảnh tham chiếu từ internet. Tác phẩm tập trung vào việc nghiên cứu cấu trúc giải phẫu côn trùng, các khớp chân phân đoạn và tạo hình vòi hút đặc trưng theo phong cách stylized.',
+      en: 'A personal highpoly sculpting project of a giant insectoid creature (mosquito-like) created in ZBrush, based on online references. The piece focuses on studying insect anatomy, segmented leg joints, and creating a stylized proboscis.',
+    },
+    tools: ['ZBrush'],
+    styleTags: ['ZBrush', 'Sculpting', 'Creature Design', 'Insectoid', 'Stylized'],
+    relatedBlocks:[
+      {type: 'cards', 
+        items: [{ media: {type: 'image', src: '../../assets/3d/mosquito/01.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/mosquito/02.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/mosquito/03.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/mosquito/04.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/mosquito/001.webp', large: true }},]
+      },
+    ],
+  },
+
+  egypt: {
+    title: 'Egypt',
+    year: '2023',
+    cover: { type: 'image', src: '../../assets/3d/egypt/000.png'},
+    category: { vi: 'Scuplt', en: 'Scuplt' },
+    subtitle: {
+      vi: '3D Scuplting — Scuplting Study',
+      en: '3D Scuplting — Scuplting Study',
+    },
+    desc: {
+      vi: 'Dựa trên hình ảnh reference từ ArtStation. Tôi thực hiện toàn bộ quá trình digital sculpting trong ZBrush, tập trung xây dựng anatomy, silhouette, trang phục và các chi tiết bề mặt của nhân vật.',
+      en: 'Based on a visual reference from ArtStation. The character was fully sculpted in ZBrush, focusing on anatomy, silhouette, costume design, and surface details.',
+    },
+    tools: ['ZBrush'],
+    styleTags: ['Semi-Realistic', 'Sculpting', 'Character Sculpt', 'Dark Fantasy', 'Creature Design'],
+    relatedBlocks:[
+      {type: 'cards', 
+        items: [{ media: {type: 'image', src: '../../assets/3d/egypt/01.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/egypt/02.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/egypt/03.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/egypt/04.webp' }},
+                { media: {type: 'image', src: '../../assets/3d/egypt/001.webp', large: true }},]
+      },
+    ],
+  },
+
+  tools: {
+    title: 'Hand Tools',
+    year: '2023',
+    cover: { type: 'Model', 
+      variants: [
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/tools/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/tools/01.glb' },
+        ],},
+    category: { vi: 'Model', en: 'Model' },
+    subtitle: {
+      vi: '3D Modeling — Dự án cá nhân',
+      en: '3D Modeling — Personal Project',
+    },
+    desc: {
+      vi: 'Dựa trên hình ảnh reference từ ArtStation. Tôi thực hiện toàn bộ quá trình digital sculpting trong ZBrush, tập trung xây dựng anatomy, silhouette, trang phục và các chi tiết bề mặt của nhân vật.',
+      en: 'Based on a visual reference from ArtStation. The character was fully sculpted in ZBrush, focusing on anatomy, silhouette, costume design, and surface details.',
+    },
+    tools: ['Maya'],
+    styleTags: ['Semi-Realistic', 'Sculpting', 'Character Sculpt', 'Dark Fantasy', 'Creature Design'],
+  },
+
+  aniFP: {
+    title: 'Facial Phonemes',
+    year: '2023',
+    cover: { type: 'video', src: '../../assets/3d/ani-FP/001.mp4', poster: '../../assets/3d/ani-FP/001.webp' },
+    category: { vi: 'Animation', en: 'Animation' },
+    subtitle: {
+      vi: '3D Animation — Animation Study',
+      en: '3D Animation — Animation Study',
+    },
+    desc: {
+      vi: 'Mô phỏng lại phân cảnh thoại của nhân vật Boss Baby. Tác phẩm tập trung vào kỹ thuật lip-sync theo khẩu hình kết hợp với chuyển động cơ thể và biểu cảm gương mặt',
+      en: 'Recreating a dialogue scene from Boss Baby. The piece focuses on phoneme-based lip-sync, combined with body mechanics and facial expressions.',
+    },
+    tools: ['Maya'],
+    styleTags: ['Animation'],
+    relatedBlocks:[
+      {type: 'cards', 
+        items: [  { title: 'video', media: { type: 'video', src: '../../assets/3d/ani-FP/000.mp4' }, large: true },
+        ],
+      },
+    ],
+  },
 
 
 };
