@@ -1170,13 +1170,32 @@ function initLightbox() {
 // --------------------------------------------------------------------------
 
 // Lấy đúng src "đại diện" của 1 slide model để so sánh trùng với cover —
-// ưu tiên biến thể đầu tiên nếu slide khai theo kiểu variants.
+// ưu tiên biến thể đầu tiên nếu slide khai theo kiểu variants. Dùng cho so
+// khớp trùng lặp (cover/slide) lúc dựng trang — KHÔNG đổi theo biến thể
+// đang được chọn, xem getActiveSlideSrc() ngay bên dưới nếu cần src đang
+// hiển thị thật sự.
 function getSlideSrc(slide) {
   if (!slide) return null;
   if (Array.isArray(slide.variants) && slide.variants.length) {
     return slide.variants[0].src;
   }
   return slide.src;
+}
+
+// Trả về src của ĐÚNG biến thể đang được chọn (modelData.activeVariantIndex)
+// — khác getSlideSrc() ở trên (luôn lấy biến thể đầu tiên). Dùng mỗi khi
+// cần hiện model lên (cả preview tĩnh ngoài cover/tile lẫn model-viewer
+// thật trong lightbox), để nếu người dùng đã gạt sang biến thể khác (VD
+// Lowpoly) TRƯỚC KHI bấm phóng to, lightbox mở ra vẫn đúng biến thể đó
+// thay vì luôn quay về biến thể đầu tiên.
+function getActiveSlideSrc(modelData) {
+  if (!modelData) return null;
+  if (Array.isArray(modelData.variants) && modelData.variants.length) {
+    const idx = Number.isInteger(modelData.activeVariantIndex) ? modelData.activeVariantIndex : 0;
+    const clamped = Math.max(0, Math.min(idx, modelData.variants.length - 1));
+    return modelData.variants[clamped].src;
+  }
+  return modelData.src;
 }
 
 // interactive = true  → gắn camera-controls, model xoay/zoom kéo được ngay
@@ -1192,7 +1211,7 @@ function getSlideSrc(slide) {
 //                        bấm-để-zoom hoặc cuộn ngang (dải loop liên quan).
 function buildModelViewer(modelData, altText, interactive = true) {
   const mv = document.createElement('model-viewer');
-  const initialSrc = getSlideSrc(modelData);
+  const initialSrc = getActiveSlideSrc(modelData);
   mv.setAttribute('src', initialSrc);
   if (modelData.poster) mv.setAttribute('poster', modelData.poster);
   if (interactive) {
@@ -1223,6 +1242,33 @@ function buildModelViewer(modelData, altText, interactive = true) {
   return mv;
 }
 
+// Đổi biến thể đang chọn — dùng CHUNG bởi MỌI nơi hiện model của cùng 1
+// modelData (preview tĩnh ở cover/tile NGOÀI, VÀ model-viewer thật trong
+// lightbox sau khi bấm phóng to). modelData.activeVariantIndex là "nguồn
+// sự thật" duy nhất; mỗi nơi hiện model tự đăng ký 1 "view" (xem
+// buildModelVariantToggle/buildModelVariantSwitch bên dưới) vào
+// modelData._variantViews lúc dựng — applyVariantIndex() sau đó cập nhật
+// LẠI TẤT CẢ các view đang còn nằm trong DOM (view.mv.isConnected) mỗi khi
+// có 1 nút gạt bất kỳ (ngoài cover/tile HOẶC trong lightbox) được bấm.
+// Nhờ vậy: gạt ở ngoài rồi bấm phóng to → lightbox mở đúng biến thể vừa
+// chọn; gạt tiếp trong lightbox → đóng lightbox lại, cover/tile ngoài cũng
+// đã tự cập nhật theo, không bị lệch giữa 2 nơi.
+function applyVariantIndex(modelData, index) {
+  if (!Array.isArray(modelData.variants) || !modelData.variants.length) return;
+  const clamped = Math.max(0, Math.min(index, modelData.variants.length - 1));
+  modelData.activeVariantIndex = clamped;
+
+  // Dọn các view đã rời DOM (tile/lightbox cũ bị dựng lại từ lần trước) để
+  // mảng không phình to mãi qua nhiều lần mở lightbox/chuyển slide.
+  const views = (modelData._variantViews || []).filter((view) => view.mv && view.mv.isConnected);
+  modelData._variantViews = views;
+
+  views.forEach((view) => {
+    view.mv.setAttribute('src', modelData.variants[clamped].src);
+    if (view.updateUI) view.updateUI(clamped);
+  });
+}
+
 // Trả về null nếu modelData không khai "variants" (hoặc chỉ có 1 biến thể)
 // — khi đó nơi gọi hàm này tự hiện lại badge "Model 3D" như cũ.
 // ĐÚNG 2 biến thể (trường hợp hiện tại, VD Highpoly/Lowpoly) → dựng thành
@@ -1230,8 +1276,13 @@ function buildModelViewer(modelData, altText, interactive = true) {
 // buildModelVariantSwitch() bên dưới. Từ 3 biến thể trở lên (nếu sau này
 // có thêm) → giữ nguyên kiểu cũ: nhiều nút pill có chữ, vì gạt qua-lại chỉ
 // hợp lý cho đúng 2 lựa chọn.
+// Gọi được nhiều lần cho CÙNG 1 modelData (VD 1 lần lúc dựng cover/tile
+// ngoài, 1 lần nữa mỗi khi lightbox mở lại model đó) — mỗi lần dựng 1 bộ
+// nút MỚI gắn với đúng model-viewer `mv` truyền vào, nhưng tất cả đều đọc/
+// ghi chung modelData.activeVariantIndex nên luôn đồng bộ với nhau.
 function buildModelVariantToggle(modelData, mv) {
   if (!Array.isArray(modelData.variants) || modelData.variants.length < 2) return null;
+  if (!Number.isInteger(modelData.activeVariantIndex)) modelData.activeVariantIndex = 0;
 
   if (modelData.variants.length === 2) {
     return buildModelVariantSwitch(modelData, mv);
@@ -1239,12 +1290,13 @@ function buildModelVariantToggle(modelData, mv) {
 
   const wrap = document.createElement('div');
   wrap.className = 'model-variant-toggle';
+  const buttons = [];
 
   modelData.variants.forEach((variant, index) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'model-variant-toggle__btn';
-    btn.classList.toggle('is-active', index === 0);
+    btn.classList.toggle('is-active', index === modelData.activeVariantIndex);
 
     const label = variant.label;
     if (label && typeof label === 'object') {
@@ -1258,14 +1310,20 @@ function buildModelVariantToggle(modelData, mv) {
     }
 
     btn.addEventListener('click', () => {
-      if (btn.classList.contains('is-active')) return;
-      mv.setAttribute('src', variant.src);
-      wrap.querySelectorAll('.model-variant-toggle__btn').forEach((b) => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
+      if (index === modelData.activeVariantIndex) return;
+      applyVariantIndex(modelData, index);
     });
 
+    buttons.push(btn);
     wrap.appendChild(btn);
   });
+
+  const updateUI = (activeIndex) => {
+    buttons.forEach((b, i) => b.classList.toggle('is-active', i === activeIndex));
+  };
+
+  if (!modelData._variantViews) modelData._variantViews = [];
+  modelData._variantViews.push({ mv, updateUI });
 
   return wrap;
 }
@@ -1293,7 +1351,10 @@ function buildModelVariantSwitch(modelData, mv) {
   btn.type = 'button';
   btn.className = 'model-variant-toggle__switch';
   btn.setAttribute('role', 'switch');
-  btn.setAttribute('aria-pressed', 'false');
+  // Khởi tạo ĐÚNG theo modelData.activeVariantIndex hiện tại (không luôn
+  // luôn 'false') — quan trọng khi hàm này được gọi lại để dựng nút trong
+  // lightbox SAU KHI người dùng đã gạt sang biến thể thứ 2 ở ngoài cover.
+  btn.setAttribute('aria-pressed', String(modelData.activeVariantIndex === 1));
   btn.title = `${labelText(first)} / ${labelText(second)}`;
 
   const knob = document.createElement('span');
@@ -1302,12 +1363,18 @@ function buildModelVariantSwitch(modelData, mv) {
 
   btn.addEventListener('click', () => {
     const isSecond = btn.getAttribute('aria-pressed') === 'true';
-    const next = isSecond ? first : second;
-    mv.setAttribute('src', next.src);
-    btn.setAttribute('aria-pressed', String(!isSecond));
+    applyVariantIndex(modelData, isSecond ? 0 : 1);
   });
 
   wrap.appendChild(btn);
+
+  const updateUI = (activeIndex) => {
+    btn.setAttribute('aria-pressed', String(activeIndex === 1));
+  };
+
+  if (!modelData._variantViews) modelData._variantViews = [];
+  modelData._variantViews.push({ mv, updateUI });
+
   return wrap;
 }
 
@@ -1383,18 +1450,30 @@ function initProjectDetail() {
     coverEl.innerHTML = '';
     coverEl.hidden = !cover;
     coverEl.classList.remove('project-cover--model', 'project-cover--zoomable');
+    // So khớp type không phân biệt hoa/thường ('model'/'Model'...) — dữ
+    // liệu khai trong data-2d.js/data-3d.js đôi khi lỡ viết hoa chữ đầu,
+    // trước đây khiến cả nhánh model bị bỏ qua hoàn toàn (cover trống trơn).
+    const coverType = String((cover && cover.type) || '').toLowerCase();
     if (cover) {
-      if (cover.type === 'model' || cover.type === 'image') {
+      if (coverType === 'model' || coverType === 'image') {
         // Cả cover kiểu model lẫn kiểu ảnh đều phóng to được — gộp chung 1
         // nhánh để cùng đăng ký vào zoomableSlides/click handler bên dưới.
         coverZoomIndex = zoomableSlides.length;
-        zoomableSlides.push(
-          cover.type === 'model'
-            ? { type: 'model', src: getSlideSrc(cover), poster: cover.poster, alt: project.title }
-            : { src: cover.src, alt: project.title }
-        );
+        if (coverType === 'model') {
+          // QUAN TRỌNG: đẩy THẲNG object `cover` (không tạo bản sao) vào
+          // zoomableSlides — nhờ vậy lightbox mở ra từ cover đọc CHUNG
+          // đúng field variants/activeVariantIndex với preview tĩnh ngoài
+          // cover, và applyVariantIndex()/buildModelVariantToggle() ở trên
+          // tự đồng bộ 2 chiều giữa nút gạt ngoài cover và nút gạt trong
+          // lightbox (xem giải thích đầy đủ ở đầu 2 hàm đó).
+          cover.type = 'model'; // chuẩn hoá lại chữ thường, dùng tiếp bên dưới/trong lightbox
+          if (!cover.alt) cover.alt = project.title;
+          zoomableSlides.push(cover);
+        } else {
+          zoomableSlides.push({ src: cover.src, alt: project.title });
+        }
 
-        if (cover.type === 'model') {
+        if (coverType === 'model') {
           coverEl.classList.add('project-cover--model');
           // interactive=false: cover model cũng chỉ xem trước tĩnh, giống
           // hệt model trong gallery/related — bấm vào mới mở lightbox và
@@ -1438,7 +1517,7 @@ function initProjectDetail() {
             openCoverLightbox();
           });
         }
-      } else if (cover.type === 'video') {
+      } else if (coverType === 'video') {
         const video = document.createElement('video');
         video.src = cover.src;
         video.controls = true;
@@ -1637,12 +1716,11 @@ function initProjectDetail() {
 
         tile.classList.add('project-gallery__tile--zoomable');
         tile.dataset.zoomIndex = String(zoomableSlides.length);
-        zoomableSlides.push({
-          type: 'model',
-          src: getSlideSrc(slide),
-          poster: slide.poster,
-          alt: project.title,
-        });
+        // Đẩy THẲNG `slide` (không tạo bản sao) — cùng lý do đã giải thích
+        // ở nhánh cover model phía trên: giữ chung field variants/
+        // activeVariantIndex giữa tile ngoài gallery và lightbox.
+        if (!slide.alt) slide.alt = project.title;
+        zoomableSlides.push(slide);
       } else if (slide.type === 'video') {
         // Video giờ cũng chỉ là preview TĨNH trong ô (bỏ hẳn `controls`),
         // y hệt cách ảnh/model hoạt động — bấm vào tile mới mở lightbox,
@@ -1795,7 +1873,11 @@ function initMediaLightbox() {
     } else if (slide.type === 'model') {
       const mv = document.createElement('model-viewer');
       mv.className = 'lightbox__model';
-      mv.setAttribute('src', slide.src);
+      // getActiveSlideSrc(): nếu slide có nhiều biến thể (Highpoly/Lowpoly...)
+      // VÀ người dùng đã gạt biến thể ở cover/tile NGOÀI trước khi bấm
+      // phóng to, lightbox mở ra vẫn hiện ĐÚNG biến thể vừa chọn — không tự
+      // quay lại biến thể đầu tiên.
+      mv.setAttribute('src', getActiveSlideSrc(slide));
       if (slide.poster) mv.setAttribute('poster', slide.poster);
       mv.setAttribute('camera-controls', '');
       // Cùng bộ chỉnh sáng với model trong gallery chính — xem giải thích
@@ -1807,6 +1889,16 @@ function initMediaLightbox() {
       mv.setAttribute('environment-image', 'neutral');
       mv.setAttribute('alt', slide.alt || '');
       panel.appendChild(mv);
+
+      // Model có nhiều biến thể → hiện lại ĐÚNG nút gạt đó ngay trong
+      // lightbox (dùng lại buildModelVariantToggle() — xem giải thích đồng
+      // bộ 2 chiều ở đầu hàm đó/applyVariantIndex()), để xem full-screen
+      // vẫn đổi qua lại Highpoly/Lowpoly được, không chỉ ở ngoài cover/tile.
+      const toggle = buildModelVariantToggle(slide, mv);
+      if (toggle) {
+        toggle.classList.add('model-variant-toggle--lightbox');
+        panel.appendChild(toggle);
+      }
     } else {
       const img = document.createElement('img');
       img.className = 'lightbox__img';

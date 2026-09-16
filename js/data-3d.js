@@ -184,7 +184,7 @@ const PROJECTS_3D = {
   box: {
     title: 'Sci-Fi Biohazard Storage',
     year: '2022',
-    cover: { type: 'Model', 
+    cover: { type: 'model', 
       variants: [
           { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/box/00.glb' },
           { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/box/01.glb' },
@@ -352,7 +352,7 @@ const PROJECTS_3D = {
   tools: {
     title: 'Hand Tools',
     year: '2023',
-    cover: { type: 'Model', 
+    cover: { type: 'model', 
       variants: [
           { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/tools/00.glb' },
           { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/tools/01.glb' },

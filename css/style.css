@@ -2907,6 +2907,17 @@ body.page-home .card__overlay {
   background: var(--accent-warm);
 }
 
+/* Nút gạt biến thể hiện lại BÊN TRONG lightbox (sau khi bấm phóng to model
+   có nhiều biến thể — xem renderMedia() trong initMediaLightbox() ở
+   js/script.js). .lightbox__panel đã có position: relative nên vẫn dùng
+   được đúng .model-variant-toggle (position: absolute) như ở cover/tile
+   ngoài — chỉ nới khoảng cách ra 1 chút cho đồng bộ với các nút điều
+   khiển khác của lightbox (đóng/prev/next, xem 22-26px phía trên). */
+.model-variant-toggle--lightbox {
+  top: 20px;
+  right: 20px;
+}
+
 /* Ảnh "gọi tên" (slide.large = true trong data-2d.js/data-3d.js) — to hẳn
    hơn các ảnh còn lại. LƯU Ý KỸ THUẬT: gallery dùng CSS multi-column
    (columns) để tự xếp masonry theo tỉ lệ ảnh thật — kiểu layout này chỉ
