@@ -1614,7 +1614,18 @@ html[data-theme="light"] .hero__welcome-text text {
   animation-direction: reverse; /* nhóm 3D chạy ngược chiều cho đỡ đơn điệu */
 }
 
-/* .showcase-viewport:hover .showcase { animation-play-state: paused; } */
+@media (hover: hover) and (pointer: fine) {
+  /* CHỈ pause khi hover vào dải "dự án liên quan" (relatedLoop) ở trang
+     chi tiết dự án — trang chủ (body.page-home) vẫn tự chạy liên tục,
+     không bị ảnh hưởng. .showcase là class DÙNG CHUNG cho cả 2 nơi nên
+     bắt buộc scope qua body.page-home, không thể chỉ dùng .showcase
+     (giống lý do đã giải thích ở mục "CHỈ RIÊNG TRANG CHỦ" phía trên).
+     Bọc trong (hover: hover) để không dính "hover dính màn hình" trên
+     thiết bị cảm ứng (chạm vào card rồi animation đứng hình luôn). */
+  body:not(.page-home) .showcase-viewport:hover .showcase {
+    animation-play-state: paused;
+  }
+}
 
 @keyframes showcase-scroll {
   from { transform: translateX(0); }
