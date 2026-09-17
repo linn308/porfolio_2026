@@ -393,5 +393,46 @@ const PROJECTS_3D = {
     ],
   },
 
+  speaker: {
+    title: 'Rugged Portable Speaker',
+    year: '2023',
+    cover: { type: 'model', 
+      variants: [
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/speaker/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/speaker/01.glb' },
+        ],},
+    category: { vi: 'Model', en: 'Model' },
+    subtitle: {
+      vi: '3D Prop — Hard Surface Modeling Personal Project',
+      en: '3D Prop — Hard Surface Modeling Personal Project',
+    },
+    desc: {
+      vi: 'Dự án cá nhân thực hiện model 3D một chiếc loa di động phong cách công nghiệp (industrial) chỉ bằng 3ds Max, dựa trên hình ảnh tham chiếu từ internet. Tác phẩm tập trung vào việc tái hiện các chi tiết hard-surface phức tạp như nút xoay, lưới loa và các đường gân nổi.',
+      en: 'A personal 3D modeling project creating a rugged, industrial-style portable speaker exclusively in 3ds Max, based on online references. The piece focuses on recreating complex hard-surface details such as rotary knobs, speaker grilles, and raised ridges.',
+    },
+    tools: ['3ds Max'],
+    styleTags: ['Industrial Design', 'Hard-Surface', 'Rugged Tech', '3D Modeling'],
+  },
+
+  coffee: {
+    title: 'Coffee Shop',
+    year: '2024',
+    cover: { type: 'model', 
+      variants: [
+          { label: { vi: 'Model', en: 'Model' }, src: '../../assets/3d/coffee/00.glb' },
+          { label: { vi: 'Lưới',  en: 'Wireframe' }, src: '../../assets/3d/coffee/01.glb' },
+        ],},
+    category: { vi: 'Model', en: 'Model' },
+    subtitle: {
+      vi: '3D Prop — Hard Surface Modeling Personal Project',
+      en: '3D Prop — Hard Surface Modeling Personal Project',
+    },
+    desc: {
+      vi: 'Dự án cá nhân thực hiện model 3D một không gian quán cà phê theo phong cách isometric bằng Maya và 3ds Max, dựa trên hình ảnh tham chiếu tổng hợp từ internet. Tác phẩm tập trung vào việc tái hiện không gian nội thất với tỷ lệ hài hòa.',
+      en: 'A personal 3D modeling project creating an isometric coffee shop environment using Maya and 3ds Max, based on online references. The piece focuses on recreating a stylized interior with balanced proportions.',
+    },
+    tools: ['Maya, 3ds Max'],
+    styleTags: ['Industrial Design', 'Hard-Surface', 'Rugged Tech', '3D Modeling'],
+  },
 
 };
