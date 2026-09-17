@@ -2265,6 +2265,17 @@ body.page-home .card__overlay {
 .timeline__role { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; }
 .timeline__org { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 10px; }
 .timeline__desc { color: var(--text-secondary); font-size: 0.92rem; max-width: 460px; }
+.timeline__desc strong { color: var(--text-primary); font-weight: 600; }
+
+/* Nhiều <p class="timeline__desc"> liên tiếp trong cùng 1 mốc = nhiều đoạn
+   nội dung xuống dòng riêng biệt (thay vì gộp chung 1 câu dài trong 1 <p>).
+   Đoạn sau cách đoạn trước 1 khoảng để rõ ràng là 2 ý khác nhau. */
+.timeline__desc + .timeline__desc { margin-top: 8px; }
+
+/* Riêng khối liệt kê ngắn kiểu "skill list" (VD: Học vấn — Graphic Design,
+   Digital Product Design...) vẫn giữ khoảng cách sít lại như cũ, không áp
+   khoảng cách đoạn văn ở trên vào đây. */
+.timeline__desc--list + .timeline__desc--list { margin-top: 2px; }
 
 .experience__skills .skill-group { margin-bottom: 26px; }
 .experience__skills .skill-group:last-child { margin-bottom: 0; }
