@@ -2685,22 +2685,54 @@ body.page-home .card__overlay {
    Prev/Next để không phải viết lại CSS.
    ========================================================================== */
 .project-hero {
-  /* Padding-top phải đủ chỗ cho nút Back đang neo cố định (position: fixed,
-     xem .project-back) đè lên phía trên, KHÔNG được để cover ló lên đụng
-     nút: 116px (top của nút Back) + ~44px (chiều cao thật của nút, tính
-     từ font-size + line-height + padding + border) + 48px khoảng thở
-     giữa nút và cover ≈ 208px. Khoảng 48px này CỐ TÌNH lấy bằng đúng
-     padding-top của .project-gallery-section (khoảng cách gallery ↔
-     đường border-top phía trên nó) để toàn bộ nhịp dọc của trang chi
-     tiết dự án (back ↔ cover ↔ border ↔ gallery ↔ related ↔
-     external-link) đều nhau. Nếu sau này đổi top/padding/font-size của
-     .project-back thì nhớ tính lại số 208px này cho khớp; nếu đổi mốc
-     48px thì sửa luôn ở .project-gallery-section, .section-block
-     (:first-child/:last-child) và .project-hero (padding-bottom) cho
-     đồng bộ. */
-  padding: 208px 0 48px;
+  /* Đồng bộ TOÀN BỘ nhịp dọc trang chi tiết dự án về đúng 1 mốc 48px:
+     header ↔ back ↔ border(trên cover) ↔ cover ↔ border(dưới cover) ↔
+     gallery ↔ related ↔ external-link ↔ footer. Riêng khoảng back ↔ cover
+     giờ có THÊM 1 đường kẻ ở giữa (giống hệt cách border-bottom bên dưới
+     đang làm đường kẻ giữa cover ↔ gallery), nên back ↔ cover không còn
+     là 1 khoảng 48px đơn mà là 48px (back → line) + đường kẻ + 48px
+     (line → cover) — xem .project-hero::before. Vì border không thể
+     "chèn giữa" padding bằng CSS thường (border luôn nằm ở mép ngoài
+     cùng của box), đường kẻ này phải làm bằng pseudo-element định vị
+     tuyệt đối bên trong .project-hero (cần position: relative) thay vì
+     dùng border-top thật trên .project-hero.
+     padding-top = 136px (top của nút Back, xem .project-back — đã là
+     88px header + 48px gap) + ~34px (chiều cao thật của nút, đã giảm
+     padding trên/dưới của nút còn 1 nửa — 5px thay vì 10px) + 48px
+     (gap back → line) + 48px (gap line → cover) = 266px.
+     Nếu sau này đổi top/padding/font-size của .project-back, hay đổi
+     mốc 48px, nhớ tính lại số 266px này VÀ vị trí top của
+     .project-hero::before (mục ngay dưới) cho khớp; đổi mốc 48px thì
+     sửa luôn ở .project-gallery-section, .section-block, .project-
+     related-blocks .section-block:first-child, .project-external-cta
+     (padding) và .project-hero (padding-bottom) cho đồng bộ. */
+  position: relative;
+  padding: 266px 0 48px;
   border-bottom: 1px solid var(--border-color);
 }
+
+/* Đường kẻ phía TRÊN cover — y hệt vai trò border-bottom ở trên (đường kẻ
+   phía trên gallery), chỉ khác là phải dùng pseudo-element vì nó nằm
+   GIỮA padding-top chứ không phải ở mép box. top: 218px = 136(top nút
+   Back) + 34(chiều cao nút) + 48(gap back → line).
+   Cover là TÙY CHỌN (project.cover không khai báo hoặc = false → JS ẩn
+   hẳn .project-cover, xem initProjectDetail trong script.js) — lúc đó
+   đường kẻ này KHÔNG còn lý do tồn tại nữa (nó vốn sinh ra để dẫn vào
+   cover), nếu vẫn hiện sẽ tạo ra 2 đường kẻ dồn gần nhau ngay phía trên
+   (đường này + border-bottom phía trên, chỉ cách nhau đúng phần
+   title/subtitle) — không còn đúng yêu cầu "dưới back CHỈ 1 đường line".
+   Nên ẩn hẳn nó khi .project-cover đang [hidden]. */
+.project-hero::before {
+  content: "";
+  position: absolute;
+  top: 218px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.project-hero:has(.project-cover[hidden])::before { display: none; }
 
 .project-hero__head {
   display: flex;
@@ -2731,11 +2763,19 @@ body.page-home .card__overlay {
   font-family: var(--font-mono);
 }
 
-/* padding-bottom = 0: khoảng cách gallery-section ↔ related-blocks giờ do
-   .section-block:first-child (padding-top: 48px, xem mục 12b) đảm nhiệm
-   trọn vẹn, để không bị cộng dồn 2 lớp padding thành khoảng cách to hơn
-   mốc 48px chung của cả trang. */
-.project-gallery-section { padding: 48px 0 0; }
+/* padding-bottom = 48px (KHÔNG để 0 nữa): đây là section LUÔN LUÔN tồn
+   tại (có gallery hay không cũng có section này), trong khi
+   .project-related-blocks có thể HOÀN TOÀN RỖNG (đa số project không
+   khai báo related) — nếu để gallery-section dựa vào related-blocks lo
+   khoảng cách 48px (như bản trước), lúc related rỗng thì KHÔNG CÒN AI
+   lo khoảng cách đó nữa, khiến nội dung/gallery dính sát thẳng vào
+   external-cta/footer phía sau (dù related có hay không, dù external-
+   link có hiện hay không — vì cả 2 đều có thể rỗng/hidden cùng lúc).
+   Nên đảo lại: gallery-section TỰ lo đủ 48px này, còn khi related-blocks
+   THẬT SỰ có nội dung thì khối related đầu tiên phải TỰ TRỪ đi phần
+   top của nó (xem .project-related-blocks .section-block:first-child ở
+   mục 12b) để không bị cộng dồn thành 96px. */
+.project-gallery-section { padding: 48px 0 48px; }
 
 /* Masonry "zodiac" cho trang chi tiết dự án: KHÔNG còn kiểu "1 khung lớn +
    dải thumbnail nhỏ chọn từng cái" nữa — giờ hiện TẤT CẢ ảnh/video/model
@@ -3132,12 +3172,13 @@ body.page-home .card__overlay {
 /* Nút "Xem project khác" (liên kết ngoài, VD Behance) — giờ nằm ở CUỐI BÀI,
    thành 1 section riêng ngay trên footer (không còn trong aside info nữa).
    Tự ẩn/hiện theo project.externalLink — xem initProjectDetail trong
-   js/script.js. Canh giữa, padding trên/dưới đồng bộ với các section khác
-   của trang chi tiết dự án (project-gallery-section). Section này KHÔNG
-   chiếm chỗ (margin/padding = 0) khi nút đang hidden, để không để lại
-   khoảng trắng thừa lúc project không khai báo externalLink. */
+   js/script.js. Canh giữa, padding-bottom = 48px để khớp đúng mốc chung
+   của cả trang (VOB ↔ footer cũng phải bằng các khoảng khác, không còn
+   60px lệch tông như trước). Section này KHÔNG chiếm chỗ (margin/padding
+   = 0) khi nút đang hidden, để không để lại khoảng trắng thừa lúc
+   project không khai báo externalLink. */
 .project-external-cta {
-  padding: 0 0 60px;
+  padding: 0 0 48px;
   text-align: center;
 }
 
@@ -3224,10 +3265,11 @@ body.page-home .card__overlay {
 }
 
 /* Neo nút Back cố định ở trên cùng màn hình khi cuộn (position: fixed),
-   không còn nằm trong luồng .project-hero nữa. top: 116px = 88px chiều
-   cao header (fixed) + 28px khoảng thở (hạ thấp hơn 104px cũ 1 chút để
-   nút không dính sát mép dưới header), để không bị header đè lên. Đổi
-   số này thì nhớ tính lại padding-top của .project-hero (mục 12) cho khớp.
+   không còn nằm trong luồng .project-hero nữa. top: 136px = 88px chiều
+   cao header (fixed) + 48px khoảng thở — khớp đúng mốc 48px chung của cả
+   trang (header ↔ back cũng phải bằng back ↔ line ↔ cover ↔ ... như các
+   khoảng khác), để không bị header đè lên. Đổi số này thì nhớ tính lại
+   padding-top + vị trí ::before của .project-hero (mục 12) cho khớp.
    left dùng calc(max(...)) để tự khớp đúng lề trái thật của .container
    (24px lúc container đã đụng max-width 1200px và được canh giữa, hoặc
    sát mép khi viewport hẹp hơn 1200px) — xem thêm override 1024px bên
@@ -3237,13 +3279,13 @@ body.page-home .card__overlay {
    luồng nữa. */
 .project-back {
   position: fixed;
-  top: 116px;
+  top: 136px;
   left: calc(max(0px, (100vw - var(--container-width)) / 2) + 24px);
   z-index: 90;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 5px 16px;
   border-radius: 999px;
   border: 1px solid var(--border-color);
   background: rgba(var(--overlay-rgb), 0.7);
@@ -3267,22 +3309,20 @@ body.page-home .card__overlay {
    có khai báo project.relatedLoop/project.relatedCards trong data-2d.js/
    data-3d.js. Không khai báo thì layout trang chi tiết y hệt như cũ, không
    có khoảng trống thừa nào cả.
-   ========================================================================== */
-.section-block { padding: 70px 0; }
+   Padding 48px 0 (thay vì 70px 0 như trước) để khớp đúng mốc chung của cả
+   trang chi tiết dự án:
+   - 2+ khối liên tiếp (VD Cards → Loop): khoảng GIỮA chúng = bottom của
+     khối trước (48px) + top của khối sau (0px, do rule
+     .section-block + .section-block ngay dưới ép về 0 để không cộng dồn
+     thành 96px) = đúng 48px, y hệt các khoảng khác trên trang.
+   - Khối related ĐẦU TIÊN: .project-gallery-section giờ đã TỰ lo sẵn 48px
+     ở padding-bottom của chính nó (xem mục 9 phía trên) — nếu để nguyên
+     top: 48px mặc định ở khối related đầu tiên nữa thì bị cộng dồn thành
+     96px. Rule thứ 3 bên dưới ép riêng top của khối đầu tiên về 0 để bù
+     lại, y hệt cách rule thứ 2 xử lý khoảng GIỮA 2 khối. */
+.section-block { padding: 48px 0; }
 .section-block + .section-block { padding-top: 0; }
-
-/* Khớp mốc 48px chung của trang chi tiết dự án (xem .project-hero /
-   .project-gallery-section): khối related ĐẦU TIÊN lấy đúng 48px làm
-   khoảng cách với gallery-section phía trên (thay vì 70px mặc định), còn
-   khối related CUỐI CÙNG lấy đúng 48px làm khoảng cách với
-   .project-external-cta phía dưới. Nếu chỉ có 1 khối related (trường hợp
-   phổ biến nhất) thì nó vừa là :first-child vừa là :last-child nên cả 2
-   phía trên/dưới đều tự động thành 48px. Khoảng cách 70px mặc định vẫn
-   giữ nguyên cho khoảng GIỮA 2 khối related liên tiếp (loop + cards) —
-   phần này không nằm trong nhịp back/cover/gallery/related/external-link
-   cần đồng bộ. */
-.project-related-blocks .section-block:first-child { padding-top: 48px; }
-.project-related-blocks .section-block:last-child { padding-bottom: 48px; }
+.project-related-blocks .section-block:first-child { padding-top: 0; }
 
 /* Thanh tiêu đề "text" trong sườn — 1 dải nền tối kéo full width, tách
    biệt rõ với khối phía trên/dưới, đúng tinh thần "chỉ khi được gọi ra". */
@@ -3491,7 +3531,15 @@ body.page-home .card__overlay {
   .modal__panel { max-height: 92vh; }
   .modal__nav { width: 38px; height: 38px; }
 
+  /* padding-top 100px này KHÔNG khớp với vị trí .project-hero::before
+     (top: 218px, tính theo mốc 48px của desktop) — nếu để nguyên,
+     đường kẻ trên cover sẽ trồi vào giữa cover trên màn hình nhỏ. Tạm ẩn
+     đường kẻ này ở mobile cho tới khi có mốc khoảng cách riêng cho
+     mobile (nhịp back/cover/gallery/... trên mobile vẫn đang là 1 hệ số
+     khác, chưa được đồng bộ theo yêu cầu — xem ghi chú ở .project-hero
+     desktop, mục 12). */
   .project-hero { padding: 100px 0 16px; }
+  .project-hero::before { display: none; }
 }
 
 @media (max-width: 900px) {
