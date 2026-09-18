@@ -1722,26 +1722,19 @@ function initProjectDetail() {
         if (!slide.alt) slide.alt = project.title;
         zoomableSlides.push(slide);
       } else if (slide.type === 'video') {
-        // Video giờ cũng chỉ là preview TĨNH trong ô (bỏ hẳn `controls`),
-        // y hệt cách ảnh/model hoạt động — bấm vào tile mới mở lightbox,
-        // và CHỈ trong lightbox video mới thật sự phát được (tự có
-        // controls + autoplay, xem renderMedia() trong initMediaLightbox()).
-        // Nhờ vậy video cũng nằm chung 1 chuỗi Prev/Next với cover/ảnh/
-        // model/card liên quan, thay vì là vùng bấm-để-phát tách biệt như
-        // trước (lúc đó bấm vào nút play gốc của trình duyệt hay bị lẫn
-        // với việc mở lightbox, hành vi không nhất quán).
-        tile.classList.add('project-gallery__tile--zoomable');
+        // Video có control gốc ngay trong ô, phát trực tiếp tại chỗ —
+        // KHÔNG cần bấm mở lightbox nữa (khác với model: model chỉ là
+        // preview tĩnh, phải bấm vào mới thật sự xoay/zoom được trong
+        // lightbox). Vì vậy video KHÔNG gắn class --zoomable và KHÔNG nối
+        // vào zoomableSlides — chuỗi Prev/Next trong lightbox chỉ còn đi
+        // qua ảnh/model, đúng với việc video đã tự đủ tương tác tại chỗ.
         const video = document.createElement('video');
         video.src = slide.src;
-        video.muted = true;
+        video.controls = true;
         video.playsInline = true;
         video.preload = 'metadata';
         if (slide.poster) video.poster = slide.poster;
         tile.appendChild(video);
-
-        const videoIdx = zoomableSlides.length;
-        tile.dataset.zoomIndex = String(videoIdx);
-        zoomableSlides.push({ type: 'video', src: slide.src, poster: slide.poster, alt: project.title });
       } else {
         const img = document.createElement('img');
         img.src = slide.src;

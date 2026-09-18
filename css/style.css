@@ -3160,8 +3160,8 @@ body.page-home .card__overlay {
 .project-body__info {
   position: sticky;
   top: 110px;
-  max-height: min(560px, calc(100svh - 130px));
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
   padding-right: 4px;
 }
 
