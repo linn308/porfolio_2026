@@ -415,7 +415,7 @@ const PROJECTS_3D = {
   },
 
   coffee: {
-    title: 'Coffee Shop',
+    title: 'Coffee Kiosk',
     year: '2024',
     cover: { type: 'model', 
       variants: [
