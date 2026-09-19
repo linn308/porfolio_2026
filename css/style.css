@@ -2332,6 +2332,64 @@ body.page-home .card__overlay {
 .footer__cta .kicker { display: inline-flex; margin-inline: auto; }
 .footer__cta .section-title { text-align: center; }
 
+/* Running text (dải chữ "Portfolio" chạy ngang, full-bleed, giữa social
+   links và "Thanks for watching") */
+.footer__running-text {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.footer__running-track {
+  display: flex;
+  width: max-content;
+  animation: footer-running-marquee 26s linear infinite;
+  will-change: transform;
+}
+
+.footer__running-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footer__running-item {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-inline: 18px;
+  color: transparent;
+  -webkit-text-stroke: 0.6px var(--text-primary);
+}
+
+.footer__running-dot {
+  display: inline-block;
+  font-size: 0.8rem;
+  transform: translateY(-2px);
+  color: var(--accent); /* chế độ tối: xanh cyan */
+}
+
+html[data-theme="light"] .footer__running-dot {
+  color: var(--accent-warm); /* chế độ sáng: vàng ấm */
+}
+
+@keyframes footer-running-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__running-track { animation: none; }
+}
+
 /* Thanks for watching!!! */
 .footer__tks {
   display: flex;
