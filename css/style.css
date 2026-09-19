@@ -1859,10 +1859,9 @@ body:not(.page-home) .card__media {
   .card:hover .card__media img { transform: scale(1.08); filter: brightness(0.5); }
 }
 
-/* Video làm ảnh đại diện trong card (relatedLoop/relatedCards) — cùng kích
-   thước/hiệu ứng hover với ảnh thường ở trên, chỉ hiện frame đầu (không
-   control, không autoplay) vì cả card đã là 1 vùng bấm để phóng to, không
-   cần play ngay tại chỗ — xem appendMediaThumb() trong js/script.js. */
+/* Video làm ảnh đại diện trong card (relatedLoop/relatedCards) — có
+   control gốc ngay tại tile (xem appendMediaThumb() trong js/script.js),
+   phát trực tiếp không cần mở lightbox. */
 .card__media video {
   display: block;
   width: 100%;
@@ -1870,8 +1869,13 @@ body:not(.page-home) .card__media {
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
+/* Tắt phóng to (transform: scale) khi hover riêng cho video — video đã
+   có control gốc để bấm play/tua ngay tại chỗ, card lại phóng to đồng
+   thời làm 2 hiệu ứng đè lên nhau, dễ bấm nhầm control. Chỉ giữ lại
+   filter tối màu khi hover để đồng bộ với ảnh/model-viewer, y hệt cách
+   xử lý ở .card__media model-viewer phía dưới. */
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .card__media video { transform: scale(1.08); filter: brightness(0.5); }
+  .card:hover .card__media video { filter: brightness(0.5); }
 }
 
 /* model-viewer bên trong card: xoay/zoom được ngay tại chỗ, không cần mở modal.
@@ -3160,8 +3164,8 @@ body.page-home .card__overlay {
 .project-body__info {
   position: sticky;
   top: 110px;
-  max-height: min(560px, calc(100svh - 130px));
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
   padding-right: 4px;
 }
 
@@ -3719,6 +3723,10 @@ body.page-home .card__overlay {
    2D/3D (index-2d.html/index-3d.html) hay dải showcase trang chủ, card ở
    những nơi đó vẫn điều hướng bình thường (cursor: pointer), không cần
    badge này.
+   :not(:has(video)) — VIDEO là ngoại lệ: đã có control gốc ngay tại tile
+   (xem appendMediaThumb trong js/script.js), phát trực tiếp KHÔNG cần bấm
+   mở lightbox, nên không cần cursor pointer hay badge "bấm để phóng to"
+   này (khác với ảnh/model vẫn cần bấm mới mở lightbox được).
    (Trước đây rule này scope theo #projectRelatedLoopTrack/
    #projectRelatedCardsGrid — 2 ID chưa từng được gán trong
    buildRelatedLoopBlock()/buildRelatedCardsBlock(), nên chưa từng chạy.
@@ -3727,11 +3735,11 @@ body.page-home .card__overlay {
    pointer dùng chung cho .card__media ở mọi nơi khác trong site (xem
    rule gốc ".card__media { cursor: pointer }" ở mục 8). Badge "⤢" phía
    dưới vẫn giữ nguyên để gợi ý bấm-để-xem-to. */
-.project-related-blocks .card__media {
+.project-related-blocks .card__media:not(:has(video)) {
   cursor: pointer;
 }
 
-.project-related-blocks .card__media::after {
+.project-related-blocks .card__media:not(:has(video))::after {
   content: '⤢';
   position: absolute;
   top: 10px;
@@ -3753,7 +3761,7 @@ body.page-home .card__overlay {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-related-blocks .card:hover .card__media::after {
+  .project-related-blocks .card:hover .card__media:not(:has(video))::after {
   opacity: 1;
 }
 }

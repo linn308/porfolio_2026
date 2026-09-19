@@ -1723,18 +1723,15 @@ function initProjectDetail() {
         if (!slide.alt) slide.alt = project.title;
         zoomableSlides.push(slide);
       } else if (slide.type === 'video') {
-        // Video giờ cũng chỉ là preview TĨNH trong ô (bỏ hẳn `controls`),
-        // y hệt cách ảnh/model hoạt động — bấm vào tile mới mở lightbox,
-        // và CHỈ trong lightbox video mới thật sự phát được (tự có
-        // controls + autoplay, xem renderMedia() trong initMediaLightbox()).
-        // Nhờ vậy video cũng nằm chung 1 chuỗi Prev/Next với cover/ảnh/
-        // model/card liên quan, thay vì là vùng bấm-để-phát tách biệt như
-        // trước (lúc đó bấm vào nút play gốc của trình duyệt hay bị lẫn
-        // với việc mở lightbox, hành vi không nhất quán).
-        tile.classList.add('project-gallery__tile--zoomable');
+        // Video có control gốc ngay trong ô, phát trực tiếp tại chỗ —
+        // KHÔNG cần bấm mở lightbox nữa (khác với model: model chỉ là
+        // preview tĩnh, phải bấm vào mới thật sự xoay/zoom được trong
+        // lightbox). Vì vậy video KHÔNG gắn class --zoomable và KHÔNG nối
+        // vào zoomableSlides — chuỗi Prev/Next trong lightbox chỉ còn đi
+        // qua ảnh/model, đúng với việc video đã tự đủ tương tác tại chỗ.
         const video = document.createElement('video');
         video.src = slide.src;
-        video.muted = true;
+        video.controls = true;
         video.playsInline = true;
         video.preload = 'metadata';
         if (slide.poster) video.poster = slide.poster;
@@ -1984,6 +1981,11 @@ function bindZoomableTiles(containerEl, tileSelector, slides) {
     // lightbox (nếu không chặn ở đây, mọi click trong tile — kể cả trúng
     // nút — đều bị closest(tileSelector) bắt và mở lightbox luôn).
     if (event.target.closest('.model-variant-toggle')) return;
+    // VIDEO có control gốc ngay tại tile (xem appendMediaThumb) — bấm vào
+    // đây là để play/pause/tua bằng control có sẵn, KHÔNG mở lightbox
+    // (khác với model: model chỉ là preview tĩnh nên bấm vào mới mở
+    // lightbox để thật sự xoay/zoom được).
+    if (event.target.closest('video')) return;
     const tile = event.target.closest(tileSelector);
     if (!tile || !containerEl.contains(tile)) return;
     const idx = Number(tile.dataset.zoomIndex);
@@ -1996,6 +1998,7 @@ function bindZoomableTiles(containerEl, tileSelector, slides) {
   containerEl.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     if (event.target.closest('.model-variant-toggle')) return;
+    if (event.target.closest('video')) return;
     const tile = event.target.closest(tileSelector);
     if (!tile || !containerEl.contains(tile)) return;
     event.preventDefault();
@@ -2018,8 +2021,10 @@ function getItemMedia(item) {
 
 // Dựng đúng loại thẻ media (ảnh / video / model-viewer) cho 1 ô thumbnail
 // nhỏ trong card (relatedLoop/relatedCards) — không cần badge "Model 3D"
-// hay control video đầy đủ như gallery chính vì đây chỉ là ảnh đại diện,
-// bấm vào là mở lightbox xem bản đầy đủ.
+// như gallery chính vì đây chỉ là ảnh đại diện, bấm vào mở lightbox xem
+// bản đầy đủ. Riêng VIDEO là ngoại lệ (giống cover/gallery chính): có
+// control gốc ngay tại đây, phát trực tiếp không cần bấm mở lightbox —
+// xem exclusion cho <video> trong bindZoomableTiles() bên dưới.
 function appendMediaThumb(container, media, altText) {
   if (!media) return;
   if (media.type === 'model') {
@@ -2043,7 +2048,7 @@ function appendMediaThumb(container, media, altText) {
     const video = document.createElement('video');
     video.src = media.src;
     if (media.poster) video.poster = media.poster;
-    video.muted = true;
+    video.controls = true;
     video.playsInline = true;
     video.preload = 'metadata';
     container.appendChild(video);
