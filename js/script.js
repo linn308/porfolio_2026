@@ -2239,16 +2239,11 @@ function initScrollReveal() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px 20px 0px' });
-    // Trước đây rootMargin +180px (mở rất rộng vùng tính "đang trong khung
-    // nhìn") khiến card bị đánh dấu .is-visible QUÁ SỚM — trong lúc gallery
-    // dạng masonry (columns) còn đang tính lại layout theo ảnh (nhất là ảnh
-    // loading="lazy" load xong mới có kích thước thật), card đổi sang trạng
-    // thái "đã hiện" ở 1 vị trí tạm rồi bị masonry đẩy qua vị trí khác —
-    // nhìn như "biến mất, kéo tới mới bật ra" vì transition đã chạy xong từ
-    // trước tại vị trí cũ. Giảm margin xuống rất nhẹ (20px) để card chỉ được
-    // đánh dấu hiện khi ĐÃ GẦN NHƯ ở đúng vị trí cuối, animate vẫn chạy nhưng
-    // không còn bị lệch pha với layout nữa.
+    }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
+    // rootMargin âm -50% ở đáy = co vùng "trong khung nhìn" lại chỉ còn NỬA
+    // TRÊN của màn hình, nên card chỉ được đánh dấu .is-visible (và animate
+    // trượt lên) khi đã cuộn tới khoảng GIỮA màn hình, không còn từ mép dưới
+    // như trước.
 
     targets.forEach((el) => observer.observe(el));
   });
@@ -2286,13 +2281,10 @@ function initSectionReveal() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    // Trước dùng rootMargin +100px (mở rộng vùng nhận diện xuống dưới) nên
-    // các khối này bị đánh dấu "đã hiện" từ SỚM, trước khi thật sự cuộn tới
-    // — nhìn như "không animate gì cả" vì lúc người dùng thấy được thì hiệu
-    // ứng đã chạy xong từ trước rồi. Đổi sang rootMargin ÂM (-40px): giờ chỉ
-    // đánh dấu hiện khi phần tử đã cuộn vào TRONG khung nhìn thật một đoạn,
-    // đúng lúc mắt nhìn thấy nó bắt đầu trượt.
+    }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
+    // rootMargin âm -50% ở đáy = co vùng "trong khung nhìn" lại chỉ còn NỬA
+    // TRÊN của màn hình, nên khối .reveal chỉ được đánh dấu .is-visible (bắt
+    // đầu trượt lên/trái/phải) khi đã cuộn tới khoảng GIỮA màn hình.
 
     targets.forEach((el) => observer.observe(el));
   });

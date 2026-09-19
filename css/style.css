@@ -2361,7 +2361,7 @@ body.page-home .card__overlay {
   display: inline-block;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  font-size: clamp(0.85rem, 1.6vw, 1.25rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   white-space: nowrap;
