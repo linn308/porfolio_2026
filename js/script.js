@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMediaLightbox();
   initShowcaseCards();
   initProjectDetail();
+  initProjectInfoHeightSync();
   initScrollReveal();
   initSectionReveal();
   initBackButton();
@@ -1735,6 +1736,7 @@ function initProjectDetail() {
         video.playsInline = true;
         video.preload = 'metadata';
         if (slide.poster) video.poster = slide.poster;
+        video.addEventListener('loadedmetadata', syncProjectInfoHeight);
         tile.appendChild(video);
 
         const videoIdx = zoomableSlides.length;
@@ -1745,6 +1747,11 @@ function initProjectDetail() {
         img.src = slide.src;
         img.alt = project.title;
         img.loading = 'lazy';
+        // Ảnh lazy-load xong mới có kích thước thật, khiến masonry
+        // (.project-gallery dạng columns) đổi chiều cao thật của
+        // .project-body__gallery — đồng bộ lại max-height của info ngay
+        // lúc đó, xem syncProjectInfoHeight() ở mục 8g.
+        img.addEventListener('load', syncProjectInfoHeight);
         tile.appendChild(img);
 
         // Đánh dấu ô này là "bấm để phóng to" + nhớ vị trí của nó trong
@@ -1800,6 +1807,115 @@ function initProjectDetail() {
   // Card mới build ở trên (nếu có) cần initScrollReveal() quét lại — gọi
   // sau khi DOM đã có card thật, không thì observer sẽ không thấy gì.
   initScrollReveal();
+
+  // Đợi 1 frame để layout (grid/masonry) đã ổn định rồi mới đo chiều cao
+  // thật của gallery — xem giải thích đầy đủ ở syncProjectInfoHeight()
+  // mục 8g bên dưới.
+  requestAnimationFrame(syncProjectInfoHeight);
+}
+
+/* --------------------------------------------------------------------------
+   8g. ĐỒNG BỘ CHIỀU CAO CỘT INFO (PHẢI) KHỚP VỚI GALLERY (TRÁI) Ở TRANG CHI
+   TIẾT DỰ ÁN.
+   Trước đây .project-body__info chỉ bị chặn bằng 1 max-height CỐ ĐỊNH theo
+   viewport (xem style.css) — nhưng .project-body dùng align-items: start,
+   nên dù info có bị max-height cắt bớt, chiều cao HỘP thật của nó (giá trị
+   max-height đó) vẫn được tính vào chiều cao cả hàng grid. Gallery project
+   nào ngắn hơn info (ít ảnh, ảnh nhỏ) vẫn để lại khoảng trắng dư dưới
+   gallery, kéo dài tới khi info "hết" — đúng hiện tượng "content dư ra so
+   với hình ảnh" khi cuộn.
+   Giải pháp triệt để hơn: đo trực tiếp chiều cao THẬT của
+   .project-body__gallery sau khi đã render (và sau khi từng ảnh/video bên
+   trong tải xong — ảnh lazy-load xong mới đổi chiều cao thật của masonry,
+   xem 2 listener 'load'/'loadedmetadata' đã gắn ở nhánh dựng ảnh/video phía
+   trên), rồi gán ĐÚNG con số đó làm max-height cho .project-body__info. Kết
+   quả: info luôn vừa khít chiều cao với gallery — dư nội dung thì tự cuộn
+   riêng bên trong (overflow-y: auto đã khai ở style.css), không còn kéo dư
+   khoảng trắng nữa.
+   KHỚP ĐÁY 2 CỘT: mỗi ô .project-gallery__tile có margin-bottom (khoảng cách
+   dọc giữa các ô masonry) — ô CUỐI CÙNG của cột cao nhất cũng mang margin này,
+   và vì .project-gallery là multicol (BFC) nên margin đó KHÔNG bị nuốt, nó
+   nằm trong chiều cao của .project-body__gallery. Hệ quả: chiều cao đo được
+   luôn dư ra đúng bằng margin đó (~20px) so với đáy THẬT của ô ảnh cuối, mà
+   cột info (sticky) lại bị "dính" vào đáy của .project-body, nên khi cuộn
+   xuống hết, đáy info (tag cuối) thấp hơn đáy ảnh ~20px. Cách sửa: đo đáy
+   thật của các ô (getBoundingClientRect), lấy phần dư = đáy wrapper − đáy ô
+   thấp nhất, rồi (1) trừ phần dư này khi gán max-height cho info, và (2)
+   gán margin-bottom ÂM đúng bằng phần dư cho wrapper để đáy .project-body
+   (giới hạn sticky) cũng rút về đáy ảnh. Chọn đo bằng JS thay vì hard-code
+   -20px trong CSS để tự khớp dù sau này đổi margin của ô, đổi số cột, hay
+   trình duyệt xử lý margin cuối multicol khác nhau (phần dư = 0 thì không
+   làm gì cả).
+   Chỉ áp dụng ở layout 2 cột desktop (>1024px) và khi gallery thực sự đang
+   hiện (không rơi vào .project-body--full) — các trường hợp còn lại xóa
+   max-height inline để CSS mặc định (1 cột, không giới hạn) tự lo. */
+function syncProjectInfoHeight() {
+  const bodyEl = document.querySelector('.project-body');
+  if (!bodyEl) return;
+
+  const galleryWrapperEl = bodyEl.querySelector('.project-body__gallery');
+  const infoEl = bodyEl.querySelector('.project-body__info');
+  if (!infoEl) return;
+
+  const shouldSkip = window.innerWidth <= 1024
+    || bodyEl.classList.contains('project-body--full')
+    || !galleryWrapperEl
+    || galleryWrapperEl.hidden;
+
+  if (shouldSkip) {
+    infoEl.style.maxHeight = '';
+    // Trả margin âm (nếu lần đo trước ở layout 2 cột đã gán) về mặc định —
+    // layout 1 cột không cần khớp đáy 2 cột nên không được để sót lại.
+    if (galleryWrapperEl) galleryWrapperEl.style.marginBottom = '';
+    return;
+  }
+
+  // Xóa margin âm của lần đo trước TRƯỚC KHI đo, nếu không đáy wrapper đo
+  // được sẽ đã bị rút sẵn và phần dư tính ra sai (hàm này chạy lại nhiều
+  // lần: mỗi ảnh tải xong, mỗi lần resize).
+  galleryWrapperEl.style.marginBottom = '';
+
+  const wrapperRect = galleryWrapperEl.getBoundingClientRect();
+  if (wrapperRect.height <= 0) return;
+
+  // Đáy THẬT của gallery = đáy thấp nhất trong các ô (không tính margin-
+  // bottom của ô cuối). Không có ô nào thì giữ nguyên wrapperRect.bottom.
+  let tilesBottom = -Infinity;
+  galleryWrapperEl.querySelectorAll('.project-gallery__tile').forEach((tile) => {
+    tilesBottom = Math.max(tilesBottom, tile.getBoundingClientRect().bottom);
+  });
+
+  // Phần dư (margin-bottom của ô cuối) nằm giữa đáy ô thấp nhất và đáy
+  // wrapper. Math.max(0, ...) để lỡ trình duyệt không cộng margin đó vào
+  // chiều cao thì phần dư = 0, không làm gì thêm.
+  const trailingGap = Number.isFinite(tilesBottom)
+    ? Math.max(0, wrapperRect.bottom - tilesBottom)
+    : 0;
+
+  // (1) Rút đáy .project-body (= giới hạn dưới của sticky) về đáy ảnh thật.
+  galleryWrapperEl.style.marginBottom = trailingGap > 0
+    ? `${-Math.round(trailingGap)}px`
+    : '';
+
+  // (2) max-height của info = chiều cao gallery THẬT (đã trừ phần dư), để
+  // đáy info và đáy ảnh trùng nhau ở cả 2 trường hợp: info ngắn hơn gallery
+  // (nằm sát đáy body nhờ sticky) hay info dài hơn (tự cuộn bên trong).
+  infoEl.style.maxHeight = `${Math.round(wrapperRect.height - trailingGap)}px`;
+}
+
+// Gắn listener resize đúng 1 lần (an toàn nếu initProjectDetail() được gọi
+// lại nhiều lần), rồi đo ngay 1 lần cho lần render đầu.
+let projectInfoHeightSyncBound = false;
+function initProjectInfoHeightSync() {
+  syncProjectInfoHeight();
+  if (projectInfoHeightSyncBound) return;
+  projectInfoHeightSyncBound = true;
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(syncProjectInfoHeight, 150);
+  });
 }
 
 /* --------------------------------------------------------------------------

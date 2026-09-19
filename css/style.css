@@ -2758,47 +2758,56 @@ html[data-theme="light"] .footer__running-dot {
    Prev/Next để không phải viết lại CSS.
    ========================================================================== */
 .project-hero {
-  /* Đồng bộ TOÀN BỘ nhịp dọc trang chi tiết dự án về đúng 1 mốc 48px:
-     header ↔ back ↔ border(trên cover) ↔ cover ↔ border(dưới cover) ↔
-     gallery ↔ related ↔ external-link ↔ footer. Riêng khoảng back ↔ cover
-     giờ có THÊM 1 đường kẻ ở giữa (giống hệt cách border-bottom bên dưới
-     đang làm đường kẻ giữa cover ↔ gallery), nên back ↔ cover không còn
-     là 1 khoảng 48px đơn mà là 48px (back → line) + đường kẻ + 48px
-     (line → cover) — xem .project-hero::before. Vì border không thể
-     "chèn giữa" padding bằng CSS thường (border luôn nằm ở mép ngoài
-     cùng của box), đường kẻ này phải làm bằng pseudo-element định vị
-     tuyệt đối bên trong .project-hero (cần position: relative) thay vì
-     dùng border-top thật trên .project-hero.
-     padding-top = 136px (top của nút Back, xem .project-back — đã là
-     88px header + 48px gap) + 30px (chiều cao thật của nút, đã giảm
-     padding trên/dưới của nút còn 3px thay vì 5px) + 48px
-     (gap back → line) + 48px (gap line → cover) = 262px.
-     Nếu sau này đổi top/padding/font-size của .project-back, hay đổi
-     mốc 48px, nhớ tính lại số 262px này VÀ vị trí top của
-     .project-hero::before (mục ngay dưới) cho khớp; đổi mốc 48px thì
-     sửa luôn ở .project-gallery-section, .section-block, .project-
-     related-blocks .section-block:first-child, .project-external-cta
-     (padding) và .project-hero (padding-bottom) cho đồng bộ. */
+  /* Đồng bộ nhịp dọc trang chi tiết dự án về mốc --hero-gap (48px):
+     line ↔ cover/gallery ↔ related ↔ external-link ↔ footer. Nhịp này
+     dùng chung cho cả 2 trường hợp:
+       (A) KHÔNG có cover (project.cover không khai báo → JS gắn [hidden]
+           cho .project-cover, xem initProjectDetail trong script.js):
+           chỉ có Back + 1 đường kẻ (chính là border-bottom bên dưới) +
+           nội dung/gallery.
+       (B) CÓ cover: Back + đường kẻ (::before) + cover + đường kẻ
+           (border-bottom) + nội dung/gallery.
+     LỖI TRƯỚC ĐÂY: padding-top chỉ có 120px (đã được tay chỉnh gọn lại để
+     ca (A) khít với nút Back đang neo ở top: 115px), nhưng ca (B) vẫn dùng
+     cùng con số đó → cover mọc lên ở y = 120px, trong khi nút Back (fixed,
+     115px → ~145px) và ::before (cũ: top 214px) nằm sâu hơn → cover đè lên
+     cả nút Back lẫn đường kẻ. Ca (B) cần thêm chỗ cho đường kẻ + 1 khoảng
+     thở nữa, nên padding-top của nó phải LỚN HƠN ca (A) — xem rule
+     :has(.project-cover:not([hidden])) ngay bên dưới.
+     TÁCH THÀNH BIẾN để khỏi phải tính tay lại nhiều con số rời rạc:
+       --hero-pad-top: padding-top ở ca (A) (KHÔNG ĐỔI — đang khớp thiết kế
+                       của ca không cover, đừng đụng vào).
+       --hero-gap:     mốc 48px chung (đổi mốc thì sửa luôn ở
+                       .project-gallery-section, .section-block, .project-
+                       related-blocks .section-block:first-child, .project-
+                       external-cta cho đồng bộ).
+     Đường kẻ nằm ở y = --hero-pad-top + --hero-gap (= 168px) ở CẢ 2 ca:
+     ca (A) đường kẻ này là border-bottom (đáy padding-bottom), ca (B) là
+     ::before — cùng 1 vị trí nên khoảng Back → line giống hệt nhau và
+     đường kẻ không "nhảy" khi chuyển giữa các dự án. Nếu sau này đổi
+     top/padding/font-size của .project-back thì chỉ cần chỉnh lại
+     --hero-pad-top. */
+  --hero-pad-top: 120px;
+  --hero-gap: 48px;
   position: relative;
-  padding: 120px 0 48px;
+  padding: var(--hero-pad-top) 0 var(--hero-gap);
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Đường kẻ phía TRÊN cover — y hệt vai trò border-bottom ở trên (đường kẻ
-   phía trên gallery), chỉ khác là phải dùng pseudo-element vì nó nằm
-   GIỮA padding-top chứ không phải ở mép box. top: 214px = 136(top nút
-   Back) + 30(chiều cao nút) + 48(gap back → line).
-   Cover là TÙY CHỌN (project.cover không khai báo hoặc = false → JS ẩn
-   hẳn .project-cover, xem initProjectDetail trong script.js) — lúc đó
-   đường kẻ này KHÔNG còn lý do tồn tại nữa (nó vốn sinh ra để dẫn vào
-   cover), nếu vẫn hiện sẽ tạo ra 2 đường kẻ dồn gần nhau ngay phía trên
-   (đường này + border-bottom phía trên, chỉ cách nhau đúng phần
-   title/subtitle) — không còn đúng yêu cầu "dưới back CHỈ 1 đường line".
-   Nên ẩn hẳn nó khi .project-cover đang [hidden]. */
+/* Đường kẻ phía TRÊN cover (chỉ dùng ở ca B). Phải dùng pseudo-element vì
+   nó nằm GIỮA padding-top chứ không phải ở mép box (border luôn nằm ở mép
+   ngoài cùng, không "chèn giữa" padding được). top tính theo biến để luôn
+   trùng đúng vị trí đường kẻ của ca A (xem ghi chú ở .project-hero) —
+   trước đây hard-code 214px (tính theo nút Back cũ ở top: 136px) nên đã
+   lệch sau khi nút Back được dời lên 115px.
+   Cover là TÙY CHỌN — lúc không có cover thì đường kẻ này KHÔNG còn lý do
+   tồn tại (nếu vẫn hiện sẽ thành 2 đường kẻ dồn gần nhau cùng với
+   border-bottom, chỉ cách nhau đúng phần title/subtitle), nên ẩn hẳn khi
+   .project-cover đang [hidden]. */
 .project-hero::before {
   content: "";
   position: absolute;
-  top: 214px;
+  top: calc(var(--hero-pad-top) + var(--hero-gap));
   left: 0;
   right: 0;
   height: 1px;
@@ -2806,6 +2815,22 @@ html[data-theme="light"] .footer__running-dot {
 }
 
 .project-hero:has(.project-cover[hidden])::before { display: none; }
+
+/* CA B (có cover): đẩy cover xuống dưới đường kẻ.
+   padding-top = 120 (chỗ cho nút Back) + 48 (Back → line) + 1 (độ dày đường
+   kẻ) + 48 (line → cover) = 217px → cover bắt đầu ngay dưới đường kẻ đúng
+   1 mốc --hero-gap, không còn đè lên nút Back / đường kẻ.
+   Dùng :not([hidden]) (thay vì đổi rule gốc) để ca A — không cover — giữ
+   NGUYÊN 100% như cũ, không ảnh hưởng gì.
+   Bọc trong min-width: 621px vì ≤620px đã có rule mobile riêng ở mục 13
+   (.project-hero { padding: 100px 0 16px } + ẩn ::before): selector :has()
+   này có độ ưu tiên cao hơn rule mobile đó nên nếu không bọc, nó sẽ đè luôn
+   padding mobile và làm cover mobile bị đẩy xuống 217px. */
+@media (min-width: 621px) {
+  .project-hero:has(.project-cover:not([hidden])) {
+    padding-top: calc(var(--hero-pad-top) + var(--hero-gap) + 1px + var(--hero-gap));
+  }
+}
 
 .project-hero__head {
   display: flex;
@@ -3202,28 +3227,19 @@ html[data-theme="light"] .footer__running-dot {
 .project-body__gallery .project-gallery.project-gallery--cols-5 { columns: 4 130px; }
 
 /* Cột thông tin bên phải: dính theo khi cuộn trang, để luôn thấy tên/tag/
-   tool dù đang cuộn xem ảnh dài ở cột trái. Giới hạn chiều cao + tự cuộn
-   riêng nếu nội dung (mô tả dài) vượt quá viewport.
-   max-height CỐ TÌNH chặn ở 560px (thay vì gần full viewport như trước)
-   — vì đây là item trong 1 grid row cùng .project-body__gallery, chiều
-   cao THẬT SỰ của cột info (kể cả khi đã bị max-height chặn lại) vẫn
-   quyết định chiều cao cả hàng grid. Project nào gallery ít ảnh (cột
-   trái ngắn) mà info dài chạm gần tới trần cũ (~100svh) sẽ kéo cả hàng
-   cao gần bằng viewport, để lại khoảng trắng lớn dưới gallery trước khi
-   tới related-blocks/nút Behance (và trong lúc cuộn còn thấy info vẫn
-   "dính" trên đầu trong khi nút đã lộ ra ở dưới, nhìn như 2 phần rời
-   nhau — xem ảnh FFL). Hạ trần xuống 560px giúp chặn tình huống này ở
-   mọi kích thước màn hình, gallery ngắn hay dài cũng không kéo hàng
-   grid vọt lên gần full viewport nữa — khoảng trắng dưới gallery (nếu
-   có) chỉ còn ở mức vài trăm px, không còn cảm giác nút "lửng" giữa
-   trang. Nếu sau này nội dung info thường xuyên dài hơn 560px và muốn
-   dễ đọc hơn, có thể tăng số này lên, nhưng nhớ đây là đánh đổi trực
-   tiếp với độ chênh lệch 2 cột. */
+   tool dù đang cuộn xem ảnh dài ở cột trái.
+   max-height ở đây CHỈ LÀ GIÁ TRỊ DỰ PHÒNG cho khoảnh khắc trước khi JS
+   chạy xong (hoặc khi JS bị tắt) — ngay sau khi trang dựng xong,
+   syncProjectInfoHeight() trong js/script.js (mục 8g) đo chiều cao THẬT
+   của .project-body__gallery và gán lại max-height (qua inline style, luôn
+   thắng giá trị CSS ở đây) đúng bằng con số đó, để info luôn vừa khít với
+   gallery — dư nội dung thì tự cuộn riêng bên trong (overflow-y: auto),
+   không còn kéo dư khoảng trắng dưới gallery ngắn như trước nữa. */
 .project-body__info {
   position: sticky;
   top: 110px;
-  max-height: none;
-  overflow-y: visible;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
   padding-right: 4px;
 }
 
