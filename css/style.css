@@ -2712,24 +2712,24 @@ body.page-home .card__overlay {
      tuyệt đối bên trong .project-hero (cần position: relative) thay vì
      dùng border-top thật trên .project-hero.
      padding-top = 136px (top của nút Back, xem .project-back — đã là
-     88px header + 48px gap) + ~34px (chiều cao thật của nút, đã giảm
-     padding trên/dưới của nút còn 1 nửa — 5px thay vì 10px) + 48px
-     (gap back → line) + 48px (gap line → cover) = 266px.
+     88px header + 48px gap) + 30px (chiều cao thật của nút, đã giảm
+     padding trên/dưới của nút còn 3px thay vì 5px) + 48px
+     (gap back → line) + 48px (gap line → cover) = 262px.
      Nếu sau này đổi top/padding/font-size của .project-back, hay đổi
-     mốc 48px, nhớ tính lại số 266px này VÀ vị trí top của
+     mốc 48px, nhớ tính lại số 262px này VÀ vị trí top của
      .project-hero::before (mục ngay dưới) cho khớp; đổi mốc 48px thì
      sửa luôn ở .project-gallery-section, .section-block, .project-
      related-blocks .section-block:first-child, .project-external-cta
      (padding) và .project-hero (padding-bottom) cho đồng bộ. */
   position: relative;
-  padding: 266px 0 48px;
+  padding: 120px 0 48px;
   border-bottom: 1px solid var(--border-color);
 }
 
 /* Đường kẻ phía TRÊN cover — y hệt vai trò border-bottom ở trên (đường kẻ
    phía trên gallery), chỉ khác là phải dùng pseudo-element vì nó nằm
-   GIỮA padding-top chứ không phải ở mép box. top: 218px = 136(top nút
-   Back) + 34(chiều cao nút) + 48(gap back → line).
+   GIỮA padding-top chứ không phải ở mép box. top: 214px = 136(top nút
+   Back) + 30(chiều cao nút) + 48(gap back → line).
    Cover là TÙY CHỌN (project.cover không khai báo hoặc = false → JS ẩn
    hẳn .project-cover, xem initProjectDetail trong script.js) — lúc đó
    đường kẻ này KHÔNG còn lý do tồn tại nữa (nó vốn sinh ra để dẫn vào
@@ -2740,7 +2740,7 @@ body.page-home .card__overlay {
 .project-hero::before {
   content: "";
   position: absolute;
-  top: 218px;
+  top: 214px;
   left: 0;
   right: 0;
   height: 1px;
@@ -3294,13 +3294,13 @@ body.page-home .card__overlay {
    luồng nữa. */
 .project-back {
   position: fixed;
-  top: 136px;
+  top: 115px;
   left: calc(max(0px, (100vw - var(--container-width)) / 2) + 24px);
   z-index: 90;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 16px;
+  padding: 3px 16px;
   border-radius: 999px;
   border: 1px solid var(--border-color);
   background: rgba(var(--overlay-rgb), 0.7);
@@ -3547,7 +3547,7 @@ body.page-home .card__overlay {
   .modal__nav { width: 38px; height: 38px; }
 
   /* padding-top 100px này KHÔNG khớp với vị trí .project-hero::before
-     (top: 218px, tính theo mốc 48px của desktop) — nếu để nguyên,
+     (top: 214px, tính theo mốc 48px của desktop) — nếu để nguyên,
      đường kẻ trên cover sẽ trồi vào giữa cover trên màn hình nhỏ. Tạm ẩn
      đường kẻ này ở mobile cho tới khi có mốc khoảng cách riêng cho
      mobile (nhịp back/cover/gallery/... trên mobile vẫn đang là 1 hệ số
