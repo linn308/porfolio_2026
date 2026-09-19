@@ -3160,8 +3160,8 @@ body.page-home .card__overlay {
 .project-body__info {
   position: sticky;
   top: 110px;
-  max-height: none;
-  overflow-y: visible;
+  max-height: min(560px, calc(100svh - 130px));
+  overflow-y: auto;
   padding-right: 4px;
 }
 
@@ -3950,4 +3950,83 @@ body.page-home .card__overlay {
   .timeline__role a:hover {
   text-decoration-color: currentColor;
 }
+}
+/* ==========================================================================
+   CUSTOM CURSOR — chấm + vòng hoa 5 cánh đuổi theo chuột
+   HTML do JS tự chèn (xem initCustomCursor() trong js/script.js), style.css
+   chỉ lo phần hiển thị. Lý do tách 2 lớp (.custom-cursor__dot đứng yên
+   khớp chuột + .custom-cursor__flower trễ theo sau):
+   - Chấm tâm cần bám ĐÚNG vị trí con trỏ thật (không lerp) để người dùng
+     vẫn "nhắm" chính xác khi click vào nút/link nhỏ.
+   - Vòng hoa trễ nhẹ (lerp trong JS) tạo cảm giác "trôi" mềm mại, giống
+     hiệu ứng cursor tham khảo — hoa là phần trang trí nên trễ 1 chút
+     không ảnh hưởng thao tác.
+   Toàn bộ chỉ bật trên thiết bị có chuột thật (hover:hover + pointer:fine,
+   xem điều kiện trong JS) — thiết bị cảm ứng không có mousemove liên tục
+   nên giữ nguyên cursor mặc định (hoặc không cursor) của trình duyệt. */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 10000;
+  pointer-events: none; /* không được chặn click vào phần tử bên dưới */
+}
+
+/* Ẩn cursor mặc định của hệ thống trên toàn trang khi cursor tuỳ chỉnh
+   đang bật (class này do JS gắn vào <body>, chỉ khi hover:hover+pointer:fine
+   khớp — nên không bao giờ ẩn mất cursor trên thiết bị cảm ứng). */
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: none !important;
+}
+
+.custom-cursor__dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  /* Dùng lại --text-primary thay vì khai màu riêng: biến này vốn đã đen ở
+     theme sáng (#201f1b) và trắng ở theme tối (#f5f4f2), xem :root /
+     html[data-theme="light"] ở đầu file — đổi theme là chấm tự đổi màu
+     theo, không cần thêm biến hay code riêng theo theme. */
+  background: var(--text-primary);
+  transform: translate(-50%, -50%);
+  /* Không transition transform: chấm cần bám tức thời đúng toạ độ chuột
+     mỗi lần mousemove (JS ghi thẳng vào style.transform, xem
+     initCustomCursor() trong js/script.js) — thêm transition ở đây sẽ
+     khiến chấm luôn trễ 1 nhịp so với chuột thật, đúng thứ mà chấm
+     (khác với vòng hoa) không được phép có. */
+}
+
+.custom-cursor__flower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  /* KHÔNG khai transition cho transform ở đây: vị trí (translate), độ
+     nghiêng (rotate) VÀ scale khi hover/bấm chuột đều được gộp chung vào
+     1 chuỗi transform, tính và lerp sẵn trong JS mỗi frame (xem
+     animateFlower() trong js/script.js) — nếu thêm transition CSS vào
+     transform đang bị JS ghi đè liên tục 60 lần/giây, trình duyệt sẽ chạy
+     đua lại transition mỗi frame, gây giật/trễ chồng trễ thay vì mượt
+     hơn. Opacity (ẩn khi chuột ra khỏi viewport) vẫn dùng transition CSS
+     bình thường vì opacity KHÔNG bị JS đụng tới. */
+  transition: opacity 0.2s ease;
+}
+
+/* Ẩn hẳn khi chuột rời khỏi cửa sổ trình duyệt — tránh chấm/hoa "đứng
+   hình" dính ở mép màn hình lúc rê chuột ra ngoài. */
+.custom-cursor--hidden { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Người dùng bật "giảm hiệu ứng chuyển động": JS đã tự bỏ qua vòng lặp
+     lerp (xem điều kiện prefersReducedMotion trong initCustomCursor()) và
+     đặt hoa trùng thẳng vị trí chuột — css chỉ cần đảm bảo không còn
+     transition nào áp cho opacity gây cảm giác "trễ" khi ẩn/hiện. */
+  .custom-cursor__flower { transition: none; }
 }

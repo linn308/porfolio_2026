@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSectionReveal();
   initBackButton();
   setFooterYear();
+  initCustomCursor();
   // ĐẶT CUỐI CÙNG: chạy sau initProjectDetail() để lúc quét <img>/<video>
   // trong trang, gallery/cover/related do JS đổ vào đã có sẵn trong DOM.
   initLoadingScreen();
@@ -1722,19 +1723,26 @@ function initProjectDetail() {
         if (!slide.alt) slide.alt = project.title;
         zoomableSlides.push(slide);
       } else if (slide.type === 'video') {
-        // Video có control gốc ngay trong ô, phát trực tiếp tại chỗ —
-        // KHÔNG cần bấm mở lightbox nữa (khác với model: model chỉ là
-        // preview tĩnh, phải bấm vào mới thật sự xoay/zoom được trong
-        // lightbox). Vì vậy video KHÔNG gắn class --zoomable và KHÔNG nối
-        // vào zoomableSlides — chuỗi Prev/Next trong lightbox chỉ còn đi
-        // qua ảnh/model, đúng với việc video đã tự đủ tương tác tại chỗ.
+        // Video giờ cũng chỉ là preview TĨNH trong ô (bỏ hẳn `controls`),
+        // y hệt cách ảnh/model hoạt động — bấm vào tile mới mở lightbox,
+        // và CHỈ trong lightbox video mới thật sự phát được (tự có
+        // controls + autoplay, xem renderMedia() trong initMediaLightbox()).
+        // Nhờ vậy video cũng nằm chung 1 chuỗi Prev/Next với cover/ảnh/
+        // model/card liên quan, thay vì là vùng bấm-để-phát tách biệt như
+        // trước (lúc đó bấm vào nút play gốc của trình duyệt hay bị lẫn
+        // với việc mở lightbox, hành vi không nhất quán).
+        tile.classList.add('project-gallery__tile--zoomable');
         const video = document.createElement('video');
         video.src = slide.src;
-        video.controls = true;
+        video.muted = true;
         video.playsInline = true;
         video.preload = 'metadata';
         if (slide.poster) video.poster = slide.poster;
         tile.appendChild(video);
+
+        const videoIdx = zoomableSlides.length;
+        tile.dataset.zoomIndex = String(videoIdx);
+        zoomableSlides.push({ type: 'video', src: slide.src, poster: slide.poster, alt: project.title });
       } else {
         const img = document.createElement('img');
         img.src = slide.src;
@@ -2313,4 +2321,144 @@ function setFooterYear() {
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
+}
+/* --------------------------------------------------------------------------
+   11. CUSTOM CURSOR — chấm + vòng hoa 5 cánh đuổi theo chuột
+   Chỉ bật trên thiết bị có chuột thật (hover:hover + pointer:fine) — thiết
+   bị cảm ứng không phát mousemove liên tục nên bật ở đó chỉ tạo ra 1 chấm
+   "chết" dính ở lần chạm cuối, không có ý nghĩa gì.
+   Cơ chế 2 lớp:
+   - .custom-cursor__dot: gán translate = toạ độ chuột THẬT mỗi lần
+     mousemove, không lerp — luôn khớp đúng điểm click.
+   - .custom-cursor__flower: cập nhật mỗi frame bằng requestAnimationFrame,
+     lerp dần về phía toạ độ chuột thật (hệ số CURSOR_FLOWER_EASE) — tạo độ
+     trễ mượt giống cursor tham khảo, thay vì dính cứng vào chuột.
+   Icon hoa dùng lại đúng path SVG của FLOWER_ICON_SVG (badge số lượng ảnh,
+   xem mục initGalleryBadges() phía trên) để đồng bộ hình khối trên toàn
+   site, chỉ khác là tô stroke bằng gradient thay vì currentColor, và kích
+   thước to hơn hẳn (dùng làm cursor chứ không phải icon nhỏ trong badge).
+   -------------------------------------------------------------------------- */
+function initCustomCursor() {
+  const supportsCustomCursor =
+    window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!supportsCustomCursor) return;
+
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const cursor = document.createElement('div');
+  cursor.className = 'custom-cursor';
+  // Gradient khai trong <defs> của chính SVG này (không phải CSS) vì
+  // stop-color cần set qua style="" mới chắc chắn nhận được CSS custom
+  // property var(--accent)/var(--accent-warm) ở mọi trình duyệt — 2 biến
+  // này đã tự có bản riêng cho theme sáng/tối (xem :root / html[data-theme
+  // ="light"] trong style.css) nên gradient tự đổi tông theo theme luôn,
+  // không cần code riêng ở đây.
+  cursor.innerHTML = `
+    <svg class="custom-cursor__flower" viewBox="0 0 24 24" width="46" height="46" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="customCursorFlowerGradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0" style="stop-color: var(--accent);" />
+          <stop offset="1" style="stop-color: var(--accent-warm);" />
+        </linearGradient>
+      </defs>
+      <path stroke="url(#customCursorFlowerGradient)" d="M 7.510 5.820 A 4.5 4.5 0 0 1 16.490 5.820 A 4.5 4.5 0 0 1 19.265 14.361 A 4.5 4.5 0 0 1 12.000 19.639 A 4.5 4.5 0 0 1 4.735 14.361 A 4.5 4.5 0 0 1 7.510 5.820 Z"/>
+    </svg>
+    <span class="custom-cursor__dot"></span>
+  `;
+  document.body.appendChild(cursor);
+  document.body.classList.add('custom-cursor-active');
+
+  const dotEl = cursor.querySelector('.custom-cursor__dot');
+  const flowerEl = cursor.querySelector('.custom-cursor__flower');
+
+  // Toạ độ chuột thật, cập nhật ngay mỗi mousemove — flowerX/flowerY là
+  // toạ độ đang hiển thị của hoa, đuổi dần theo mouseX/mouseY mỗi frame
+  // (xem animateFlower() bên dưới) chứ không nhảy thẳng tới.
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let flowerX = mouseX;
+  let flowerY = mouseY;
+  let hasMouseMoved = false;
+
+  // scale HIỆN TẠI (đang hiển thị, được lerp dần) và scale MỤC TIÊU (1 khi
+  // bình thường, to hơn khi hover vùng bấm được, nhỏ hơn khi đang giữ
+  // chuột) — lerp luôn cả scale trong animateFlower() thay vì transition
+  // CSS, vì transform của flower đã bị set thẳng qua style.transform mỗi
+  // frame (để lerp vị trí), nên 1 rule scale khai riêng bên CSS (qua class)
+  // sẽ bị đè mất, không bao giờ chạy được — phải gộp hết translate + rotate
+  // + scale vào chung 1 chuỗi transform tính trong JS.
+  let currentScale = 1;
+  let targetScale = 1;
+  let isPressed = false;
+
+  // Selector các vùng "bấm được" — hover vào thì phóng to vòng hoa, gợi ý
+  // giống cursor pointer mặc định nhưng theo phong cách riêng của site.
+  const INTERACTIVE_SELECTOR = 'a, button, input, textarea, select, label, [role="button"], [onclick]';
+
+  function updateHoverState(clientX, clientY) {
+    // Dò phần tử đang nằm dưới toạ độ chuột bằng elementFromPoint thay vì
+    // gắn listener cho từng phần tử lúc khởi tạo — nhiều card/nút trong
+    // site được JS dựng ĐỘNG sau đó (gallery badge, lightbox, related
+    // blocks...), gắn listener 1 lần lúc initCustomCursor() chạy sẽ bỏ
+    // sót hết các phần tử này.
+    const target = document.elementFromPoint(clientX, clientY);
+    const isInteractive = !!(target && target.closest(INTERACTIVE_SELECTOR));
+    targetScale = isPressed ? 0.85 : isInteractive ? 1.35 : 1;
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    hasMouseMoved = true;
+    dotEl.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    updateHoverState(mouseX, mouseY);
+
+    // Reduced motion: đặt hoa trùng luôn vị trí + scale mục tiêu ngay
+    // trong sự kiện mousemove, không chờ vòng lặp animateFlower() lerp
+    // dần — với người dùng bật "giảm hiệu ứng chuyển động", độ trễ dù
+    // mượt cũng là 1 dạng chuyển động không mong muốn.
+    if (prefersReducedMotion) {
+      flowerX = mouseX;
+      flowerY = mouseY;
+      flowerEl.style.transform = `translate(${flowerX}px, ${flowerY}px) translate(-50%, -50%) scale(${targetScale})`;
+    }
+  });
+
+  document.addEventListener('mouseleave', () => cursor.classList.add('custom-cursor--hidden'));
+  document.addEventListener('mouseenter', () => cursor.classList.remove('custom-cursor--hidden'));
+  window.addEventListener('mousedown', () => {
+    isPressed = true;
+    updateHoverState(mouseX, mouseY);
+  });
+  window.addEventListener('mouseup', () => {
+    isPressed = false;
+    updateHoverState(mouseX, mouseY);
+  });
+
+  if (prefersReducedMotion) return; // không cần vòng lặp lerp ở trên nữa
+
+  // Hệ số lerp: số càng nhỏ, hoa càng "nặng"/trễ khi đuổi theo chuột. 0.15
+  // cho cảm giác trôi nhẹ, mượt, giống cursor tham khảo người dùng gửi —
+  // chỉnh số này là cách nhanh nhất để "trễ nhiều/ít hơn" nếu cần sau này.
+  // Scale lerp nhanh hơn hẳn (0.25) vì đây là phản hồi hover/click, cần
+  // "ăn theo" ngay chứ không nên trễ như phần di chuyển.
+  const CURSOR_FLOWER_EASE = 0.15;
+  const CURSOR_SCALE_EASE = 0.25;
+
+  function animateFlower() {
+    if (hasMouseMoved) {
+      flowerX += (mouseX - flowerX) * CURSOR_FLOWER_EASE;
+      flowerY += (mouseY - flowerY) * CURSOR_FLOWER_EASE;
+      currentScale += (targetScale - currentScale) * CURSOR_SCALE_EASE;
+      // Xoay nhẹ theo độ lệch giữa hoa và chuột thật (khoảng cách còn lại
+      // của lerp) — hoa "nghiêng" theo hướng đang đuổi tới, chỉ là hiệu
+      // ứng trang trí thêm, không ảnh hưởng logic định vị.
+      const tiltDeg = (mouseX - flowerX) * 0.5;
+      flowerEl.style.transform =
+        `translate(${flowerX}px, ${flowerY}px) translate(-50%, -50%) rotate(${tiltDeg}deg) scale(${currentScale})`;
+    }
+    requestAnimationFrame(animateFlower);
+  }
+  requestAnimationFrame(animateFlower);
 }
