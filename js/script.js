@@ -2355,11 +2355,12 @@ function initScrollReveal() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
-    // rootMargin âm -50% ở đáy = co vùng "trong khung nhìn" lại chỉ còn NỬA
-    // TRÊN của màn hình, nên card chỉ được đánh dấu .is-visible (và animate
-    // trượt lên) khi đã cuộn tới khoảng GIỮA màn hình, không còn từ mép dưới
-    // như trước.
+    }, { threshold: 0, rootMargin: '0px 0px -33.33% 0px' });
+    // rootMargin âm -33.33% ở đáy = co vùng "trong khung nhìn" lại chỉ còn
+    // 2/3 TRÊN của màn hình, nên card chỉ được đánh dấu .is-visible (và
+    // animate trượt lên) khi đã cuộn tới khoảng 2/3 màn hình, không còn ở
+    // GIỮA màn hình như trước (khác với initSectionReveal() ở trang chủ,
+    // vẫn giữ mốc giữa màn hình).
 
     targets.forEach((el) => observer.observe(el));
   });

@@ -17,6 +17,12 @@
   --accent-soft: rgba(56, 189, 248, 0.12);
   --accent-warm: #e7b869;  /* vàng ấm — editorial / 2D */
   --accent-warm-soft: rgba(231, 184, 105, 0.12);
+  --accent-cv: #f2719d;    /* hồng — riêng cho link CV, cố tình khác màu
+                               với --accent (cyan, 3D) và --accent-warm
+                               (vàng, 2D) để không bị nhận lầm là link
+                               2D/3D, đồng thời nổi bật hơn hẳn so với
+                               trắng/đen (dễ chìm vào đoạn text phía trên
+                               của hero). */
 
   /* Dùng để dựng các nền mờ (overlay) trên ảnh/video: pill nút mute,
      nút cuộn, badge, nút đóng modal/lightbox, gradient scrim của Hero...
@@ -81,6 +87,10 @@ html[data-theme="light"] {
   --accent-soft: rgba(3, 108, 163, 0.12);
   --accent-warm: #ffb52c;
   --accent-warm-soft: rgba(138, 92, 18, 0.14);
+  --accent-cv: #d81b60;   /* hồng đậm hơn bản chế độ tối, đủ tương phản
+                              trên nền sáng --bg-base (#eeece5), theo đúng
+                              cách --accent/--accent-warm cũng đậm/rực hơn
+                              ở chế độ sáng so với chế độ tối. */
  
   --overlay-rgb: 238, 236, 229;
 
@@ -1578,6 +1588,21 @@ html[data-theme="light"] .hero__welcome-text text {
 }
 @media (hover: hover) and (pointer: fine) {
   .featured__more--accent:hover { color: var(--accent); }
+}
+
+/* Modifier riêng cho link CV (local PDF) ở hero trang chủ — tái dùng đúng
+   layout/hover-icon của .featured__more, nhưng dùng --accent-cv (hồng)
+   thay vì trắng/đen cố định: trắng/đen thường bị chìm, trùng với đoạn
+   text (--text-primary/--text-secondary) ngay phía trên trong hero, nên
+   đổi sang 1 màu riêng — không phải vàng --accent-warm (2D) hay cyan
+   --accent (3D) — để CV luôn nổi bật và không bị nhận lầm là link
+   2D/3D. Giữ cùng cách hoạt động: KHÔNG đổi màu khi hover, chỉ mũi tên
+   dịch chuyển như các link featured__more khác. */
+.featured__more--cv {
+  color: var(--accent-cv);
+}
+@media (hover: hover) and (pointer: fine) {
+  .featured__more.featured__more--cv:hover { color: var(--accent-cv); }
 }
 
 
