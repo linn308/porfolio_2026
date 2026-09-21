@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroTypewriter();
   initHeroPortfolioText();
   initHeroPipParallax();
+  initGalleryPriority();
   initGalleryFilter();
   initGalleryBadges();
   initLightbox();
@@ -812,6 +813,101 @@ function initShowcaseCards() {
       const href = trigger.dataset.detail;
       if (href) navigateWithFade(href);
     });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   4c. ƯU TIÊN CARD TRONG GALLERY (dùng ở 2d.html và 3d.html)
+   Gallery chính (#galleryGrid) TRƯỚC ĐÂY dùng CSS multi-column (columns) —
+   trình duyệt tự đổ ĐẦY CỘT 1 bằng các card đứng trước trong DOM rồi mới
+   sang cột 2, 3... nên card "ưu tiên" luôn dồn hết vào 1 CỘT (thẳng dọc)
+   chứ không rải ra một HÀNG ngang như mong muốn.
+
+   Giờ đổi #galleryGrid sang flex + các cột con .gallery__col do CHÍNH hàm
+   này tự dựng bằng JS (xem #galleryGrid trong style.css), rồi rải card
+   theo kiểu ROUND-ROBIN: card 1 → cột 1, card 2 → cột 2, card 3 → cột 3,
+   card 4 → cột 1 (quay lại), card 5 → cột 2... Vì thứ tự rải luôn đi
+   NGANG qua hết các cột rồi mới xuống hàng kế tiếp, card nào đứng trước
+   trong danh sách đã sort theo ưu tiên (xem PRIORITY_RANK) sẽ luôn nằm ở
+   HÀNG trên — đúng nghĩa "ưu tiên theo hàng" thay vì theo cột.
+
+   Card nào muốn đẩy lên đầu/xuống cuối thì gắn thêm data-priority="high"
+   (đẩy lên hàng đầu) hoặc data-priority="low" (đẩy xuống hàng cuối) ngay
+   trên thẻ <article class="card ...">. Card KHÔNG khai data-priority
+   (mặc định) tự nằm ở khoảng GIỮA — sau mọi card "high", trước mọi card
+   "low". Trong từng nhóm (high / mặc định / low), thứ tự tương đối giữ
+   đúng như thứ tự khai trong HTML.
+
+   ĐÁNH ĐỔI: vì không còn dùng CSS multi-column tự cân bằng chiều cao theo
+   PIXEL thật, các cột có thể lệch chiều cao nhau chút (không còn "khít"
+   tuyệt đối như masonry gốc) — bù lại kiểm soát được CHÍNH XÁC hàng nào
+   có card nào, đúng yêu cầu ưu tiên theo hàng.
+
+   Số cột lấy đúng theo 3 mốc responsive đang có trong style.css (.gallery):
+   >1024px = 3 cột, 621–1024px = 2 cột, ≤620px = 1 cột — đổi cỡ màn hình
+   qua mốc nào thì tự dựng lại cột cho khớp (nghe 'resize'). Không đụng gì
+   đến data-category (initGalleryFilter() phía dưới vẫn hoạt động như cũ,
+   vì nó querySelectorAll('.card') LẠI sau khi hàm này đã dựng xong DOM,
+   dù card giờ nằm trong .gallery__col thì querySelectorAll không giới hạn
+   theo cấp con trực tiếp nên vẫn tìm thấy đủ).
+   -------------------------------------------------------------------------- */
+function initGalleryPriority() {
+  const grid = document.getElementById('galleryGrid');
+  if (!grid) return;
+
+  // Card ban đầu có thể đang nằm trực tiếp trong #galleryGrid (lần tải
+  // đầu) hoặc đã nằm trong .gallery__col (nếu hàm này từng chạy rồi, ví
+  // dụ gọi lại sau resize) — gom cả 2 trường hợp lại cho chắc.
+  const cards = Array.from(grid.querySelectorAll('.card'));
+  if (cards.length < 2) return;
+
+  const PRIORITY_RANK = { high: 0, low: 2 };
+  const rankOf = (card) => PRIORITY_RANK[card.dataset.priority] ?? 1;
+
+  // Sort ỔN ĐỊNH (stable) theo rank — Array.prototype.sort trong JS hiện
+  // đại đã đảm bảo ổn định, nên các card cùng rank tự giữ đúng thứ tự
+  // tương đối ban đầu, không cần code thêm gì để giữ thứ tự đó.
+  const sortedCards = cards
+    .map((card, index) => ({ card, index, rank: rankOf(card) }))
+    .sort((a, b) => a.rank - b.rank || a.index - b.index)
+    .map((entry) => entry.card);
+
+  const getColumnCount = () => {
+    if (window.matchMedia('(max-width: 620px)').matches) return 1;
+    if (window.matchMedia('(max-width: 1024px)').matches) return 2;
+    return 3;
+  };
+
+  const layout = () => {
+    const columnCount = getColumnCount();
+
+    grid.innerHTML = '';
+    const cols = Array.from({ length: columnCount }, () => {
+      const col = document.createElement('div');
+      col.className = 'gallery__col';
+      grid.appendChild(col);
+      return col;
+    });
+
+    // Round-robin: card đã sort theo ưu tiên rải NGANG qua hết các cột
+    // trước khi xuống hàng kế tiếp — xem giải thích đầy đủ ở đầu hàm.
+    sortedCards.forEach((card, i) => {
+      cols[i % columnCount].appendChild(card);
+    });
+  };
+
+  layout();
+
+  // Đổi cỡ màn hình qua mốc responsive (3 → 2 → 1 cột) thì dựng lại cột
+  // cho khớp, tránh card lệch cột cũ. sortedCards vẫn giữ đúng element
+  // gốc (appendChild chỉ DI CHUYỂN node, không tạo bản sao) nên gọi lại
+  // layout() bao nhiêu lần cũng an toàn, không mất/lặp card.
+  let lastColumnCount = getColumnCount();
+  window.addEventListener('resize', () => {
+    const nextColumnCount = getColumnCount();
+    if (nextColumnCount === lastColumnCount) return;
+    lastColumnCount = nextColumnCount;
+    layout();
   });
 }
 

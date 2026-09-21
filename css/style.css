@@ -1791,6 +1791,34 @@ html[data-theme="light"] .hero__welcome-text text {
   column-span: all;
 }
 
+/* #galleryGrid (gallery CHÍNH của index-2d.html/index-3d.html) — ĐỔI cơ chế
+   chia cột: không dùng CSS multi-column (columns) như .gallery gốc ở trên
+   nữa, vì multi-column tự chọn cột cho từng phần tử theo kiểu "đổ đầy cột 1
+   trước rồi mới sang cột 2" — khiến card ưu tiên (data-priority="high" ở
+   initGalleryPriority() trong js/script.js) luôn dồn hết vào MỘT cột đầu
+   tiên (ưu tiên theo CỘT) chứ không rải đều ra một HÀNG ngang.
+
+   Đổi #galleryGrid sang flex + các cột con .gallery__col do JS tự dựng
+   (initGalleryPriority() phần 4c) — JS rải card lần lượt cột 1, cột 2, cột
+   3, cột 1, cột 2... (round-robin) nên card đứng trước trong danh sách đã
+   sort theo ưu tiên (high → mặc định → low) luôn nằm ở HÀNG trên, trải
+   ngang đủ qua từng cột — đúng nghĩa "ưu tiên theo hàng" người dùng cần.
+   Dùng #galleryGrid (ID) để CHỈ áp dụng riêng gallery chính này, không đụng
+   tới các nơi khác đang dùng chung class .gallery (project detail related
+   cards) — những nơi đó vẫn giữ đúng multi-column như cũ. */
+#galleryGrid {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+#galleryGrid .gallery__col {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .gallery__empty {
   color: var(--text-muted);
   text-align: center;
