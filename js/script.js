@@ -818,7 +818,10 @@ function applyShowcaseSpeed(track) {
 // An toàn gọi nhiều lần trên cùng 1 track (dataset flag) — buildRelatedLoopBlock()
 // gọi ngay lúc dựng, initShowcaseSpeed() quét lại cho dải tĩnh ở trang chủ.
 function bindShowcaseSpeed(track) {
-  if (!track || track.dataset.speedBound) return;
+  // Track đã do bindShowcaseControls() điều khiển (relatedLoop có nút
+  // Prev/Next) thì KHÔNG đặt animation-duration nữa — nó không còn dùng
+  // CSS animation.
+  if (!track || track.dataset.speedBound || track.dataset.loopControl) return;
   track.dataset.speedBound = 'true';
 
   let frame = 0;
@@ -839,6 +842,168 @@ function bindShowcaseSpeed(track) {
 
 function initShowcaseSpeed() {
   document.querySelectorAll('.showcase').forEach((track) => bindShowcaseSpeed(track));
+}
+
+/* --------------------------------------------------------------------------
+   4a-3. DẢI LOOP CÓ NÚT PREV/NEXT (relatedLoop ở trang chi tiết dự án)
+   Vì sao không dùng tiếp CSS animation: animation CSS chỉ chạy 1 chiều từ
+   0 tới -50%, không có cách "cộng thêm" một bước nhảy khi bấm nút mà không
+   bị giật/reset. Nên dải này chuyển sang JS: giữ 1 biến `pos` (px đã cuộn)
+   và mỗi frame ghi transform = translateX(-pos mod half).
+     - Tự chạy: mỗi frame cộng speed * dt (speed = --showcase-speed, px/giây
+       — cùng số với trang chủ nên tốc độ nhìn thấy đồng nhất).
+     - Bấm Next/Prev: chạy 1 animation easing (easeOutCubic ~700ms) dịch
+       thêm ±50% chiều rộng khung nhìn. Trong lúc đó tạm dừng tự chạy để
+       không cộng dồn 2 chuyển động. Bấm liên tiếp thì cộng dồn đích tới.
+     - "half" (nửa track) là chu kỳ lặp liền mạch — lấy mod theo nó nên
+       lùi quá đầu hay tiến quá cuối vẫn nối vòng, không có "điểm chặn".
+   Giữ lại hành vi cũ: hover (chuột thật) thì dừng tự chạy; tôn trọng
+   prefers-reduced-motion (không tự chạy, bấm nút thì nhảy tức thì).
+   -------------------------------------------------------------------------- */
+const SHOWCASE_STEP_RATIO = 0.5;   // mỗi lần bấm dịch 50% chiều rộng khung nhìn
+const SHOWCASE_STEP_MS = 700;      // thời gian animation cho 1 lần bấm
+const SHOWCASE_NAV_LABELS = {
+  prev: { vi: 'Lùi lại', en: 'Previous' },
+  next: { vi: 'Tiến tới', en: 'Next' },
+};
+const SHOWCASE_NAV_ICONS = {
+  prev: '<path d="M15 6l-6 6 6 6"/>',
+  next: '<path d="M9 6l6 6-6 6"/>',
+};
+
+function bindShowcaseControls(track, viewport, navWrap) {
+  if (!track || track.dataset.loopControl) return;
+  track.dataset.loopControl = 'true';
+  track.classList.add('showcase--manual'); // CSS: tắt keyframes, bật will-change
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+  let half = 0;      // quãng đường 1 vòng loop (px) = nửa chiều dài track
+  let speed = 0;     // px/giây
+  let pos = 0;       // số px đã cuộn (không giới hạn khi đang animate)
+  let anim = null;   // { from, to, start, dur } khi đang chạy bước nhảy
+  let hovering = false;
+  let inView = false;
+  let last = 0;
+  let raf = 0;
+
+  const wrapPos = (p) => ((p % half) + half) % half;
+  const render = () => {
+    track.style.transform = 'translate3d(' + (-wrapPos(pos)).toFixed(2) + 'px,0,0)';
+  };
+
+  // Đo lại khi track đổi kích thước (video tải xong metadata, resize...).
+  // Giữ TỈ LỆ pos/half để dải không nhảy chỗ khi track dài ra.
+  const measure = () => {
+    const w = track.getBoundingClientRect().width / 2;
+    if (!w) return;
+    if (half) {
+      const k = w / half;
+      pos *= k;
+      if (anim) { anim.from *= k; anim.to *= k; }
+    }
+    half = w;
+    const cssSpeed = parseFloat(getComputedStyle(track).getPropertyValue('--showcase-speed'));
+    speed = reduceMotion ? 0 : (cssSpeed > 0 ? cssSpeed : SHOWCASE_FALLBACK_SPEED);
+    render();
+  };
+
+  const tick = (now) => {
+    raf = requestAnimationFrame(tick);
+    // Kẹp dt: tab bị treo/quay lại không làm dải "phóng" 1 đoạn dài.
+    const dt = Math.min(now - last, 100) / 1000;
+    last = now;
+    if (!half) return;
+
+    if (anim) {
+      const t = Math.min((now - anim.start) / anim.dur, 1);
+      pos = anim.from + (anim.to - anim.from) * easeOutCubic(t);
+      if (t >= 1) { pos = wrapPos(anim.to); anim = null; }
+    } else if (speed > 0 && inView && !hovering) {
+      pos += speed * dt;
+      if (pos >= half) pos -= half;
+    } else {
+      return; // đứng yên: không ghi style thừa
+    }
+    render();
+  };
+
+  const start = () => {
+    if (raf) return;
+    last = performance.now();
+    raf = requestAnimationFrame(tick);
+  };
+  const stop = () => {
+    cancelAnimationFrame(raf);
+    raf = 0;
+  };
+
+  const go = (dir) => {
+    if (!half) return;
+    const step = viewport.clientWidth * SHOWCASE_STEP_RATIO * dir;
+    if (reduceMotion) { pos += step; render(); return; }
+    // Đang animate dở thì cộng dồn vào ĐÍCH cũ (bấm nhanh 2 lần = đi 100%).
+    const base = anim ? anim.to : pos;
+    anim = { from: pos, to: base + step, start: performance.now(), dur: SHOWCASE_STEP_MS };
+    start();
+  };
+
+  // --- Nút Prev / Next ---
+  const buttons = {};
+  ['prev', 'next'].forEach((key) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'showcase-nav__btn showcase-nav__btn--' + key;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" '
+      + 'stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+      + 'stroke-linejoin="round" aria-hidden="true">' + SHOWCASE_NAV_ICONS[key] + '</svg>';
+    btn.addEventListener('click', () => go(key === 'next' ? 1 : -1));
+    navWrap.appendChild(btn);
+    buttons[key] = btn;
+  });
+
+  // aria-label song ngữ: applyLanguage() chỉ đổi textContent của phần tử có
+  // data-vi/data-en (sẽ xoá mất icon SVG nếu gắn lên nút) nên nghe theo
+  // thuộc tính lang của <html> để tự cập nhật nhãn.
+  const updateLabels = () => {
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'vi';
+    Object.keys(buttons).forEach((key) => {
+      buttons[key].setAttribute('aria-label', SHOWCASE_NAV_LABELS[key][lang]);
+    });
+  };
+  updateLabels();
+  new MutationObserver(updateLabels).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['lang'],
+  });
+
+  // Hover dừng tự chạy — chỉ với chuột thật (giống rule CSS cũ, tránh "hover
+  // dính" trên màn cảm ứng). Dùng navWrap để rê vào nút cũng không bị trôi.
+  if (canHover) {
+    navWrap.addEventListener('mouseenter', () => { hovering = true; });
+    navWrap.addEventListener('mouseleave', () => { hovering = false; });
+  }
+
+  // Chỉ chạy rAF khi dải đang trong khung nhìn — khỏi tốn CPU khi đang
+  // cuộn ở phần khác của trang.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      inView = entries[entries.length - 1].isIntersecting;
+      if (inView) start(); else if (!anim) stop();
+    }).observe(navWrap);
+  } else {
+    inView = true;
+    start();
+  }
+
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(measure).observe(track);
+  } else {
+    window.addEventListener('resize', measure);
+  }
+  measure();
 }
 
 /* --------------------------------------------------------------------------
@@ -2361,7 +2526,12 @@ function buildRelatedLoopBlock(block, lang, sharedSlides) {
   const track = document.createElement('div');
   track.className = 'showcase';
   viewport.appendChild(track);
-  section.appendChild(viewport);
+  // Bọc thêm .showcase-nav (position: relative) để đặt nút Prev/Next đè lên
+  // 2 mép dải mà KHÔNG nằm trong viewport (viewport có mask mờ 2 mép).
+  const navWrap = document.createElement('div');
+  navWrap.className = 'showcase-nav';
+  navWrap.appendChild(viewport);
+  section.appendChild(navWrap);
 
   // Đẩy media của TỪNG item vào sharedSlides NGAY TỪ ĐẦU (trước khi build
   // tile), ghi nhớ lại đúng index của nó trong danh sách dùng chung — tile
@@ -2415,10 +2585,11 @@ function buildRelatedLoopBlock(block, lang, sharedSlides) {
 
   bindZoomableTiles(track, '.card', sharedSlides);
 
-  // Tốc độ loop tính theo px/giây (không phải duration cố định) — xem
-  // bindShowcaseSpeed() ở mục 4a-2. Gọi ở đây (kể cả khi track chưa gắn
-  // vào DOM) vì ResizeObserver sẽ tự đo lại ngay khi track có kích thước.
-  bindShowcaseSpeed(track);
+  // Dải liên quan tự chạy theo px/giây (cùng biến --showcase-speed như
+  // trang chủ) NHƯNG do JS điều khiển để thêm được nút Prev/Next — xem
+  // bindShowcaseControls() ở mục 4a-3. Gọi ở đây (kể cả khi track chưa gắn
+  // vào DOM) vì ResizeObserver bên trong sẽ tự đo lại khi track có kích thước.
+  bindShowcaseControls(track, viewport, navWrap);
 
   return section;
 }

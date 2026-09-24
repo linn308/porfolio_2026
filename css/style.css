@@ -1668,6 +1668,60 @@ html[data-theme="light"] .hero__welcome-text text {
   to { transform: translateX(-50%); }
 }
 
+/* --------------------------------------------------------------------------
+   DẢI LOOP CÓ NÚT PREV/NEXT (chỉ relatedLoop ở trang chi tiết dự án)
+   Dải này KHÔNG dùng CSS animation nữa: script.js (bindShowcaseControls)
+   tự dịch track bằng transform mỗi frame để vừa tự chạy, vừa nhận thêm
+   bước nhảy mượt khi bấm nút. Trang chủ vẫn dùng animation CSS như cũ.
+   -------------------------------------------------------------------------- */
+.showcase-nav { position: relative; }
+
+.showcase--manual {
+  animation: none;       /* tắt keyframes — JS đang điều khiển transform */
+  will-change: transform;
+}
+
+/* 2 nút nằm NGOÀI .showcase-viewport (anh em, không phải con) vì viewport
+   có mask-image làm mờ 60px 2 mép — đặt nút bên trong sẽ bị mờ theo.
+   top: calc(50% - 14px): track có padding 4px trên / 32px dưới nên tâm
+   của phần card lệch lên (32 - 4) / 2 = 14px so với tâm cả khối. */
+.showcase-nav__btn {
+  position: absolute;
+  top: calc(50% - 14px);
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-opa-8);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.showcase-nav__btn--prev { left: 20px; }
+.showcase-nav__btn--next { right: 20px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .showcase-nav__btn:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+.showcase-nav__btn:active { transform: translateY(-50%) scale(0.94); }
+.showcase-nav__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 620px) {
+  .showcase-nav__btn { width: 38px; height: 38px; }
+  .showcase-nav__btn--prev { left: 10px; }
+  .showcase-nav__btn--next { right: 10px; }
+}
+
 .showcase .card {
   flex: 0 0 auto;
   /* width: 300px; */
