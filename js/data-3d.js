@@ -226,10 +226,25 @@ const PROJECTS_3D = {
             text: ['I took the lead in Story & Animation, driving the project’s main concept and direction while developing the script, storyboard, layout, and animation for the film.',
                   'I also supported the team with 3D modeling throughout production.']},
     },
-    slides: [
-      { type: 'image', src: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=1400&auto=format&fit=crop' },
-      { type: 'image', src: 'https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1400&auto=format&fit=crop' },
+    slides:[{ type: 'image', src: '../../assets/3d/FFL/01.webp' },
+            { type: 'image', src: '../../assets/3d/FFL/02.webp' },
+     ],
+    relatedBlocks:[
+      { title: { vi: 'Diễn hoạt', en: 'Animation' },
+        type: 'loop', 
+        items: [{ media: {type: 'video', src: '../../assets/3d/FFL/00.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/01.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/02.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/03.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/04.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/05.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/06.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/07.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/08.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/09.mp4' }},
+                { media: {type: 'video', src: '../../assets/3d/FFL/10.mp4' }},
+              ]
+      },
     ],
   },
 
@@ -431,7 +446,7 @@ const PROJECTS_3D = {
       vi: 'Dự án cá nhân thực hiện model 3D một không gian quán cà phê theo phong cách isometric bằng Maya và 3ds Max, dựa trên hình ảnh tham chiếu tổng hợp từ internet. Tác phẩm tập trung vào việc tái hiện không gian nội thất với tỷ lệ hài hòa.',
       en: 'A personal 3D modeling project creating an isometric coffee shop environment using Maya and 3ds Max, based on online references. The piece focuses on recreating a stylized interior with balanced proportions.',
     },
-    tools: ['Maya, 3ds Max'],
+    tools: ['Maya', '3ds Max'],
     styleTags: ['Industrial Design', 'Hard-Surface', 'Rugged Tech', '3D Modeling'],
   },
 

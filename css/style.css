@@ -1628,10 +1628,21 @@ html[data-theme="light"] .hero__welcome-text text {
 }
 
 .showcase {
+  /* TỐC ĐỘ LOOP (px/giây) — script.js (initShowcaseSpeed) đọc số này rồi tự
+     tính animation-duration = (nửa chiều dài track) / tốc độ. Nhờ vậy dải
+     nào cũng chạy CÙNG 1 tốc độ nhìn thấy, bất kể có 5 hay 11 card, card
+     hẹp (ảnh) hay rộng (video 16:9). Muốn chạy chậm/nhanh hơn: chỉ đổi số
+     này (nhỏ = chậm). */
+  --showcase-speed: 50;
   display: flex;
   width: max-content;
   gap: 14px;
-  padding: 4px 0 32px;
+  /* padding-right = đúng bằng gap: translateX(-50%) chỉ nối liền mạch khi
+     nửa track = (tổng card + N khoảng gap). Thiếu padding này nửa track
+     chỉ có (N - 0.5) gap nên mỗi vòng bị giật ~7px ở chỗ nối. */
+  padding: 4px 14px 32px 0;
+  /* 42s chỉ là GIÁ TRỊ DỰ PHÒNG khi JS chưa chạy/bị tắt — JS sẽ ghi đè
+     bằng inline style ngay khi trang tải xong. */
   animation: showcase-scroll 42s linear infinite;
 }
 
@@ -1684,6 +1695,22 @@ html[data-theme="light"] .hero__welcome-text text {
   width: auto;
   height: 100%;
   aspect-ratio: 1 / 1;
+}
+
+/* VIDEO trong dải loop: làm y hệt <img> ở trên — cao cố định theo card
+   (100% của .card__media), chiều rộng tự suy ra từ TỈ LỆ THẬT của video.
+   Trước đây video dùng rule chung `.card__media video { width: 100%;
+   height: auto }` nên rộng bằng kích thước gốc (vd 1920px) rồi bị
+   .card__media (cao 450px, overflow: hidden) cắt mất 1 phần hình.
+   `aspect-ratio: auto 16 / 9` = dùng tỉ lệ thật khi đã có metadata; trong
+   lúc chưa tải xong thì tạm giữ khung 16:9 để dải không co giật.
+   object-fit: contain = phòng hờ, khung sai lệch vài px cũng không cắt hình. */
+.showcase .card__media video {
+  display: block;
+  width: auto;
+  height: 100%;
+  aspect-ratio: auto 16 / 9;
+  object-fit: contain;
 }
 
 .showcase .card__body { display: none; }
@@ -1919,6 +1946,11 @@ body:not(.page-home) .card__media {
   display: block;
   width: 100%;
   height: auto;
+  /* Giữ đúng tỉ lệ thật của video (auto) và chỉ dùng 16:9 làm khung tạm
+     trước khi metadata tải xong — tránh card lưới "nhảy" chiều cao và
+     tránh video bị ép/cắt khi khung chưa biết kích thước. */
+  aspect-ratio: auto 16 / 9;
+  object-fit: contain;
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
@@ -3173,6 +3205,26 @@ html[data-theme="light"] .footer__running-dot {
    control gốc, không cần mở lightbox thêm. */
 .project-cover video {
   cursor: pointer;
+}
+
+/* ĐỒNG BỘ KÍCH THƯỚC COVER (poster ↔ video).
+   Nguyên nhân lệch: <video> chưa có dữ liệu thì lấy kích thước của POSTER,
+   tải xong metadata lại đổi sang kích thước của FILE VIDEO — 2 file khác
+   độ phân giải/tỉ lệ thì khung cover bị nhảy, và object-fit: cover + 
+   max-height: 70vh còn cắt mất 1 phần hình.
+   Cách xử lý: khoá khung cố định 16:9 (cùng tỉ lệ .project-cover--model
+   phía dưới) cho cả poster lẫn video, object-fit: contain để không mất
+   hình, nền đen cho phần thừa nếu video không đúng 16:9. Muốn đổi tỉ lệ
+   khung: sửa --cover-ratio. Poster nên xuất từ chính frame của video (cùng
+   tỉ lệ) để 2 lớp khít tuyệt đối. */
+.project-cover video {
+  --cover-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--cover-ratio);
+  max-height: none;
+  object-fit: contain;
+  background: #000;
 }
 
 /* DÙNG "padding-top hack" thay vì aspect-ratio — aspect-ratio trên

@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initMediaLightbox();
   initShowcaseCards();
   initProjectDetail();
+  // Sau initProjectDetail() để dải loop "dự án liên quan" (JS tự dựng) đã có
+  // trong DOM — xem giải thích ở mục 4c bên dưới.
+  initShowcaseSpeed();
   initProjectInfoHeightSync();
   initScrollReveal();
   initSectionReveal();
@@ -787,6 +790,55 @@ function initPageTransitions() {
       navigateWithFade(href);
     });
   });
+}
+
+/* --------------------------------------------------------------------------
+   4a-2. TỐC ĐỘ LOOP .showcase — CỐ ĐỊNH THEO PX/GIÂY
+   Animation showcase-scroll dịch track đúng -50% (= chiều dài 1 nửa) trong
+   khoảng thời gian animation-duration. Nếu duration cố định (42s như CSS
+   cũ) thì tốc độ nhìn thấy = (chiều dài nửa track) / 42s => track càng dài
+   (nhiều card, hoặc card rộng như video 16:9) càng chạy NHANH — đó là lý do
+   dải video ở 3d-FFL.html chạy vọt hơn hẳn dải ảnh ở trang chủ.
+   Cách sửa: đảo lại — cố định TỐC ĐỘ (px/giây, biến --showcase-speed trong
+   style.css) rồi tự tính duration = nửa chiều dài track / tốc độ. Phải đo
+   lại mỗi khi track đổi kích thước (ảnh/video tải xong metadata, resize
+   cửa sổ, đổi ngôn ngữ) nên dùng ResizeObserver thay vì đo 1 lần.
+   -------------------------------------------------------------------------- */
+const SHOWCASE_FALLBACK_SPEED = 50; // px/giây — chỉ dùng khi CSS không khai báo --showcase-speed
+
+function applyShowcaseSpeed(track) {
+  // Nửa track = đúng quãng đường 1 vòng loop (translateX(-50%)).
+  const half = track.getBoundingClientRect().width / 2;
+  if (!half) return; // track đang ẩn/chưa có kích thước — chờ lần đo sau
+  const cssSpeed = parseFloat(getComputedStyle(track).getPropertyValue('--showcase-speed'));
+  const speed = cssSpeed > 0 ? cssSpeed : SHOWCASE_FALLBACK_SPEED;
+  track.style.animationDuration = (half / speed).toFixed(2) + 's';
+}
+
+// An toàn gọi nhiều lần trên cùng 1 track (dataset flag) — buildRelatedLoopBlock()
+// gọi ngay lúc dựng, initShowcaseSpeed() quét lại cho dải tĩnh ở trang chủ.
+function bindShowcaseSpeed(track) {
+  if (!track || track.dataset.speedBound) return;
+  track.dataset.speedBound = 'true';
+
+  let frame = 0;
+  // Gom nhiều lần đổi kích thước liên tiếp (11 video lần lượt tải xong
+  // metadata) về 1 lần đo mỗi frame, tránh ghi style dồn dập.
+  const schedule = () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => applyShowcaseSpeed(track));
+  };
+
+  schedule();
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(schedule).observe(track);
+  } else {
+    window.addEventListener('resize', schedule);
+  }
+}
+
+function initShowcaseSpeed() {
+  document.querySelectorAll('.showcase').forEach((track) => bindShowcaseSpeed(track));
 }
 
 /* --------------------------------------------------------------------------
@@ -2362,6 +2414,11 @@ function buildRelatedLoopBlock(block, lang, sharedSlides) {
   items.forEach((item, i) => track.appendChild(buildLoopTile(item, i, true)));
 
   bindZoomableTiles(track, '.card', sharedSlides);
+
+  // Tốc độ loop tính theo px/giây (không phải duration cố định) — xem
+  // bindShowcaseSpeed() ở mục 4a-2. Gọi ở đây (kể cả khi track chưa gắn
+  // vào DOM) vì ResizeObserver sẽ tự đo lại ngay khi track có kích thước.
+  bindShowcaseSpeed(track);
 
   return section;
 }
