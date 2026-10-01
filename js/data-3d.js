@@ -451,14 +451,33 @@ const PROJECTS_3D = {
       en: '3D Animation — Animation Study',
     },
     desc: {
-      vi: 'Mô phỏng lại phân cảnh thoại của nhân vật Boss Baby. Tác phẩm tập trung vào kỹ thuật lip-sync theo khẩu hình kết hợp với chuyển động cơ thể và biểu cảm gương mặt',
-      en: 'Recreating a dialogue scene from Boss Baby. The piece focuses on phoneme-based lip-sync, combined with body mechanics and facial expressions.',
+      vi: 'Bài tập animation tập trung vào body mechanics, posing và timing, thực hành chuyển động nhân vật qua các pose và chuyển trọng tâm khác nhau, hướng đến chuyển động tự nhiên và có nhịp điệu.',
+      en: 'An animation exercise focused on body mechanics, posing, and timing, exploring character movement through dynamic poses and weight shifts to create more natural and rhythmic motion.',
     },
     tools: ['Maya'],
-    styleTags: ['Animation'],
+    styleTags: ['Body Mechanics', 'Posing', 'Timing', 'Character Animation'],
     slides:[{ type: 'video', src: '../../assets/3d/ani-FS/000.mp4', poster: '../../assets/3d/ani-FS/000.webp' }],
   },
 
+  aniCar: {
+    title: 'Vehicle Animation',
+    year: '2026',
+    category: { vi: 'Animation', en: 'Animation' },
+    subtitle: {
+      vi: '3D Animation — Animation Study',
+      en: '3D Animation — Animation Study',
+    },
+    desc: {
+      vi: 'Bài tập cá nhân nghiên cứu chuyển động của xe khi đi qua gờ giảm tốc, với 3 tình huống và tốc độ khác nhau, tập trung vào weight shift, suspension movement và timing để tạo chuyển động chân thực và có sự khác biệt rõ ràng theo tốc độ.',
+      en: 'A personal animation study exploring a vehicle driving over a speed bump under three different scenarios and speeds, focusing on weight shift, suspension movement, and timing to create believable motion and varied reactions to speed.',
+    },
+    tools: ['3ds Max'],
+    styleTags: ['Vehicle Animation', 'Mechanical Animation', 'Weight Shift', 'Suspension', 'Timing'],
+    slides:[{ type: 'video', src: '../../assets/3d/ani-car/001.mp4', poster: '../../assets/3d/ani-car/000.webp' },
+            { type: 'video', src: '../../assets/3d/ani-car/002.mp4', poster: '../../assets/3d/ani-car/000.webp' },
+            { type: 'video', src: '../../assets/3d/ani-car/003.mp4', poster: '../../assets/3d/ani-car/000.webp' }
+    ],
+  },
 
 
 };
