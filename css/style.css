@@ -2890,6 +2890,190 @@ html[data-theme="light"] .footer__running-dot {
   margin-top: 16px;
 }
 
+/* Light-box cho project CHƯA có page riêng (card không có data-detail):
+   hiện video, nút đổi biến thể model và dải thumbnail các media của project. */
+.modal__video { width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #000; display: block; }
+.modal__video[hidden], .modal__img[hidden], .modal__model[hidden] { display: none; }
+
+/* Nút biến thể nằm cạnh nút Đóng chứ không đè lên nó */
+.modal__media .model-variant-toggle { top: 16px; right: 64px; }
+
+.modal__thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 30px 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.modal__thumbs[hidden] { display: none; }
+
+/* Tiêu đề lightbox là link sang page riêng của project (khi card có data-detail) */
+.modal__title-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.modal__title-link::after {
+  content: " \2192";
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .modal__title-link:hover { color: var(--accent); border-color: var(--accent); }
+}
+
+/* Prev / Next của lightbox danh sách: nằm ngoài khung, sát 2 mép màn hình
+   (con trực tiếp của .modal nên canh theo cả viewport, không theo .modal__panel).
+   Chỉ áp cho .modal > .modal__nav — .modal__nav ở trang chi tiết dự án giữ nguyên. */
+.modal > .modal__nav {
+  position: fixed;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  z-index: 3;
+}
+.modal > .modal__nav--prev { left: 28px; right: auto; }
+.modal > .modal__nav--next { right: 28px; left: auto; }
+.modal > .modal__nav .modal__nav-icon { font-size: 1.7rem; }
+.modal__nav[hidden] { display: none; }
+
+/* Màn hình hẹp: không còn chỗ trống 2 bên khung → đưa nút xuống mép dưới */
+@media (max-width: 900px) {
+  .modal > .modal__nav { top: auto; bottom: 14px; transform: none; width: 42px; height: 42px; }
+  .modal > .modal__nav--prev { left: 16px; }
+  .modal > .modal__nav--next { right: 16px; }
+}
+
+/* ==========================================================================
+   LIGHTBOX TRANG 3D — KÍCH THƯỚC CỐ ĐỊNH CHO MỌI PROJECT (.modal--media)
+   Panel = [khung media 16:10] + [hàng thumbnail 66px] + [phần chữ 280px].
+   Cả 3 phần có chiều cao CỐ ĐỊNH (hàng thumbnail vẫn giữ chỗ khi project chỉ có
+   1 file, mô tả luôn giữ chỗ đúng 3 dòng) nên project nào cũng ra đúng 1
+   kích thước, không nhảy khung và không sinh scroll-bar.
+   Chiều rộng panel bị chặn theo chiều cao màn hình: (94vh - 346px) * 1.6, để
+   tổng chiều cao luôn nhỏ hơn 94vh — màn hình thấp thì panel hẹp lại chứ không
+   bị tràn. 346px = 66px (thumbnail) + 280px (phần chữ).
+   ========================================================================== */
+.modal--media .modal__panel {
+  width: min(1080px, 100%, max(320px, calc((94vh - 346px) * 1.6)));
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+}
+.modal--media .modal__media {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.modal--media .modal__img,
+.modal--media .modal__video,
+.modal--media .modal__model {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+/* Ảnh và video phủ ĐẦY khung y như model GLB */
+.modal--media .modal__img,
+.modal--media .modal__video { object-fit: cover; object-position: center; display: block; }
+
+/* Nền khung media = nền của theme (cùng màu panel, đổi theo dark/light).
+   Video render tách nền (có kênh alpha) sẽ lộ đúng màu này thay vì nền đen. */
+.modal--media .modal__media,
+.modal--media .modal__video { background: var(--bg-surface); }
+/* Phần tử đang ẩn phải ẩn THẬT (rule display:block ở trên có độ ưu tiên ngang
+   [hidden] nên nếu thiếu dòng này video/ảnh ẩn vẫn đè lên model) */
+.modal--media .modal__img[hidden],
+.modal--media .modal__video[hidden],
+.modal--media .modal__model[hidden] { display: none; }
+
+/* Hàng thumbnail luôn giữ chỗ 66px; project 1 file thì chỉ ẩn nội dung */
+.modal--media .modal__thumbs {
+  box-sizing: border-box;
+  height: 66px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.modal--media .modal__thumbs::-webkit-scrollbar { display: none; }
+.modal--media .modal__thumbs[hidden] { display: flex; visibility: hidden; }
+
+/* Phần chữ cao cố định. Mô tả CHIẾM ĐÚNG 3 DÒNG: dài hơn thì cắt "…", ngắn hơn
+   (1-2 dòng) thì vẫn giữ chỗ đủ 3 dòng → tag và bộ đếm ở mọi card luôn nằm
+   đúng 1 vị trí. Tiêu đề và phụ đề cũng chỉ 1 dòng (dài quá thì cắt "…") để
+   không đẩy các phần bên dưới xuống. */
+.modal--media .modal__body {
+  box-sizing: border-box;
+  height: 280px;
+  padding: 22px 30px;
+  overflow: hidden;
+}
+.modal--media .modal__subtitle,
+.modal--media .modal__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.modal--media .modal__desc {
+  --desc-lines: 3;
+  --desc-line-height: 1.65;
+  line-height: var(--desc-line-height);
+  height: calc(var(--desc-lines) * var(--desc-line-height) * 1em);
+  display: -webkit-box;
+  -webkit-line-clamp: var(--desc-lines);
+  line-clamp: var(--desc-lines);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.modal--media .modal__counter { margin-top: 12px; }
+
+/* Panel rộng → nút Prev/Next ngoài khung cần nhiều chỗ trống 2 bên */
+@media (max-width: 1200px) {
+  .modal--media > .modal__nav { top: auto; bottom: 14px; transform: none; width: 42px; height: 42px; }
+  .modal--media > .modal__nav--prev { left: 16px; }
+  .modal--media > .modal__nav--next { right: 16px; }
+}
+
+/* Điện thoại: chữ dài hơn do khung hẹp → cho phép cuộn trong panel thay vì cắt */
+@media (max-width: 620px) {
+  .modal--media .modal__panel { max-height: 92vh; overflow-y: auto; }
+  .modal--media .modal__body { height: auto; }
+}
+
+.modal__thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 72px;
+  height: 54px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast);
+}
+.modal__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.modal__thumb.is-active { opacity: 1; border-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .modal__thumb:hover { opacity: 1; }
+}
+.modal__thumb-tag {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  background: rgba(var(--overlay-rgb), 0.45);
+}
+
 /* ==========================================================================
    12. PROJECT DETAIL PAGE (project.html)
    Trang mẫu xem đầy đủ 1 dự án: nhiều ảnh/model trong cùng 1 gallery lớn,

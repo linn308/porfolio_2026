@@ -76,7 +76,8 @@ const PROJECTS_3D = {
       en: 'The design emphasizes a modern grid layout, unconventional typography, and a dynamic visual rhythm to capture the spirit of youth street fashion.',
     },
     tools: ['Indesign', 'Photoshop'],
-        styleTags: ['Typography', 'Fashion Magazine','Minimalist' , 'Modern', 'Grid System'],
+    styleTags: ['Typography', 'Fashion Magazine','Minimalist' , 'Modern', 'Grid System'],
+    externalLink: 'https://www.behance.net/gallery/181567735/3D-Game-Design-CRUSADER', 
     team: {
       vi: { label: 'Đóng góp', text: 'Lên ý tưởng concept & Dàn trang chính.' },
       en: { label: 'Contribution', text: 'Concept Idealisation & Main Editorial Layout Designer.' },
@@ -99,9 +100,6 @@ const PROJECTS_3D = {
   crusader: {
     title: 'CRUSADER',
     year: '2023',
-    // Bắt buộc khai báo cover mới có thumbnail/video hiện ở trên cùng —
-    // không còn tự lấy slides[0] như trước. src trùng với slide video bên
-    // dưới nên slide đó tự bị bỏ khỏi gallery, không lặp lại.
     cover: { type: 'video', src: '../../assets/3d/crusader/000.mp4', poster: '../../assets/3d/crusader/001.webp' },
     category: { vi: 'Model', en: 'Model' },
     subtitle: {
@@ -114,10 +112,6 @@ const PROJECTS_3D = {
     },
     tools: ['Maya', 'ZBrush', 'Substance Painter', 'Unreal', 'Marmoset'],
     styleTags: ['3D Game Design', 'Fantasy', 'Character Design', 'Stylized 3D', 'Game Art'],
-    // Link đến đúng project này trên Behance (hoặc Sketchfab/ArtStation/demo
-    // online...) — có khai báo (chuỗi URL) thì nút "Xem project khác" ở cuối
-    // bài tự hiện, xoá dòng này (hoặc để '') thì nút tự ẩn. Thay URL bên
-    // dưới bằng link Behance thật của project CRUSADER.
     externalLink: 'https://www.behance.net/gallery/181567735/3D-Game-Design-CRUSADER',
     team: {
       vi: { label: 'Đóng góp', 
@@ -127,9 +121,6 @@ const PROJECTS_3D = {
             text: ['Participated in concept development and visual direction, while taking the lead on designing and finalizing the character "Kord"—handling everything from initial sketches and modeling to final coloring.',
                   'Assisted with modeling and coloring tasks for other project assets.']},
     },
-    //   slides: [
-    //   { type: 'image', src: '../../assets/3d/crusader/0100.png' },
-    // ],
     relatedBlocks:[
       { title: { vi: 'Kord — Character Design & 3D Modeling', en: 'Kord — Character Design & 3D Modeling' },
         type: 'cards', 
@@ -402,7 +393,7 @@ const PROJECTS_3D = {
     styleTags: ['Animation'],
     relatedBlocks:[
       {type: 'cards', 
-        items: [  { title: 'video', media: { type: 'video', src: '../../assets/3d/ani-FP/000.mp4' }, large: true },
+        items: [  { title: 'video', media: { type: 'video', src: '../../assets/3d/ani-FP/000.mp4' }, poster: '../../assets/3d/ani-FP/000.webp', large: true },
         ],
       },
     ],
@@ -450,4 +441,25 @@ const PROJECTS_3D = {
     styleTags: ['Industrial Design', 'Hard-Surface', 'Rugged Tech', '3D Modeling'],
   },
 
+  aniFS: {
+    title: 'Figure Skating',
+    year: '2023',
+    cover: { type: 'video', src: '../../assets/3d/ani-FS/001.mp4', poster: '../../assets/3d/ani-FS/001.webp' },
+    category: { vi: 'Animation', en: 'Animation' },
+    subtitle: {
+      vi: '3D Animation — Animation Study',
+      en: '3D Animation — Animation Study',
+    },
+    desc: {
+      vi: 'Mô phỏng lại phân cảnh thoại của nhân vật Boss Baby. Tác phẩm tập trung vào kỹ thuật lip-sync theo khẩu hình kết hợp với chuyển động cơ thể và biểu cảm gương mặt',
+      en: 'Recreating a dialogue scene from Boss Baby. The piece focuses on phoneme-based lip-sync, combined with body mechanics and facial expressions.',
+    },
+    tools: ['Maya'],
+    styleTags: ['Animation'],
+    slides:[{ type: 'video', src: '../../assets/3d/ani-FS/000.mp4', poster: '../../assets/3d/ani-FS/000.webp' }],
+  },
+
+
+
 };
+

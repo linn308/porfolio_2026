@@ -1296,36 +1296,187 @@ function initLightbox() {
   const modalDesc = document.getElementById('modalDesc');
   const modalTools = document.getElementById('modalTools');
   const modalCounter = document.getElementById('modalCounter');
-  const modalFullLink = document.getElementById('modalFullLink');
+  const modalVideo = document.getElementById('modalVideo');
+  const modalVariants = document.getElementById('modalVariants');
+  const modalThumbs = document.getElementById('modalThumbs');
   const closeBtn = document.getElementById('modalClose');
   const modalPrevBtn = document.getElementById('modalPrev');
   const modalNextBtn = document.getElementById('modalNext');
 
   let currentTriggers = []; // danh sách .card__media đang hiển thị, theo thứ tự DOM
   let currentIndex = -1;
+  let mediaList = [];   // danh sách media của project đang mở trong light-box
+  let mediaIndex = 0;   // media đang hiện
+  let variantIndex = 0; // biến thể model đang chọn (nếu media có variants)
+
+  const curLang = () => (document.documentElement.lang === 'en' ? 'en' : 'vi');
+
+  // Gom toàn bộ media của 1 card thành 1 danh sách phẳng: cover → slides →
+  // relatedBlocks. Lấy từ PROJECTS[data-id] (data-3d.js / data-2d.js); project
+  // chưa khai báo ở đó thì dùng data-model / data-img ngay trên card.
+  const buildMediaList = (trigger) => {
+    const { id, img, model } = trigger.dataset;
+    const project = (typeof PROJECTS !== 'undefined' && id) ? PROJECTS[id] : null;
+    const list = [];
+    const seen = new Set();
+    const push = (m) => {
+      if (!m) return;
+      const variants = Array.isArray(m.variants) && m.variants.length ? m.variants : null;
+      const key = variants ? variants[0].src : m.src;
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      list.push({ type: m.type || 'image', src: m.src, poster: m.poster, variants });
+    };
+
+    if (project) {
+      if (project.cover) push(project.cover);
+      else if (model) push({ type: 'model', src: model });
+      else if (img) push({ type: 'image', src: img });
+      (project.slides || []).forEach(push);
+      const blocks = project.relatedBlocks || [
+        project.relatedCards ? { items: project.relatedCards.items } : null,
+        project.relatedLoop ? { items: project.relatedLoop.items } : null,
+      ].filter(Boolean);
+      blocks.forEach((b) => (b.items || []).forEach((it) => push(getItemMedia(it))));
+    }
+    if (!list.length) {
+      if (model) push({ type: 'model', src: model });
+      else if (img) push({ type: 'image', src: img });
+    }
+    return list;
+  };
+
+  const stopVideo = () => {
+    if (!modalVideo) return;
+    modalVideo.pause();
+    modalVideo.removeAttribute('src');
+    modalVideo.removeAttribute('poster');
+    modalVideo.load();
+  };
+
+  const renderVariants = (media) => {
+    if (!modalVariants) return;
+    modalVariants.innerHTML = '';
+    const has = Boolean(media) && media.type === 'model' && media.variants && media.variants.length > 1;
+    modalVariants.hidden = !has;
+    if (!has) return;
+    media.variants.forEach((v, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'model-variant-toggle__btn' + (i === variantIndex ? ' is-active' : '');
+      b.dataset.variantIndex = String(i);
+      b.textContent = (v.label && (v.label[curLang()] || v.label.vi || v.label.en)) || `#${i + 1}`;
+      modalVariants.appendChild(b);
+    });
+  };
+
+  const showMedia = (index, alt) => {
+    if (!mediaList.length) return;
+    mediaIndex = (index + mediaList.length) % mediaList.length;
+    variantIndex = 0;
+    const media = mediaList[mediaIndex];
+
+    modalImg.hidden = media.type !== 'image';
+    if (modalVideo) modalVideo.hidden = media.type !== 'video';
+    modalModel.hidden = media.type !== 'model';
+
+    stopVideo();
+    if (media.type === 'image') {
+      modalImg.src = media.src || '';
+      modalImg.alt = alt || '';
+    } else if (media.type === 'video' && modalVideo) {
+      if (media.poster) modalVideo.setAttribute('poster', media.poster);
+      modalVideo.src = media.src;
+      // Trình duyệt chỉ cho tự phát khi video tắt tiếng — người xem vẫn bật
+      // tiếng được bằng nút loa trên thanh điều khiển.
+      modalVideo.muted = true;
+      const playing = modalVideo.play();
+      if (playing && typeof playing.catch === 'function') playing.catch(() => {});
+    } else if (media.type === 'model') {
+      const src = media.variants ? media.variants[0].src : media.src;
+      modalModel.setAttribute('src', src);
+      if (media.poster) modalModel.setAttribute('poster', media.poster);
+      else modalModel.removeAttribute('poster');
+      modalModel.setAttribute('alt', alt || '');
+    }
+
+    renderVariants(media);
+    if (modalThumbs) {
+      modalThumbs.querySelectorAll('.modal__thumb').forEach((t, i) => {
+        t.classList.toggle('is-active', i === mediaIndex);
+        // thanh cuộn thumbnail bị ẩn → tự cuộn ngang tới thumbnail đang chọn
+        if (i === mediaIndex) {
+          modalThumbs.scrollLeft = t.offsetLeft - (modalThumbs.clientWidth - t.offsetWidth) / 2;
+        }
+      });
+    }
+  };
+
+  const renderThumbs = (alt) => {
+    if (!modalThumbs) return;
+    modalThumbs.innerHTML = '';
+    modalThumbs.hidden = mediaList.length <= 1;
+    if (mediaList.length <= 1) return;
+    mediaList.forEach((m, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'modal__thumb modal__thumb--' + m.type;
+      b.dataset.mediaIndex = String(i);
+      b.setAttribute('aria-label', `${alt || ''} ${i + 1}/${mediaList.length}`.trim());
+      const thumbSrc = m.type === 'image' ? m.src : m.poster;
+      if (thumbSrc) {
+        const im = document.createElement('img');
+        im.src = thumbSrc;
+        im.alt = '';
+        im.loading = 'lazy';
+        b.appendChild(im);
+      }
+      if (m.type !== 'image') {
+        const tag = document.createElement('span');
+        tag.className = 'modal__thumb-tag';
+        tag.textContent = m.type === 'video' ? '▶' : '3D';
+        b.appendChild(tag);
+      }
+      modalThumbs.appendChild(b);
+    });
+  };
 
   const getVisibleTriggers = () =>
     Array.from(document.querySelectorAll('.card:not(.is-hidden) .card__media'));
 
-  const renderTrigger = (trigger) => {
-    const { title, subtitle, descVi, descEn, desc, img, model, tools } = trigger.dataset;
+  // keepMedia = true khi chỉ render lại do đổi ngôn ngữ → giữ nguyên media đang xem.
+  const renderTrigger = (trigger, keepMedia = false) => {
+    const { title, subtitle, descVi, descEn, desc, tools } = trigger.dataset;
 
-    // Dự án 3D có sẵn file .glb (data-model) thì hiển thị model-viewer
-    // ngay trong modal để xem 360°; còn lại hiển thị ảnh tĩnh.
-    const hasModel = Boolean(model);
-    modalModel.hidden = !hasModel;
-    modalImg.hidden = hasModel;
-
-    if (hasModel) {
-      modalModel.setAttribute('src', model);
-      modalModel.setAttribute('alt', title || '');
+    // Project nào KHÔNG có data-detail (chưa có page riêng) thì light-box này
+    // là nơi xem chính: hiện cover + slides + relatedBlocks lấy từ data-3d.js.
+    if (keepMedia) {
+      renderVariants(mediaList[mediaIndex]);
+      if (modalVariants && !modalVariants.hidden) {
+        modalVariants.querySelectorAll('.model-variant-toggle__btn').forEach((b, i) => {
+          b.classList.toggle('is-active', i === variantIndex);
+        });
+      }
     } else {
-      modalImg.src = img || '';
-      modalImg.alt = title || '';
+      mediaList = buildMediaList(trigger);
+      renderThumbs(title);
+      showMedia(0, title);
     }
 
     modalSubtitle.textContent = subtitle || '';
-    modalTitle.textContent = title || '';
+    // Card có data-detail (đã có page riêng) → tiêu đề là link sang page đó;
+    // không có thì chỉ là chữ thường.
+    const detailHref = trigger.dataset.detail;
+    modalTitle.textContent = '';
+    if (detailHref) {
+      const a = document.createElement('a');
+      a.className = 'modal__title-link';
+      a.href = detailHref;
+      a.textContent = title || '';
+      modalTitle.appendChild(a);
+    } else {
+      modalTitle.textContent = title || '';
+    }
 
     // data-desc-vi / data-desc-en là cặp song ngữ mới cho phần mô tả dài.
     // Card nào chưa kịp cập nhật (chỉ còn data-desc cũ, 1 ngôn ngữ) vẫn
@@ -1350,26 +1501,13 @@ function initLightbox() {
       modalCounter.textContent = `${currentIndex + 1} / ${currentTriggers.length}`;
     }
 
-    // Nút "Xem đầy đủ dự án" chỉ hiện khi card có data-detail — đường dẫn
-    // tới trang chi tiết RIÊNG của dự án đó (project/<slug>/index.html).
-    // Không phải project nào cũng có trang riêng ngay; card nào chưa có
-    // data-detail thì modal chỉ dừng ở bản xem nhanh này, không có nút này.
-    if (modalFullLink) {
-      const detailHref = trigger.dataset.detail;
-      if (detailHref) {
-        modalFullLink.href = detailHref;
-        modalFullLink.hidden = false;
-      } else {
-        modalFullLink.hidden = true;
-      }
-    }
   };
 
   // Nếu người dùng đổi ngôn ngữ trong lúc modal đang mở, render lại mô tả
   // ngay lập tức thay vì phải đóng/mở lại mới thấy ngôn ngữ mới.
   window.__refreshLightbox = () => {
     if (modal.classList.contains('is-open') && currentTriggers[currentIndex]) {
-      renderTrigger(currentTriggers[currentIndex]);
+      renderTrigger(currentTriggers[currentIndex], true);
     }
   };
 
@@ -1391,6 +1529,7 @@ function initLightbox() {
   };
 
   const closeModal = () => {
+    stopVideo();
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('no-scroll');
@@ -1403,13 +1542,33 @@ function initLightbox() {
   };
 
   document.addEventListener('click', (event) => {
-    // "Xem đầy đủ dự án" đi sang project.html — chặn lại để chạy hiệu ứng
-    // mờ dần đồng bộ với initPageTransitions() (link này được tạo/gán href
-    // động nên không nằm trong danh sách link tĩnh mà initPageTransitions
-    // quét lúc trang vừa load).
-    if (event.target.closest('#modalFullLink')) {
+    // Bấm tiêu đề (có link) → sang page riêng của project, chạy hiệu ứng mờ dần
+    // đồng bộ với initPageTransitions() (link này tạo động nên không nằm trong
+    // danh sách link tĩnh mà initPageTransitions quét lúc trang vừa load).
+    const titleLink = event.target.closest('.modal__title-link');
+    if (titleLink) {
       event.preventDefault();
-      navigateWithFade(modalFullLink.href);
+      navigateWithFade(titleLink.href);
+      return;
+    }
+    // Chọn media khác trong light-box (thumbnail) hoặc đổi biến thể model.
+    const thumb = event.target.closest('.modal__thumb');
+    if (thumb && modal.contains(thumb)) {
+      const t = currentTriggers[currentIndex];
+      showMedia(Number(thumb.dataset.mediaIndex), t && t.dataset.title);
+      return;
+    }
+    const vbtn = event.target.closest('#modalVariants .model-variant-toggle__btn');
+    if (vbtn) {
+      const media = mediaList[mediaIndex];
+      const i = Number(vbtn.dataset.variantIndex);
+      if (media && media.variants && media.variants[i]) {
+        variantIndex = i;
+        modalModel.setAttribute('src', media.variants[i].src);
+        modalVariants.querySelectorAll('.model-variant-toggle__btn').forEach((b, k) => {
+          b.classList.toggle('is-active', k === i);
+        });
+      }
       return;
     }
     const trigger = event.target.closest('.card__media');
