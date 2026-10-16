@@ -19,6 +19,89 @@ const PROJECTS = Object.assign(
 );
 
 /* --------------------------------------------------------------------------
+   ANALYTICS ẨN DANH -- đếm lượt truy cập, trang nào được xem và xem bao lâu.
+   Cả site (mọi trang đều nạp script.js) chỉ cần điền ID ở ngay dưới đây:
+     • ga4     : Measurement ID của Google Analytics 4, dạng 'G-ABC123XYZ'
+                 (GA4 → Admin → Data streams → chọn stream web → Measurement ID)
+     • clarity : Project ID của Microsoft Clarity (tuỳ chọn, để trống nếu không dùng)
+   Để trống / còn 'G-XXXXXXXXXX' thì analytics TẮT hoàn toàn, không tải gì cả.
+   Tự động bỏ qua khi: chạy local (localhost, file://) hoặc trình duyệt bật
+   "Do Not Track" -- để số liệu không lẫn lượt xem của chính bạn khi đang sửa.
+   Mỗi file .html là 1 trang riêng nên GA4 tự ghi lượt xem + thời gian ở trang
+   đó. Riêng LIGHT-BOX thì không đổi URL nên được gửi thêm 2 sự kiện:
+     • project_open      : người xem mở project nào (project_id, project_title)
+     • project_view_time : đã xem project đó trong light-box bao nhiêu giây
+   -------------------------------------------------------------------------- */
+const ANALYTICS_CONFIG = {
+  ga4: 'G-9SNQWCCBKV',
+  clarity: '',
+};
+
+const siteAnalytics = (() => {
+  const isId = (v) => typeof v === 'string' && v.trim() !== '' && !/X{4,}/i.test(v);
+  const host = location.hostname;
+  const isLocal = location.protocol === 'file:' || host === 'localhost' || host === '127.0.0.1' || host === '';
+  const dnt = navigator.doNotTrack === '1' || window.doNotTrack === '1';
+  const enabled = !isLocal && !dnt && (isId(ANALYTICS_CONFIG.ga4) || isId(ANALYTICS_CONFIG.clarity));
+
+  if (enabled && isId(ANALYTICS_CONFIG.ga4)) {
+    const id = ANALYTICS_CONFIG.ga4.trim();
+    const tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', id, { anonymize_ip: true });
+  }
+
+  if (enabled && isId(ANALYTICS_CONFIG.clarity)) {
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', ANALYTICS_CONFIG.clarity.trim());
+  }
+
+  const track = (name, params) => {
+    if (enabled && typeof window.gtag === 'function') window.gtag('event', name, params || {});
+  };
+
+  // Theo dõi project đang mở trong light-box để tính thời gian xem.
+  let current = null; // { id, title, start }
+  const flush = () => {
+    if (!current) return;
+    const seconds = Math.round((Date.now() - current.start) / 1000);
+    if (seconds >= 1) {
+      track('project_view_time', {
+        project_id: current.id,
+        project_title: current.title,
+        duration_sec: seconds,
+      });
+    }
+    current = null;
+  };
+
+  return {
+    enabled,
+    track,
+    // Gọi khi light-box mở / chuyển sang project khác (prev, next).
+    projectOpen(trigger) {
+      flush();
+      const d = (trigger && trigger.dataset) || {};
+      current = { id: d.id || '', title: d.title || '', start: Date.now() };
+      track('project_open', { project_id: current.id, project_title: current.title });
+    },
+    // Gọi khi đóng light-box.
+    projectClose: flush,
+  };
+})();
+
+// Rời trang (kể cả bấm tiêu đề sang page riêng) khi light-box đang mở → vẫn ghi giờ xem.
+window.addEventListener('pagehide', () => siteAnalytics.projectClose());
+
+/* --------------------------------------------------------------------------
    0b. TÍN HIỆU "LOADER ĐÃ ẨN" — dùng chung cho các hiệu ứng xuất hiện lần
    đầu (hero__decor/hero__portfolio-letter/hero__welcome-text qua CSS, và card/
    .reveal qua initScrollReveal()/initSectionReveal() bên dưới). Nơi nào
@@ -1515,6 +1598,7 @@ function initLightbox() {
     currentTriggers = getVisibleTriggers();
     currentIndex = currentTriggers.indexOf(trigger);
     renderTrigger(trigger);
+    siteAnalytics.projectOpen(trigger);
 
     // Chỉ 1 card đang hiển thị (hoặc do bộ lọc chỉ còn lại đúng 1) thì
     // Prev/Next chẳng đi đâu được — ẩn hẳn 2 nút này thay vì để chúng
@@ -1529,6 +1613,7 @@ function initLightbox() {
   };
 
   const closeModal = () => {
+    siteAnalytics.projectClose();
     stopVideo();
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
@@ -1539,6 +1624,7 @@ function initLightbox() {
     if (!currentTriggers.length) return;
     currentIndex = (currentIndex + offset + currentTriggers.length) % currentTriggers.length;
     renderTrigger(currentTriggers[currentIndex]);
+    siteAnalytics.projectOpen(currentTriggers[currentIndex]);
   };
 
   document.addEventListener('click', (event) => {
